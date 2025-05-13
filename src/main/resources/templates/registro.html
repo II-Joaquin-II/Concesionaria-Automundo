@@ -9,56 +9,134 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">  
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
-        <link rel="stylesheet" href="/loginregistro.css">
+        <link rel="stylesheet" href="../css/loginregistro.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </head>
     <body>
         <div class="login-container">
             <!-- Formulario de registro -->
             <div class="login-form">
                 <form class="formulario fade-in-up" id="registerForm">
-                    <img src="../Vista/logo.jpg" alt="Logo AutoMundo" class="logo">
+                    <a th:href="@{/principal}">
+                        <img src="../img/logo.jpg" alt="Logo AutoMundo" class="logo">
+                    </a>
                     <h1>Regístrate</h1>
                     <div class="contenedor">
-                        <div class="input-contenedor">
-                            <i class="fas fa-user icon"></i>
-                            <input type="text" id="username" placeholder="Nombre" required>
-                        </div>
-
-                        <div class="input-contenedor">
-                            <i class="fas fa-user icon"></i>
-                            <input type="text" id="lastname" placeholder="Apellidos" required>
-                        </div>
-
-                        <div class="input-contenedor">
-                            <i class="fas fa-envelope icon"></i>
-                            <input type="text" id="email" placeholder="Correo Electrónico" required>
-                        </div>
-
-                        <div class="input-contenedor">
-                            <i class="fas fa-key icon"></i>
-                            <input type="password" id="password" placeholder="Contraseña" required>
-                        </div>
-
-                        <div class="input-contenedor">
-                            <i class="fas fa-key icon"></i>
-                            <input type="password" id="confirmPassword" placeholder="Confirmar Contraseña" required>
-                        </div>
-
-                        <button type="button" class="button" id="register">Registrate</button>
-                        <p>Al registrarte, aceptas nuestras Condiciones de uso y Política de privacidad.</p>
-                        <p>¿Ya tienes una cuenta? <a class="link" href="login.html">Iniciar Sesión</a></p>
+                    <div class="input-contenedor">
+                        <i class="fas fa-user icon"></i>
+                        <input type="text" id="username" name="nombre_cli" placeholder="Nombre" required>
                     </div>
+
+                    <div class="input-contenedor">
+                        <i class="fas fa-user icon"></i>
+                        <input type="text" id="lastname" name="apellidos_cli" placeholder="Apellidos" required>
+                    </div>
+
+                    <div class="input-contenedor">
+                        <i class="fas fa-user icon"></i>
+                        <input type="text" id="dni" name="dni" placeholder="DNI" required>
+                    </div>
+
+                    <div class="input-contenedor">
+                        <i class="fas fa-user icon"></i>
+                        <input type="date" id="Fecha" name="fecha_nac" placeholder="Fecha de Nacimiento" required>
+                    </div>
+
+                    <div class="input-contenedor">
+                        <i class="fas fa-user icon"></i>
+                        <input type="text" id="celular" name="celular" placeholder="Celular" required>
+                    </div>
+
+                    <div class="input-contenedor">
+                        <i class="fas fa-user icon"></i>
+                        <input type="text" id="usuario" name="usuario_cli" placeholder="Usuario" required>
+                    </div>
+
+                    <div class="input-contenedor">
+                        <i class="fas fa-envelope icon"></i>
+                        <input type="text" id="email" name="email" placeholder="Correo Electrónico" required>
+                    </div>
+
+                    <div class="input-contenedor">
+                        <i class="fas fa-key icon"></i>
+                        <input type="password" id="password" name="pass_cli" placeholder="Contraseña" required>
+                    </div>
+
+                    <div class="input-contenedor">
+                        <i class="fas fa-key icon"></i>
+                        <input type="password" id="confirmPassword" placeholder="Confirmar Contraseña" required>
+                    </div>
+
+                    <button type="button" class="button" id="register">Registrate</button>
+                    <p>Al registrarte, aceptas nuestras Condiciones de uso y Política de privacidad.</p>
+                    <p>¿Ya tienes una cuenta? <a class="link" th:href="@{/login}">Iniciar Sesión</a></p>
+                </div>
+                    
                 </form>
+
+                <script>
+                document.getElementById('register').addEventListener('click', function (event) {
+                event.preventDefault(); // Evita el envío por defecto del formulario
+
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                if (password !== confirmPassword) {
+                Swal.fire('Error', 'Las contraseñas no coinciden', 'error');
+                return;
+                }
+
+                const cliente = {
+                    nombre_cli: document.getElementById('username').value,
+                    apellidos_cli: document.getElementById('lastname').value,
+                    dni: document.getElementById('dni').value,
+                    fecha_nac: document.getElementById('Fecha').value,
+                    celular: document.getElementById('celular').value,
+                    email: document.getElementById('email').value,
+                    usuario_cli: document.getElementById('usuario').value,
+                    pass_cli: password
+                };
+
+                fetch('/api/clientes', {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json'
+                },
+                    body: JSON.stringify(cliente)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                    throw new Error('Error al registrar');
+                }
+                    return response.json();
+                })
+
+                .then(data => {
+                Swal.fire('¡Registro exitoso!', 'Tu cuenta ha sido creada', 'success').then(() => {
+                window.location.href = '/login'; // redirige al login si todo está bien
+                });
+                })
+
+                .catch(error => {
+                Swal.fire('Error', 'No se pudo completar el registro', 'error');
+                console.error(error);
+                });
+                });
+                </script>
+
+
             </div>
 
             <!-- Imagen de fondo-->
             <div class="login-image">
-                <img src="../Vista/fondo.jpg" class="background-image" alt="Imagen de fondo">
+                <img src="../img/fondo.jpg" class="background-image" alt="Imagen de fondo">
             </div>
         </div>
 
-        <script src="/sweetalert.js"></script>
-        <script src="/registro.js"></script>
+        <script src="../js/sweetalert.js"></script>
+        <!-- 
+        <script src="../js/registro.js"></script>
+        -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     </body>
 </html>

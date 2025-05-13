@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class RegistroController {
     @GetMapping("/registro") 
     public String Login(Model modelo){
-        return "login"; 
+        return "registro"; 
     }
 }

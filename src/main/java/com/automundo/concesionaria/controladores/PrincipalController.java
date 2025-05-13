@@ -9,4 +9,9 @@ public class PrincipalController {
     public String Login(Model modelo){
         return "principal"; //Nombre del HTML que se dirige
     }
+
+    @GetMapping("/index") 
+    public String Index(Model modelo){
+        return "index"; 
+    }
 }
