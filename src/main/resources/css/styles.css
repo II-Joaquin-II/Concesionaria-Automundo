@@ -1,0 +1,56 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f8f8f8;
+  margin: 0;
+}
+
+.car-card {
+  background: white;
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+.car-card img {
+  width: 100%;
+  height: auto;
+}
+
+.title.red {
+  color: red;
+}
+
+.label {
+  margin: 5px 5px;
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.colors {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+.color {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid #000;
+  cursor: pointer;
+}
+
+/* Clases específicas de color */
+.black {
+  background-color: black;
+}
+.red {
+  background-color: red;
+}
+.green {
+  background-color: green;
+}
