@@ -21,30 +21,16 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    function validateEmail(inputElement) {
-        inputElement.addEventListener("input", function () {
-            const email = this.value;
-            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-            if (!emailPattern.test(email)) {
-                this.setCustomValidity("Por favor ingresa un correo electrónico válido.");
-            } else {
-                this.setCustomValidity("");
-            }
-        });
-    }
 
     const usernameInput = document.getElementById("username");
     const lastnameInput = document.getElementById("lastname");
     const dniInput = document.getElementById("dni");
     const celularInput = document.getElementById("celular");
-    const emailInput = document.getElementById("email");
 
     validateName(usernameInput);
     validateName(lastnameInput);
     validateDni(dniInput);
     validateCelular(celularInput);
-    validateEmail(emailInput);
 });
 
 
@@ -81,11 +67,6 @@ document.getElementById('register').addEventListener('click', function (event) {
 
     if (password !== confirmPassword) {
         Swal.fire('Error', 'Las contraseñas no coinciden', 'error');
-        return;
-    }
-
-    if (!validateEmailFormat(email)) {
-        Swal.fire('Error', 'Por favor, ingresa un correo electrónico válido', 'error');
         return;
     }
 
@@ -131,9 +112,3 @@ document.getElementById('register').addEventListener('click', function (event) {
             console.error(error);
         });
 });
-
-
-function validateEmailFormat(email) {
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailPattern.test(email);
-}

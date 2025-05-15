@@ -43,7 +43,7 @@ public class SecurityClass {
         http
             .csrf(csrf -> csrf.disable())  
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/registro", "/principal", "/admin", "/api/clientes", "/adminverclientes", "/index")
+                .requestMatchers("/login", "/registro", "/principal", "/admin", "/adminverclientes", "/index")
                 .permitAll()
 
                 .requestMatchers(HttpMethod.POST, "/api/clientes")
