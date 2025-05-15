@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import com.automundo.concesionaria.model.Clientes;
 import com.automundo.concesionaria.repositorio.ClientesRepositorio;
+import org.springframework.http.HttpMethod;
 
 @Configuration
 @EnableWebSecurity
@@ -42,9 +43,10 @@ public class SecurityClass {
         http
             .csrf(csrf -> csrf.disable())  
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/registro", "/principal", "/admin", "/api/clientes", "/adminverclientes", "/index")
+                .requestMatchers("/login", "/registro", "/principal", "/admin", "/adminverclientes", "/index")
                 .permitAll()
-                
+                .requestMatchers(HttpMethod.POST, "/api/clientes")
+                .permitAll()
                 //.requestMatchers("/carousel.css", "/sweetalert.js", "/img/**", "/login.js", "/loginregistro.css", "/estiloAdmin.css", "/registro.js")
                 //.permitAll()
                 .requestMatchers("/css/**", "/js/**", "/img/**")
