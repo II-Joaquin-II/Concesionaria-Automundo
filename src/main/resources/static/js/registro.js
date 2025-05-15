@@ -1,40 +1,139 @@
-  // Obtiene el botón de registro y agrega un evento de clic
-        document.getElementById("register").addEventListener("click", function (e) {
-            e.preventDefault(); // Prevenir el submit del formulario
-
-            // Obtiene los valores de los campos
-            const username = document.getElementById("username").value.trim();
-            const lastname = document.getElementById("lastname").value.trim();
-            const email = document.getElementById("email").value.trim();
-            const password = document.getElementById("password").value.trim();
-            const confirmPassword = document.getElementById("confirmPassword").value.trim();
-
-            // Validaciones básicas
-            if (username === "" || lastname === "" || email === "" || password === "" || confirmPassword === "") {
-                swal("¡Error!", "Todos los campos son obligatorios.", "error");
-                return;
-            }
-
-            // Validación de las contraseñas
-            if (password !== confirmPassword) {
-                swal("¡Error!", "Las contraseñas no coinciden.", "error");
-                return;
-            }
-
-            // Validación del formato del correo
-            const emailPattern = /\w+@\w+\.\w+/;
-            if (!emailPattern.test(email)) {
-                swal("¡Error!", "Por favor ingresa un correo electrónico válido.", "error");
-                return;
-            }
-            
-            // Mensaje de éxito y redireccion al login
-            swal({
-                title: "¡Éxito!",
-                text: "Te has registrado correctamente. Por favor inicia sesión.",
-                icon: "success",
-                button: "Aceptar"
-            }).then(function () {
-                window.location.href = "login.html";
-            });
+document.addEventListener("DOMContentLoaded", function () {
+    function validateName(inputElement) {
+        inputElement.addEventListener("input", function () {
+            this.value = this.value.replace(/[^A-Za-záéíóúÁÉÍÓÚñÑ\s]/g, '');
         });
+    }
+
+    function validateDni(inputElement) {
+        inputElement.addEventListener("input", function () {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    }
+
+    function validateCelular(inputElement) {
+        inputElement.addEventListener("input", function () {
+            this.value = this.value.replace(/[^0-9]/g, '');
+
+            if (this.value.length > 9) {
+                this.value = this.value.slice(0, 9);
+            }
+        });
+    }
+
+    function validateEmail(inputElement) {
+        inputElement.addEventListener("input", function () {
+            const email = this.value;
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            if (!emailPattern.test(email)) {
+                this.setCustomValidity("Por favor ingresa un correo electrónico válido.");
+            } else {
+                this.setCustomValidity("");
+            }
+        });
+    }
+
+    const usernameInput = document.getElementById("username");
+    const lastnameInput = document.getElementById("lastname");
+    const dniInput = document.getElementById("dni");
+    const celularInput = document.getElementById("celular");
+    const emailInput = document.getElementById("email");
+
+    validateName(usernameInput);
+    validateName(lastnameInput);
+    validateDni(dniInput);
+    validateCelular(celularInput);
+    validateEmail(emailInput);
+});
+
+
+document.getElementById('register').addEventListener('click', function (event) {
+    event.preventDefault();
+
+    const username = document.getElementById('username').value;
+    const lastname = document.getElementById('lastname').value;
+    const dni = document.getElementById('dni').value;
+    const celular = document.getElementById('celular').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const fechaNacInput = document.getElementById('Fecha').value;
+    const fechaNac = new Date(fechaNacInput);
+    const hoy = new Date();
+    const fechaLimite = new Date();
+    fechaLimite.setFullYear(hoy.getFullYear() - 18);
+
+    if (!username || !lastname || !dni || !celular || !email || !password || !confirmPassword || !fechaNacInput) {
+        Swal.fire('Campos vacíos', 'Por favor, completa todos los campos', 'error');
+        return;
+    }
+
+    if (isNaN(fechaNac.getTime())) {
+        Swal.fire("Fecha inválida", "Por favor ingresa una fecha válida.", "error");
+        return;
+    }
+
+    if (fechaNac > fechaLimite) {
+        Swal.fire("Debes ser mayor de 18 años", "Tu fecha de nacimiento indica que eres menor de edad.", "warning");
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        Swal.fire('Error', 'Las contraseñas no coinciden', 'error');
+        return;
+    }
+
+    if (!validateEmailFormat(email)) {
+        Swal.fire('Error', 'Por favor, ingresa un correo electrónico válido', 'error');
+        return;
+    }
+
+    if (celular.length !== 9) {
+        Swal.fire('Error', 'El número de celular debe tener 9 dígitos', 'error');
+        return;
+    }
+
+    const cliente = {
+        nombre_cli: username,
+        apellidos_cli: lastname,
+        dni: dni,
+        fecha_nac: fechaNacInput,
+        celular: celular,
+        email: email,
+        usuario_cli: document.getElementById('usuario').value,
+        pass_cli: password
+    };
+
+    fetch('/api/clientes', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(cliente)
+    })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(errorData => {
+                    const errorMessage = errorData.error || 'No se pudo completar el registro';
+                    Swal.fire('Error', errorMessage, 'error');
+                    throw new Error(errorMessage);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            Swal.fire('¡Registro exitoso!', 'Tu cuenta ha sido creada', 'success').then(() => {
+                window.location.href = '/login'; 
+            });
+        })
+        .catch(error => {
+            console.error(error);
+        });
+});
+
+
+function validateEmailFormat(email) {
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailPattern.test(email);
+}

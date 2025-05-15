@@ -24,17 +24,18 @@
                     <div class="contenedor">
                     <div class="input-contenedor">
                         <i class="fas fa-user icon"></i>
-                        <input type="text" id="username" name="nombre_cli" placeholder="Nombre" required>
+                        <input type="text" id="username" name="nombre_cli" placeholder="Nombre" required pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$" maxlength="30">
+
                     </div>
 
                     <div class="input-contenedor">
                         <i class="fas fa-user icon"></i>
-                        <input type="text" id="lastname" name="apellidos_cli" placeholder="Apellidos" required>
+                        <input type="text" id="lastname" name="apellidos_cli" placeholder="Apellidos" required pattern="^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$" maxlength="30">
                     </div>
 
                     <div class="input-contenedor">
                         <i class="fas fa-user icon"></i>
-                        <input type="text" id="dni" name="dni" placeholder="DNI" required>
+                        <input type="text" id="dni" name="dni" placeholder="DNI" required pattern="^[0-9]{8}$" maxlength="8">
                     </div>
 
                     <div class="input-contenedor">
@@ -44,7 +45,7 @@
 
                     <div class="input-contenedor">
                         <i class="fas fa-user icon"></i>
-                        <input type="text" id="celular" name="celular" placeholder="Celular" required>
+                        <input type="text" id="celular" name="celular" placeholder="Celular" required pattern="^9[0-9]{8}$" maxlength="9">
                     </div>
 
                     <div class="input-contenedor">
@@ -73,57 +74,7 @@
                 </div>
                     
                 </form>
-
-                <script>
-                document.getElementById('register').addEventListener('click', function (event) {
-                event.preventDefault(); // Evita el envío por defecto del formulario
-
-                const password = document.getElementById('password').value;
-                const confirmPassword = document.getElementById('confirmPassword').value;
-
-                if (password !== confirmPassword) {
-                Swal.fire('Error', 'Las contraseñas no coinciden', 'error');
-                return;
-                }
-
-                const cliente = {
-                    nombre_cli: document.getElementById('username').value,
-                    apellidos_cli: document.getElementById('lastname').value,
-                    dni: document.getElementById('dni').value,
-                    fecha_nac: document.getElementById('Fecha').value,
-                    celular: document.getElementById('celular').value,
-                    email: document.getElementById('email').value,
-                    usuario_cli: document.getElementById('usuario').value,
-                    pass_cli: password
-                };
-
-                fetch('/api/clientes', {
-                    method: 'POST',
-                    headers: {
-                    'Content-Type': 'application/json'
-                },
-                    body: JSON.stringify(cliente)
-                })
-                .then(response => {
-                    if (!response.ok) {
-                    throw new Error('Error al registrar');
-                }
-                    return response.json();
-                })
-
-                .then(data => {
-                Swal.fire('¡Registro exitoso!', 'Tu cuenta ha sido creada', 'success').then(() => {
-                window.location.href = '/login'; // redirige al login si todo está bien
-                });
-                })
-
-                .catch(error => {
-                Swal.fire('Error', 'No se pudo completar el registro', 'error');
-                console.error(error);
-                });
-                });
-                </script>
-
+                
 
             </div>
 
@@ -134,9 +85,9 @@
         </div>
 
         <script src="../js/sweetalert.js"></script>
-        <!-- 
+        
         <script src="../js/registro.js"></script>
-        -->
+        
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     </body>
 </html>

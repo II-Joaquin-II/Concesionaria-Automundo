@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -44,9 +45,13 @@ public class SecurityClass {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/login", "/registro", "/principal", "/admin", "/api/clientes", "/adminverclientes", "/index")
                 .permitAll()
+
+                .requestMatchers(HttpMethod.POST, "/api/clientes")
+                .permitAll()
                 
                 //.requestMatchers("/carousel.css", "/sweetalert.js", "/img/**", "/login.js", "/loginregistro.css", "/estiloAdmin.css", "/registro.js")
                 //.permitAll()
+                
                 .requestMatchers("/css/**", "/js/**", "/img/**")
                 .permitAll()
                 
