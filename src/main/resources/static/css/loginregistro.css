@@ -50,12 +50,26 @@ body {
     animation: fadeInUp 0.4s ease forwards;
 }
 
-/* Logo */
+/* Animación ligera para mover el logo  */
+@keyframes moverLogo {
+    0% {
+        transform: translateX(0); /* Inicia en su posición original */
+    }
+    50% {
+        transform: translateX(10px); /* Desplazamiento hacia la derecha */
+    }
+    100% {
+        transform: translateX(0); /* Regresa a su posición original */
+    }
+}
+
+
 .logo {
     display: block;
     margin: 0 auto;
-    width: 200px;
+    width: 100px;
     height: auto;
+    animation: moverLogo 1.5s ease-in-out 1; /* Duración de la animación del logo*/
 }
 
 /* Título */
