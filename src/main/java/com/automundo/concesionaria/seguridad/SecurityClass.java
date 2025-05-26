@@ -43,9 +43,11 @@ public class SecurityClass {
         http
             .csrf(csrf -> csrf.disable())  
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/registro", "/principal", "/admin", "/adminverclientes", "/index")
+                .requestMatchers("/login", "/registro", "/principal", "/admin", "/adminverclientes", "/adminverautos", "/adminventaauto", "/adminventaautoalquilado", "/adminverreclamos",  "/index")
                 .permitAll()
-
+             
+                //.requestMatchers(HttpMethod.GET, "/api/autos").permitAll()
+                    
                 .requestMatchers(HttpMethod.POST, "/api/clientes")
                 .permitAll()
                 
@@ -55,6 +57,9 @@ public class SecurityClass {
                 .requestMatchers("/css/**", "/js/**", "/img/**")
                 .permitAll()
                 
+                    
+                //.requestMatchers("/admin", "/adminverclientes", "/adminverautos", "/adminventaauto", "/adminventaautoalquilado", "/adminverreclamos").hasRole("ADMIN")
+                //.requestMatchers(HttpMethod.GET, "/api/autos").hasRole("ADMIN")
                 //.requestMatchers("/admin/**").hasRole("ADMIN")
 
                 .requestMatchers("/detallesauto", "/comprar").hasRole("USER")
