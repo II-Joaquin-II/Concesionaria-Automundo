@@ -37,67 +37,34 @@ INSERT INTO clientes (nombre_cli, apellidos_cli, dni, fecha_nac, celular, email,
 SELECT * FROM clientes;
 
 
-CREATE TABLE Autos (
-    IDAuto INT PRIMARY KEY,
-    Modelo VARCHAR(50),
-    Color VARCHAR(30),
-    Marca VARCHAR(50),
-    Año INT,
-    Precio DECIMAL(10,2),
-    Kilometraje INT,
-    Transmision VARCHAR(20),
-    Combustible VARCHAR(20),
-    Equipamiento1 VARCHAR(50),
-    Equipamiento2 VARCHAR(50),
-    Equipamiento3 VARCHAR(50),
-    Equipamiento4 VARCHAR(50),
-    Imagen VARCHAR(255),
-    Categoria VARCHAR(30),
-    Estado VARCHAR(30)
-);
+	CREATE TABLE IF NOT EXISTS `autos` (
+    `id_auto` INT PRIMARY KEY AUTO_INCREMENT,
+    `modelo` VARCHAR(50),
+    `color` VARCHAR(30),
+    `marca` VARCHAR(50),
+    `ano` INT,
+    `precio` DECIMAL(10,2),
+    `kilometraje` INT,
+    `transmision` VARCHAR(20),
+    `combustible` VARCHAR(20),
+    `equipamiento1` VARCHAR(50),
+    `equipamiento2` VARCHAR(50),
+    `equipamiento3` VARCHAR(50),
+    `equipamiento4` VARCHAR(50),
+    `imagen` VARCHAR(255),
+    `categoria` VARCHAR(30),
+    `estado` VARCHAR(30)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO Autos (
-    IDAuto, Modelo, Color, Marca, Año, Precio, Kilometraje, Transmision, Combustible,
-    Equipamiento1, Equipamiento2, Equipamiento3, Equipamiento4,
-    Imagen, Categoria, Estado
-) VALUES
-(1, 'GRAND NOMADE', 'gris', 'SUZUKI', 2014, 36000.00, 120000, 'Mecanica', 'GASOLINA',
- 'Aire acondicionado', 'Alzavidrios Eléctrico', 'Espejos eléctricos', '', 'imagenes/AUTO1.jpg', 'SUV', 'Seminuevo'),
+INSERT INTO autos (modelo, color, marca, ano, precio, kilometraje, transmision, combustible,equipamiento1, equipamiento2, equipamiento3, equipamiento4, imagen, categoria, estado) VALUES
+	('Civic EX', 'Rojo', 'Honda', 2020, 27500, 35000, 'Automática', 'Gasolina', 'Aire acondicionado', 'Frenos ABS', 'Bluetooth', 'Cámara de reversa', 'https://www.toyotacr.com/uploads/family/0317534a7f4d9a8295952c2ab64eea73c4188e67.png', 'Sedán', 'Disponible'),
+	('Corolla SE', 'Blanco', 'Toyota', 2021, 28500, 27000, 'Automática', 'Gasolina', 'Aire acondicionado', 'Sensor de estacionamiento', 'Pantalla táctil', 'Control crucero', 'https://example.com/corolla.jpg', 'Sedán', 'Disponible'),
+	('CX-5 Touring', 'Negro', 'Mazda', 2019, 31000, 45000, 'Automática', 'Gasolina', 'Asientos de piel', 'Cámara de reversa', 'Bluetooth', 'Sistema de sonido Bose', 'https://example.com/cx5.jpg', 'SUV', 'Disponible'),
+	('Model 3', 'Gris', 'Tesla', 2022, 45000, 15000, 'Automática', 'Eléctrico', 'Piloto automático', 'Pantalla táctil', 'Cámara 360', 'Aire acondicionado', 'https://example.com/model3.jpg', 'Sedán', 'Disponible'),
+	('Hilux SR5', 'Azul', 'Toyota', 2021, 38000, 60000, 'Manual', 'Diesel', 'Tracción 4x4', 'Control de descenso', 'Faros LED', 'Bluetooth', 'https://example.com/hilux.jpg', 'Pickup', 'Disponible');
 
-(2, 'OUTBACK – X-EDITION', 'azul', 'SUBARU', 2019, 22500.00, 48623, 'Automatica', 'GASOLINA',
- 'Aire acondicionado', '4x4', 'Transmision Automatica', 'Alzavidrios Eléctrico', 'imagenes/AUTO2.jpg', 'SUV', 'Seminuevo'),
-
-(3, 'QASHQAI FULL', 'blanco', 'NISSAN', 2017, 15900.00, 68459, 'Automatica', 'GASOLINA',
- 'Aire acondicionado', 'Espejos eléctricos', 'Alzavidrios Eléctrico', 'Transmision Automatica', 'imagenes/AUTO3.jpg', 'SUV', 'Seminuevo'),
-
-(4, 'HR-V LX', 'Acero gris', 'HONDA', 2018, 15900.00, 67016, 'Mecanica', 'GASOLINA',
- 'Aire acondicionado', 'Alzavidrios Eléctrico', 'Espejos eléctricos', '', 'imagenes/AUTO4.jpg', 'SUV', 'Seminuevo'),
-
-(5, 'PICANTO 1.2 MT EX CROSS', 'ROJO', 'KIA', 2020, 11900.00, 73498, 'Mecanica', 'GASOLINA',
- 'Aire acondicionado', 'Alzavidrios Eléctrico', 'Espejos eléctricos', '', 'imagenes/AUTO5.jpg', 'Hatchback', 'Seminuevo'),
-
-(6, 'FRONTIER S 4X4 MT (NEW BA', 'GRIS METALICO', 'NISSAN', 2024, 33900.00, 25, 'Mecanica', 'GASOLINA',
- 'Aire acondicionado', 'Alzavidrios Eléctrico', 'Espejos eléctricos', '4x4', 'imagenes/AUTO6.jpg', 'Pick-Up', 'Nuevo'),
-
-(7, 'RUSH 1.5 FULL MT GNV', 'Plata', 'TOYOTA', 2021, 18900.00, 42254, 'Mecanica', 'GASOLINA',
- 'Aire acondicionado', 'Alzavidrios Eléctrico', 'Espejos eléctricos', '', 'imagenes/AUTO7.jpg', 'SUV', 'Seminuevo'),
-
-(8, 'XV 2.0 CVT LIMITED', 'GRIS PLATA', 'SUBARU', 2014, 14500.00, 66700, 'Automatica', 'GASOLINA',
- 'Aire acondicionado', 'Espejos eléctricos', 'Alzavidrios Eléctrico', 'Transmision Automatica', 'imagenes/AUTO8.jpg', 'SUV', 'Seminuevo'),
-
-(9, 'NEW QASHQAI ADVANCE CVT', 'PLATA SATIN', 'NISSAN', 2024, 27900.00, 3854, 'Variable Continua', 'GASOLINA',
- 'Aire acondicionado', 'Alzavidrios Eléctrico', 'Espejos eléctricos', '', 'imagenes/AUTO9.jpg', 'SUV', 'Nuevo'),
-
-(10, 'SANTA FE 2.5 AT GL 4X2', 'GRIS', 'HYUNDAI', 2024, 44900.00, 1032, 'Automatica', 'GASOLINA',
- 'Aire acondicionado', 'Alzavidrios Eléctrico', 'Espejos eléctricos', '4x4', 'imagenes/AUTO10.jpg', 'SUV', 'Nuevo'),
-
-(11, 'SORENTO MQ4 2.5 AT – EX 4', 'AZUL MINERAL', 'KIA', 2022, 27900.00, 74179, 'Automatica', 'GAS (G.L.P.)',
- 'Aire acondicionado', 'Espejos eléctricos', 'Alzavidrios Eléctrico', 'Transmision Automatica', 'imagenes/AUTO11.jpg', 'SUV', 'Seminuevo'),
-
-(12, 'NEW TUCSON', 'AZUL', 'HYUNDAI', 2022, 23900.00, 35224, 'Mecanica', 'GAS (G.L.P.)',
- 'Aire acondicionado', 'Espejos eléctricos', 'Alzavidrios Eléctrico', '', 'imagenes/AUTO12.jpg', 'SUV', 'Seminuevo');
- 
 SELECT * FROM Autos;
+DROP table Autos;
 
 
 CREATE TABLE Inventario (
