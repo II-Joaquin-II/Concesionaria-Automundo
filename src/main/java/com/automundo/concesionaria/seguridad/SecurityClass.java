@@ -45,7 +45,9 @@ public class SecurityClass {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/login", "/registro", "/principal", "/index")
                 .permitAll()
-
+             
+                //.requestMatchers(HttpMethod.GET, "/api/autos").permitAll()
+                    
                 .requestMatchers(HttpMethod.POST, "/api/clientes")
                 .permitAll()
 
