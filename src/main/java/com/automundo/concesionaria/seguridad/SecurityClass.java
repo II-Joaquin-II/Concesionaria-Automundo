@@ -14,15 +14,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import com.automundo.concesionaria.model.Clientes;
-import com.automundo.concesionaria.repositorio.ClientesRepositorio;
+import com.automundo.concesionaria.model.Usuario;
+import com.automundo.concesionaria.repositorio.UsuarioRepositorio;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityClass {
 
     @Autowired
-    private ClientesRepositorio repo_clientes;
+    private UsuarioRepositorio repo_clientes;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -37,25 +37,26 @@ public class SecurityClass {
                 .and()
                 .build();
     }
-
+    
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())  
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/registro", "/principal", "/admin", "/adminverclientes", "/index")
+                .requestMatchers("/login", "/registro", "/principal", "/index")
                 .permitAll()
 
                 .requestMatchers(HttpMethod.POST, "/api/clientes")
                 .permitAll()
-                
-                //.requestMatchers("/carousel.css", "/sweetalert.js", "/img/**", "/login.js", "/loginregistro.css", "/estiloAdmin.css", "/registro.js")
-                //.permitAll()
-                
+
+                .requestMatchers(HttpMethod.PUT, "/api/clientes/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/clientes/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/clientes/**").hasRole("ADMIN")
+
                 .requestMatchers("/css/**", "/js/**", "/img/**")
                 .permitAll()
                 
-                //.requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/admin/**").hasRole("ADMIN")
 
                 .requestMatchers("/detallesauto", "/comprar").hasRole("USER")
 
@@ -65,7 +66,8 @@ public class SecurityClass {
             .formLogin(form -> form
                 .loginPage("/login") 
                 .permitAll()
-                .defaultSuccessUrl("/principal", true)
+                //.defaultSuccessUrl("/principal", true)
+                .successHandler(new LoginRoles())
                 .failureUrl("/login?error=true")
             )
             
@@ -81,13 +83,14 @@ public class SecurityClass {
     @Bean
     public CommandLineRunner encryptPasswords() {
     return args -> {
-        List<Clientes> clientes = repo_clientes.findAll();
+        List<Usuario> clientes = repo_clientes.findAll();
 
-        for (Clientes cliente : clientes) {
-            String rawPassword = cliente.getPass_cli(); 
+        for (Usuario cliente : clientes) {
+            String rawPassword = cliente.getPass(); 
             if (!rawPassword.startsWith("$2a$")) { 
                 String encrypted = passwordEncoder().encode(rawPassword);
-                cliente.setPass_cli(encrypted);
+                //cliente.setPass(rawPassword);(encrypted);
+                cliente.setPass(encrypted);
                 repo_clientes.save(cliente);
             }
         }

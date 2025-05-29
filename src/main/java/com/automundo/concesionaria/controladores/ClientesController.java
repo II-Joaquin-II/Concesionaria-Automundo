@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.automundo.concesionaria.model.Clientes;
-import com.automundo.concesionaria.servicios.ClientesService;
+import com.automundo.concesionaria.model.Usuario;
+import com.automundo.concesionaria.servicios.UsuarioService;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -25,48 +25,54 @@ import jakarta.persistence.EntityNotFoundException;
 public class ClientesController {
 
     @Autowired
-    private ClientesService serv_cliente;
+    private UsuarioService serv_cliente;
 
     
     @GetMapping
-    public ResponseEntity<List<Clientes>> listarTodos() {
-        List<Clientes> clientes = serv_cliente.listarTodos();
+    public ResponseEntity<List<Usuario>> listarTodos() {
+        List<Usuario> clientes = serv_cliente.listarTodos();
         return new ResponseEntity<>(clientes, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Clientes> buscar(@PathVariable int id) {
-        Optional<Clientes> cliente = serv_cliente.BuscaId(id);
+    public ResponseEntity<Usuario> buscar(@PathVariable int id) {
+        Optional<Usuario> cliente = serv_cliente.BuscaId(id);
         return cliente.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
         .orElseGet(()-> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Clientes> actulizaCliente(@PathVariable int id, @RequestBody Clientes cliente) {
-        Optional<Clientes> clienteExiste = serv_cliente.BuscaId(id);
+    @GetMapping("/dni/{dni}")
+    public ResponseEntity<Usuario> BuscarDNI(@PathVariable String dni) {
+        Optional<Usuario> cliente = serv_cliente.BuscarDNI(dni);
+        return cliente.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+        .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 
-        if (clienteExiste.isPresent()) {
-            Clientes actualizado = clienteExiste.get();
-            actualizado.setNombre_cli(cliente.getNombre_cli());
-            actualizado.setApellidos_cli(cliente.getApellidos_cli());
-            actualizado.setDni(cliente.getDni());
-            actualizado.setFecha_nac(cliente.getFecha_nac());
-            actualizado.setCelular(cliente.getCelular());
-            actualizado.setEmail(cliente.getEmail());
-            actualizado.setUsuario_cli(cliente.getUsuario_cli());
-            actualizado.setPass_cli(cliente.getPass_cli());
-            return new ResponseEntity<>(serv_cliente.Guardar(actualizado), HttpStatus.OK);
-        } else {
+    @GetMapping("/celular/{celular}")
+    public ResponseEntity<Usuario> buscarCelular(@PathVariable String celular) {
+        Optional<Usuario> cliente = serv_cliente.buscarCelular(celular);
+        return cliente.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+        .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Usuario> actulizaCliente(@PathVariable int id, @RequestBody Usuario cliente) {
+        try {
+            Usuario actualizado = serv_cliente.Actualizar(id, cliente);
+            return new ResponseEntity<>(actualizado, HttpStatus.OK);
+        } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PostMapping
-    public ResponseEntity<Clientes> insertar(@RequestBody Clientes in_cliente) {
-        Clientes insertado = serv_cliente.Guardar(in_cliente);
+    public ResponseEntity<Usuario> insertar(@RequestBody Usuario in_cliente) {
+        Usuario insertado = serv_cliente.Guardar(in_cliente);
         return new ResponseEntity<>(insertado, HttpStatus.CREATED);
     }
 
+    /* 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> borrCliente(@PathVariable int id) {
         try {
@@ -76,7 +82,17 @@ public class ClientesController {
             return ResponseEntity.notFound().build();
         }
     }
+    */
 
+    @DeleteMapping("/dni/{dni}")
+    public ResponseEntity<Void> borrarClientePorDNI(@PathVariable String dni) {
+        try {
+            serv_cliente.eliminarPorDni(dni);
+            return ResponseEntity.noContent().build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 
 }
