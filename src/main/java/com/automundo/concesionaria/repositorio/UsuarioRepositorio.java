@@ -20,5 +20,5 @@ public interface UsuarioRepositorio extends JpaRepository<Usuario, Integer>{
     Optional<Usuario> findByDni(String dni);
 
     Optional<Usuario> findByCelular(String celular);
-
+    
 }
