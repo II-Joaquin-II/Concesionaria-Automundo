@@ -2,309 +2,320 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       >
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AUTOMUNDO PERU</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">  
-    <link rel="stylesheet" href="../css/carousel.css">
-</head>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>AUTOMUNDO PERU</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">  
+        <link rel="stylesheet" href="../css/carousel.css">
+        <link rel="stylesheet" href="/css/chatbot.css">
+        <script src="/js/chatbot.js" defer></script>
+    </head>
 
-  <body>
-  <header class="p-3 text-bg-dark header">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-12 col-md-4 mb-3 mb-md-0 text-md-start">
-                <ul class="nav justify-content-center fs-5">
-                    <li class="nav-item">
-                        <a href="" class="nav-link fw-bold text-white px-3">NOSOTROS</a>
-                    </li>
-                    <li class="nav-item">
-                        <a th:href="@{/index}" class="nav-link fw-bold text-white px-3">AUTOS</a>
-                    </li>
-                </ul>
+    <body>
+        <header class="p-3 text-bg-dark header">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-12 col-md-4 mb-3 mb-md-0 text-md-start">
+                        <ul class="nav justify-content-center fs-5">
+                            <li class="nav-item">
+                                <a href="" class="nav-link fw-bold text-white px-3">NOSOTROS</a>
+                            </li>
+                            <li class="nav-item">
+                                <a th:href="@{/index}" class="nav-link fw-bold text-white px-3">AUTOS</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-12 col-md-4 text-center mb-3 mb-md-0">
+                        <a th:href="@{/principal}">
+                            <img src="img/LOGOV.4.png" class="img-fluid" alt="Logo">
+                        </a>
+                    </div>
+                    <div class="col-12 col-md-4 text-center text-md-end">
+                        <div>
+
+                            <div th:if="${#authorization.expression('isAuthenticated()')}">
+                                <span th:text="${nombreUsuario}"></span>
+                                <a th:href="@{/logout}" class="btn btn-warning btn-sm me-2">Cerrar sesión</a>
+                            </div>
+
+                            <div th:if="${#authorization.expression('!isAuthenticated()')}">
+                                <a th:href="@{/login}" class="btn btn-outline-light btn-sm me-2">Iniciar sesión</a>
+                                <a th:href="@{/registro}" class="btn btn-warning btn-sm me-2">Registrarse</a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-12 col-md-4 text-center mb-3 mb-md-0">
-                <a th:href="@{/principal}">
-                    <img src="img/LOGOV.4.png" class="img-fluid" alt="Logo">
+        </header>
+
+
+        <main>
+            <div class="mt-0"> <!--Espacio superior-->
+                <a th:href="@{/index}"> <!--Link que te manda a la pagina de autos-->
+                    <img src="img/BannerPrincipal.jpg" class="img-fluid">
                 </a>
             </div>
-            <div class="col-12 col-md-4 text-center text-md-end">
-                    <div>
 
-                        <div th:if="${#authorization.expression('isAuthenticated()')}">
-                            <span th:text="${nombreUsuario}"></span>
-                            <a th:href="@{/logout}" class="btn btn-warning btn-sm me-2">Cerrar sesión</a>
-                        </div>
-
-                        <div th:if="${#authorization.expression('!isAuthenticated()')}">
-                            <a th:href="@{/login}" class="btn btn-outline-light btn-sm me-2">Iniciar sesión</a>
-                            <a th:href="@{/registro}" class="btn btn-warning btn-sm me-2">Registrarse</a>
-                        </div>
-
-                    </div>
+            <div class="bg-black text-center py-4">
+                <h2 class="text-danger fw-bold">NUESTRAS MARCAS</h2>
             </div>
-        </div>
-    </div>
-</header>
-  
 
-    <main>
-        <div class="mt-0"> <!--Espacio superior-->
-            <a th:href="@{/index}"> <!--Link que te manda a la pagina de autos-->
-                <img src="img/BannerPrincipal.jpg" class="img-fluid">
-            </a>
-        </div>
+            <div style="background-image: url('https://images.unsplash.com/photo-1585390062628-be8608aa7d83?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8Y29uY2VzaW9uYXJpbyUyMGRlJTIwYXV0b20lQzMlQjN2aWxlc3xlbnwwfHwwfHx8MA%3D%3D'); background-size: cover; background-position: center;" class="py-4">
+                <div class="container my-3">
+                    <div class="rounded-4 p-3 text-center shadow-lg " style="background-color: #42474d;">
+                        <!--Marcas-->
+                        <div class="rounded-4 p-3 text-center shadow-lg" style="background-color: #ffffff;">   
+                            <div class="d-flex justify-content-center flex-wrap gap-3">
+                                <img src="https://autoland.com.pe/wp-content/uploads/2024/11/logo-Subaru.png" height="40" alt="BMW">
+                                <img src="https://autoland.com.pe/wp-content/themes/autoland-theme/assets/MG-logo.png" height="40" alt="BMW">
+                                <img src="https://autoland.com.pe/wp-content/themes/autoland-theme/assets/Suzuki-logo.png" height="40" alt="BMW">
+                                <img src="https://autoland.com.pe/wp-content/uploads/2024/09/changan-logo.png" height="40" alt="BMW">
+                                <img src="https://autoland.com.pe/wp-content/themes/autoland-theme/assets/Kia-logo.png" height="40" alt="BMW">
+                                <img src="https://autoland.com.pe/wp-content/themes/autoland-theme/assets/Mitsubishi-logo.png" height="40" alt="BMW">
+                                <img src="https://autoland.com.pe/wp-content/uploads/2024/12/renault-logo-autoland.png" height="40" alt="BMW">
+                                <img src="https://autoland.com.pe/wp-content/uploads/2024/09/logo-chery.png" height="40" alt="BMW">
+                                <img src="https://autoland.com.pe/wp-content/themes/autoland-theme/assets/Mazda-logo.png" height="40" alt="BMW">
+                                <img src="https://images.icon-icons.com/2699/PNG/512/toyota_logo_icon_167770.png" height="40" alt="BMW">
+                                <!-- Agregar más marcas -->
+                            </div>
+                        </div>
+                        <h4 class="text-danger mt-4 fw-bold">Algunos de nuestros autos</h4>
+                        <!-- Carrusel de autos -->
+                        <div id="carouselExampleControls" class="carousel carousel-dark slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <div class="cards-wrapper">
+                                        <!-- Cartas -->
+                                        <div class="card">
+                                            <div class="image-wrapper">
+                                                <img src="https://autoland.com.pe/wp-content/uploads/2025/05/112682_0.jpg" alt="...">
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title">MAZDA</h5>
+                                                <p class="card-text">CX-30 AT 2.0 2WD HIGH</p>
+                                                <p class="card-text">$ 20,000</p>
+                                                <a th:href="@{/index}" class="btn btn-primary">Ver este auto</a>
+                                            </div>
+                                        </div>
+                                        <!-- Fin de Carta -->
+                                        <!-- Cartas -->
+                                        <div class="card">
+                                            <div class="image-wrapper">
+                                                <img src="https://autoland.com.pe/wp-content/uploads/2025/05/112615_0.jpg"alt="...">
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title">HYUNDAI</h5>
+                                                <p class="card-text">SANTA FE GL</p>
+                                                <p class="card-text">$ 22,000</p>
+                                                <a th:href="@{/index}" class="btn btn-primary">Ver este auto</a>
+                                            </div>
+                                        </div>
+                                        <!-- Fin de Carta -->
+                                        <!-- Cartas -->
+                                        <div class="card">
+                                            <div class="image-wrapper">
+                                                <img src="https://autoland.com.pe/wp-content/uploads/2025/05/112395_0.jpg" alt="...">
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title">FORD</h5>
+                                                <p class="card-text">MAVERIK</p>
+                                                <p class="card-text">$ 23,900</p>
+                                                <a th:href="@{/index}" class="btn btn-primary">Ver este auto</a>
+                                            </div>
+                                        </div>
+                                        <!-- Fin de Carta -->
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="cards-wrapper">
+                                        <!-- Cartas -->
+                                        <div class="card">
+                                            <div class="image-wrapper">
+                                                <img src="https://autoland.com.pe/wp-content/uploads/2025/05/111452_0.jpg" alt="...">
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title">SUBARU</h5>
+                                                <p class="card-text">XV 1.6I AWD CVT</p>
+                                                <p class="card-text">$ 19,400</p>
+                                                <a th:href="@{/index}" class="btn btn-primary">Ver este auto</a>
+                                            </div>
+                                        </div>
+                                        <!-- Fin de Carta -->
+                                        <!-- Cartas -->
+                                        <div class="card">
+                                            <div class="image-wrapper">
+                                                <img src="https://autoland.com.pe/wp-content/uploads/2025/05/112652_0.jpg" alt="...">
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title">NISSAN</h5>
+                                                <p class="card-text">X-TRAIL 2.5 ADVANCE CVT 2</p>
+                                                <p class="card-text">$ 19,400</p>
+                                                <a th:href="@{/index}" class="btn btn-primary">Ver este auto</a>
+                                            </div>
+                                        </div>
+                                        <!-- Fin de Carta -->
+                                        <!-- Cartas -->
+                                        <div class="card">
+                                            <div class="image-wrapper">
+                                                <img src="https://autoland.com.pe/wp-content/uploads/2025/05/111411_0.jpg" alt="...">
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title">SEAT</h5>
+                                                <p class="card-text">LEON 5D FR PLUS 1.8 TSI D</p>
+                                                <p class="card-text">$ 14,900</p>
+                                                <a th:href="@{/index}" class="btn btn-primary">Ver este auto</a>
+                                            </div>
+                                        </div>
+                                        <!-- Fin de Carta -->
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="cards-wrapper">
+                                        <!-- Cartas -->
+                                        <div class="card">
+                                            <div class="image-wrapper">
+                                                <img src="https://autoland.com.pe/wp-content/uploads/2025/05/112666_0.jpg" alt="...">
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title">MAZDA</h5>
+                                                <p class="card-text">MAZDA 3 SEDAN AT 2.0 GS C</p>
+                                                <p class="card-text">$ 13,500</p>
+                                                <a th:href="@{/index}" class="btn btn-primary">Ver este auto</a>
+                                            </div>
+                                        </div>
+                                        <!-- Fin de Carta -->
+                                        <!-- Cartas -->
+                                        <div class="card">
+                                            <div class="image-wrapper">
+                                                <img src="https://autoland.com.pe/wp-content/uploads/2025/05/112643_0.jpg" alt="...">
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title">NISSAN</h5>
+                                                <p class="card-text">X-TRAIL ADVANCE CVT</p>
+                                                <p class="card-text">$ 24,500</p>
+                                                <a th:href="@{/index}" class="btn btn-primary">Ver este auto</a>
+                                            </div>
+                                        </div>
+                                        <!-- Fin de Carta -->
+                                        <!-- Cartas -->
+                                        <div class="card">
+                                            <div class="image-wrapper">
+                                                <img src="https://autoland.com.pe/wp-content/uploads/2025/05/112639_0.jpg" alt="...">
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title">MITSUBISHI</h5>
+                                                <p class="card-text">ASX 2WD 2.0 GLX MT</p>
+                                                <p class="card-text">$ 12,750</p>
+                                                <a th:href="@{/index}" class="btn btn-primary">Ver este auto</a>
+                                            </div>
+                                        </div>
+                                        <!-- Fin de Carta -->
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
 
-        <div class="bg-black text-center py-4">
-            <h2 class="text-danger fw-bold">NUESTRAS MARCAS</h2>
-        </div>
-
-        <div style="background-image: url('https://images.unsplash.com/photo-1585390062628-be8608aa7d83?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8Y29uY2VzaW9uYXJpbyUyMGRlJTIwYXV0b20lQzMlQjN2aWxlc3xlbnwwfHwwfHx8MA%3D%3D'); background-size: cover; background-position: center;" class="py-4">
-        <div class="container my-3">
-            <div class="rounded-4 p-3 text-center shadow-lg " style="background-color: #42474d;">
-                <!--Marcas-->
-                <div class="rounded-4 p-3 text-center shadow-lg" style="background-color: #ffffff;">   
-                    <div class="d-flex justify-content-center flex-wrap gap-3">
-                        <img src="https://autoland.com.pe/wp-content/uploads/2024/11/logo-Subaru.png" height="40" alt="BMW">
-                        <img src="https://autoland.com.pe/wp-content/themes/autoland-theme/assets/MG-logo.png" height="40" alt="BMW">
-                        <img src="https://autoland.com.pe/wp-content/themes/autoland-theme/assets/Suzuki-logo.png" height="40" alt="BMW">
-                        <img src="https://autoland.com.pe/wp-content/uploads/2024/09/changan-logo.png" height="40" alt="BMW">
-                        <img src="https://autoland.com.pe/wp-content/themes/autoland-theme/assets/Kia-logo.png" height="40" alt="BMW">
-                        <img src="https://autoland.com.pe/wp-content/themes/autoland-theme/assets/Mitsubishi-logo.png" height="40" alt="BMW">
-                        <img src="https://autoland.com.pe/wp-content/uploads/2024/12/renault-logo-autoland.png" height="40" alt="BMW">
-                        <img src="https://autoland.com.pe/wp-content/uploads/2024/09/logo-chery.png" height="40" alt="BMW">
-                        <img src="https://autoland.com.pe/wp-content/themes/autoland-theme/assets/Mazda-logo.png" height="40" alt="BMW">
-                        <img src="https://images.icon-icons.com/2699/PNG/512/toyota_logo_icon_167770.png" height="40" alt="BMW">
-                        <!-- Agregar más marcas -->
+                        <!-- Fin del Carrusel de autos -->
+                        <div class="mt-4" id="botonprincipal">
+                            <a th:href="@{/index}">
+                                <button type="button" class="btn btn-primary p-3">Ver más autos</button>
+                            </a>
+                        </div>
                     </div>
-                </div>
-                <h4 class="text-danger mt-4 fw-bold">Algunos de nuestros autos</h4>
-                <!-- Carrusel de autos -->
-                 <div id="carouselExampleControls" class="carousel carousel-dark slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                        <div class="cards-wrapper">
-                            <!-- Cartas -->
-                            <div class="card">
-                                <div class="image-wrapper">
-                                <img src="https://autoland.com.pe/wp-content/uploads/2025/05/112682_0.jpg" alt="...">
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">MAZDA</h5>
-                                    <p class="card-text">CX-30 AT 2.0 2WD HIGH</p>
-                                    <p class="card-text">$ 20,000</p>
-                                    <a th:href="@{/index}" class="btn btn-primary">Ver este auto</a>
-                                </div>
-                            </div>
-                            <!-- Fin de Carta -->
-                             <!-- Cartas -->
-                            <div class="card">
-                                <div class="image-wrapper">
-                                <img src="https://autoland.com.pe/wp-content/uploads/2025/05/112615_0.jpg"alt="...">
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">HYUNDAI</h5>
-                                    <p class="card-text">SANTA FE GL</p>
-                                    <p class="card-text">$ 22,000</p>
-                                    <a th:href="@{/index}" class="btn btn-primary">Ver este auto</a>
-                                </div>
-                            </div>
-                            <!-- Fin de Carta -->
-                             <!-- Cartas -->
-                            <div class="card">
-                                <div class="image-wrapper">
-                                <img src="https://autoland.com.pe/wp-content/uploads/2025/05/112395_0.jpg" alt="...">
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">FORD</h5>
-                                    <p class="card-text">MAVERIK</p>
-                                    <p class="card-text">$ 23,900</p>
-                                    <a th:href="@{/index}" class="btn btn-primary">Ver este auto</a>
-                                </div>
-                            </div>
-                            <!-- Fin de Carta -->
-                        </div>
-                        </div>
-                        <div class="carousel-item">
-                        <div class="cards-wrapper">
-                            <!-- Cartas -->
-                            <div class="card">
-                                <div class="image-wrapper">
-                                <img src="https://autoland.com.pe/wp-content/uploads/2025/05/111452_0.jpg" alt="...">
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">SUBARU</h5>
-                                    <p class="card-text">XV 1.6I AWD CVT</p>
-                                    <p class="card-text">$ 19,400</p>
-                                    <a th:href="@{/index}" class="btn btn-primary">Ver este auto</a>
-                                </div>
-                            </div>
-                            <!-- Fin de Carta -->
-                             <!-- Cartas -->
-                            <div class="card">
-                                <div class="image-wrapper">
-                                <img src="https://autoland.com.pe/wp-content/uploads/2025/05/112652_0.jpg" alt="...">
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">NISSAN</h5>
-                                    <p class="card-text">X-TRAIL 2.5 ADVANCE CVT 2</p>
-                                    <p class="card-text">$ 19,400</p>
-                                    <a th:href="@{/index}" class="btn btn-primary">Ver este auto</a>
-                                </div>
-                            </div>
-                            <!-- Fin de Carta -->
-                             <!-- Cartas -->
-                            <div class="card">
-                                <div class="image-wrapper">
-                                <img src="https://autoland.com.pe/wp-content/uploads/2025/05/111411_0.jpg" alt="...">
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">SEAT</h5>
-                                    <p class="card-text">LEON 5D FR PLUS 1.8 TSI D</p>
-                                    <p class="card-text">$ 14,900</p>
-                                    <a th:href="@{/index}" class="btn btn-primary">Ver este auto</a>
-                                </div>
-                            </div>
-                            <!-- Fin de Carta -->
-                        </div>
-                        </div>
-                        <div class="carousel-item">
-                        <div class="cards-wrapper">
-                            <!-- Cartas -->
-                            <div class="card">
-                                <div class="image-wrapper">
-                                <img src="https://autoland.com.pe/wp-content/uploads/2025/05/112666_0.jpg" alt="...">
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">MAZDA</h5>
-                                    <p class="card-text">MAZDA 3 SEDAN AT 2.0 GS C</p>
-                                    <p class="card-text">$ 13,500</p>
-                                    <a th:href="@{/index}" class="btn btn-primary">Ver este auto</a>
-                                </div>
-                            </div>
-                            <!-- Fin de Carta -->
-                             <!-- Cartas -->
-                            <div class="card">
-                                <div class="image-wrapper">
-                                <img src="https://autoland.com.pe/wp-content/uploads/2025/05/112643_0.jpg" alt="...">
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">NISSAN</h5>
-                                    <p class="card-text">X-TRAIL ADVANCE CVT</p>
-                                    <p class="card-text">$ 24,500</p>
-                                    <a th:href="@{/index}" class="btn btn-primary">Ver este auto</a>
-                                </div>
-                            </div>
-                            <!-- Fin de Carta -->
-                             <!-- Cartas -->
-                            <div class="card">
-                                <div class="image-wrapper">
-                                <img src="https://autoland.com.pe/wp-content/uploads/2025/05/112639_0.jpg" alt="...">
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">MITSUBISHI</h5>
-                                    <p class="card-text">ASX 2WD 2.0 GLX MT</p>
-                                    <p class="card-text">$ 12,750</p>
-                                    <a th:href="@{/index}" class="btn btn-primary">Ver este auto</a>
-                                </div>
-                            </div>
-                            <!-- Fin de Carta -->
-                        </div>
-                        </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-                
-                <!-- Fin del Carrusel de autos -->
-                <div class="mt-4" id="botonprincipal">
-                <a th:href="@{/index}">
-                <button type="button" class="btn btn-primary p-3">Ver más autos</button>
-                </a>
                 </div>
             </div>
-        </div>
-        </div>
-    </main>
+        </main>
 
 
-    <footer class="text-bg-dark text-light pt-5 pb-4 columnas">
-        <div class="container">
+        <footer class="text-bg-dark text-light pt-5 pb-4 columnas">
+            <div class="container">
 
-            <div class="row text-center text-md-start"><!--Fila principal donde estaran los divisiones-->
-                
-                <!--DIV RECLAMACIONES-->
-                <div class="col-12 col-md-3 mb-4">
-                    <h5 class="text-uppercase mb-4 fw-bold text-danger">Reclamaciones</h5>
-                    <hr class="mb-4">
-                    <div class="mt-3">
-                        <a href="#"> <!-- Link de la pagina de reclamaciones -->
-                            <img src="img/libro.png" width="150" height="80">
+                <div class="row text-center text-md-start"><!--Fila principal donde estaran los divisiones-->
+
+                    <!--DIV RECLAMACIONES-->
+                    <div class="col-12 col-md-3 mb-4">
+                        <h5 class="text-uppercase mb-4 fw-bold text-danger">Reclamaciones</h5>
+                        <hr class="mb-4">
+                        <div class="mt-3">
+                            <a href="#"> <!-- Link de la pagina de reclamaciones -->
+                                <img src="img/libro.png" width="150" height="80">
+                            </a>
+                        </div>
+                    </div>
+                    <!--DIV CONTACTOS-->
+                    <div class="col-12 col-md-3 mb-4">
+                        <h5 class="text-uppercase mb-4 fw-bold text-danger">Contacto</h5>
+                        <hr class="mb-4">
+                        <p><i class="fas fa-home me-2"></i> Av. Andrés Aramburú, 1105, San Isidro</p>
+                        <p><i class="fas fa-envelope me-2"></i> Lunes a Sábado de 09:00 am - 06:00 pm</p>
+                        <p><i class="fas fa-phone me-2"></i>
+                            <a href="https://chat.whatsapp.com/FcHo3U2scUO3hlYxQvarL3" class="text-light" style="text-decoration: none;">+51 925 222 579</a>
+                        </p>
+                    </div>
+
+
+                    <!--DIV Inicio y nosotros-->
+                    <div class="col-12 col-md-3 mb-4">
+                        <h5 class="text-uppercase mb-4 fw-bold text-danger">Inicio</h5>
+                        <hr class="mb-4">
+                        <p><a href="" class="text-light" style="text-decoration: none;">Nuestros Autos</a></p>
+                        <p><a href="" class="text-light" style="text-decoration: none;">Financia tu auto</a></p>
+                        <p><a href="https://chat.whatsapp.com/FcHo3U2scUO3hlYxQvarL3" class="text-light" style="text-decoration: none;">Contacto</a></p>
+                    </div>
+
+                    <!--DIV REDES-->
+                    <div class="col-12 col-md-3 mb-4">
+                        <h5 class="text-uppercase mb-4 fw-bold text-danger">NUESTRAS REDES</h5>
+                        <hr class="mb-4">
+                        <ul class="list-unstyled d-flex justify-content-center justify-content-md-start gap-3">
+                            <li class="list-inline-item">
+                                <a href="https://www.facebook.com/AutomundoPe?mibextid=ZbWKwL" class="text-light"><i class="fab fa-facebook"></i></a>
+                            </li>   
+                            <li class="list-inline-item">
+                                <a href="https://x.com/automundo" class="text-light"><i class="fab fa-twitter"></i></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="https://www.linkedin.com/company/automundope/?originalSubdomain=pe" class="text-light"><i class="fab fa-linkedin-in"></i></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="https://www.youtube.com/channel/UCtYJf45k8xS7GdIfvVgAjlw" class="text-light"><i class="fab fa-youtube"></i></a>
+                            </li>
+                        </ul>
+                        <a href="principal">
+                            <img src="img/LOGOV.4.png">
                         </a>
                     </div>
                 </div>
-                <!--DIV CONTACTOS-->
-                <div class="col-12 col-md-3 mb-4">
-                    <h5 class="text-uppercase mb-4 fw-bold text-danger">Contacto</h5>
-                    <hr class="mb-4">
-                    <p><i class="fas fa-home me-2"></i> Av. Andrés Aramburú, 1105, San Isidro</p>
-                    <p><i class="fas fa-envelope me-2"></i> Lunes a Sábado de 09:00 am - 06:00 pm</p>
-                    <p><i class="fas fa-phone me-2"></i>
-                        <a href="https://chat.whatsapp.com/FcHo3U2scUO3hlYxQvarL3" class="text-light" style="text-decoration: none;">+51 925 222 579</a>
-                    </p>
-                </div>
 
-                
-                <!--DIV Inicio y nosotros-->
-                <div class="col-12 col-md-3 mb-4">
-                    <h5 class="text-uppercase mb-4 fw-bold text-danger">Inicio</h5>
-                    <hr class="mb-4">
-                    <p><a href="" class="text-light" style="text-decoration: none;">Nuestros Autos</a></p>
-                    <p><a href="" class="text-light" style="text-decoration: none;">Financia tu auto</a></p>
-                    <p><a href="https://chat.whatsapp.com/FcHo3U2scUO3hlYxQvarL3" class="text-light" style="text-decoration: none;">Contacto</a></p>
-                </div>
-
-                <!--DIV REDES-->
-                <div class="col-12 col-md-3 mb-4">
-                    <h5 class="text-uppercase mb-4 fw-bold text-danger">NUESTRAS REDES</h5>
-                    <hr class="mb-4">
-                    <ul class="list-unstyled d-flex justify-content-center justify-content-md-start gap-3">
-                        <li class="list-inline-item">
-                            <a href="https://www.facebook.com/AutomundoPe?mibextid=ZbWKwL" class="text-light"><i class="fab fa-facebook"></i></a>
-                        </li>   
-                        <li class="list-inline-item">
-                            <a href="https://x.com/automundo" class="text-light"><i class="fab fa-twitter"></i></a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a href="https://www.linkedin.com/company/automundope/?originalSubdomain=pe" class="text-light"><i class="fab fa-linkedin-in"></i></a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a href="https://www.youtube.com/channel/UCtYJf45k8xS7GdIfvVgAjlw" class="text-light"><i class="fab fa-youtube"></i></a>
-                        </li>
-                    </ul>
-                    <a href="principal">
-                        <img src="img/LOGOV.4.png">
-                    </a>
+                <!--Mensaje final del aplicativo-->
+                <hr class="mb-2">
+                <div class="text-center mb-2">
+                    <p>Concesionaria AUTOMUNDO | Todos los derechos reservados © 2025</p>
                 </div>
             </div>
+        </footer>
+        <div id="chat-widget">
+            <div id="chat-button">Hola, ¿te ayudo?</div>
 
-            <!--Mensaje final del aplicativo-->
-            <hr class="mb-2">
-            <div class="text-center mb-2">
-                <p>Concesionaria AUTOMUNDO | Todos los derechos reservados © 2025</p>
+            <div id="chat-box">
+                <div class="chat-header">Asistente Virtual</div>
+                <div id="chat-messages"></div>
+                <input type="text" id="user-input" placeholder="Escribe tu mensaje...">
             </div>
         </div>
-    </footer>
 
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-  </body>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    </body>
 </html>
