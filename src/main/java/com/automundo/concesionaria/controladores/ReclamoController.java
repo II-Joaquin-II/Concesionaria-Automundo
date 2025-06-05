@@ -11,7 +11,6 @@ import com.automundo.concesionaria.repositorio.ReclamoRepositorio;
 import com.automundo.concesionaria.repositorio.UsuarioRepositorio;
 import com.automundo.concesionaria.servicios.ReclamoServicio;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,10 +34,10 @@ public class ReclamoController {
     @PostMapping("/Nuevo")
     public ResponseEntity<?> crearReclamo(@RequestBody ReclamoDTO dto,
             @AuthenticationPrincipal UserDetails userDetails) {
-        // Obtener el email (o username) del usuario autenticado
-        String email = userDetails.getUsername(); // o getEmail() si tu UserDetails lo extiende
+        // Obtenemos el email del usuario autenticado
+        String email = userDetails.getUsername();
 
-        // Buscar el usuario por su email
+        // Buscamos al usuario por su email
         Optional<Usuario> usuarioOpt = usuarioRepositorio.findByEmail(email);
 
         if (usuarioOpt.isEmpty()) {
@@ -80,7 +79,6 @@ public class ReclamoController {
 
         Reclamo reclamo = reclamoOpt.get();
 
-        // Solo actualizas el estado (o los campos que te interesen)
         reclamo.setEstadoReclamo(dto.getEstadoReclamo());
 
         reclamoRepositorio.save(reclamo);
