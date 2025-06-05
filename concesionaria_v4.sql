@@ -79,6 +79,33 @@ INSERT INTO autos (modelo, color, marca, ano, precio, kilometraje, transmision, 
 SELECT * FROM autos;
 DROP table autos;
 
+
+CREATE TABLE IF NOT EXISTS reclamo (
+    id_reclamo INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    fecha_incidente DATE NOT NULL,
+    motivo_reclamo VARCHAR(100) NOT NULL,
+    tipo_vehiculo ENUM('nuevo', 'alquilado') NOT NULL,
+    detalle TEXT NOT NULL,
+    estado ENUM('pendiente', 'en_proceso', 'resuelto') DEFAULT 'pendiente',
+    fecha_reclamo TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci; 
+
+
+INSERT INTO reclamo (id_usuario, fecha_incidente, motivo_reclamo, tipo_vehiculo, detalle, estado)
+VALUES
+(1, '2025-05-20', 'Fallo en el sistema de frenos', 'nuevo', 'El vehículo presentó un fallo en el sistema de frenos a los 5 días de uso.', 'pendiente'),
+(2, '2025-05-15', 'Retraso en la entrega', 'alquilado', 'El vehículo alquilado no fue entregado en el horario pactado.', 'en_proceso'),
+(3, '2025-05-18', 'Problemas con el aire acondicionado', 'nuevo', 'El aire acondicionado dejó de funcionar a los pocos minutos de encenderlo.', 'resuelto'),
+(1, '2025-05-25', 'Documento incompleto', 'alquilado', 'No se entregó el contrato completo al momento del alquiler.', 'pendiente'),
+(2, '2025-05-28', 'Luces defectuosas', 'nuevo', 'Las luces delanteras parpadean de forma intermitente.', 'pendiente');
+
+
+
 INSERT INTO inventario (id_auto, cantidad_autos) VALUES
 (1, 3),
 (2, 2),
