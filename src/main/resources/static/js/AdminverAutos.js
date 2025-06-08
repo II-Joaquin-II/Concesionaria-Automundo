@@ -34,7 +34,7 @@ async function listarAutos() {
         autos.forEach(auto => {
             const colores = auto.colores.map(color => color.nombreColor).join(", ");
 
-            // Aquí la ruta completa para la imagen
+            
             const imagenes = auto.imagenes.map(imagen => 
                 `<img src="/img/${imagen.nombreArchivo}" class="img-thumbnail" width="90" height="90" alt="Imagen del auto">`
             ).join(" ");
@@ -177,7 +177,7 @@ async function listarAutos() {
     </div>
     `;
 
-    // Insertar los modales en el contenedor
+    
     const contenedor = document.getElementById('tablaResultados');
     contenedor.innerHTML = modalHTML;
 
@@ -225,16 +225,16 @@ async function listarAutos() {
         alert("Hubo un error al cargar los colores.");
     }
 
-    // Mostrar el modal de formulario para insertar el auto
+   
     const myModal = new bootstrap.Modal(document.getElementById('modalFormularioInsertarAuto'));
     myModal.show();
 }
 
 
 
-// Función para guardar el auto en la base de datos a través de la API
+
 async function guardarAuto() {
-    // Obtener los datos del formulario
+    
     const modelo = document.getElementById('modelo').value.trim();
     const marca = document.getElementById('marca').value.trim();
     const ano = parseInt(document.getElementById('ano').value);
@@ -249,20 +249,20 @@ async function guardarAuto() {
     const categoria = document.getElementById('categoria').value.trim();
     const estado = document.getElementById('estado').value.trim();
 
-    // Validar campos obligatorios
+    
     if (!modelo || !marca || !ano || !precio || !kilometraje || !transmision || !combustible || !categoria || !estado) {
         Swal.fire('Error', 'Por favor, complete todos los campos obligatorios.', 'error');
         return;
     }
 
-    // Obtener colores seleccionados
+    
     const checkboxesColores = document.querySelectorAll('input[name="colores"]:checked');
     if (checkboxesColores.length === 0) {
         Swal.fire('Error', 'Por favor, seleccione al menos un color.', 'error');
         return;
     }
 
-    // Armar lista de colores con id y nombre
+   
     const coloresSeleccionados = Array.from(checkboxesColores).map(cb => ({
         idColor: parseInt(cb.value),
         nombreColor: cb.dataset.nombre
@@ -287,7 +287,7 @@ async function guardarAuto() {
         return;
     }
 
-    // Crear el objeto AutoDTO
+    
     const autoDTO = {
         modelo,
         marca,
@@ -315,7 +315,7 @@ async function guardarAuto() {
         });
 
         if (response.ok) {
-            // Mostrar mensaje SweetAlert2 de éxito
+            
             Swal.fire({
                 icon: 'success',
                 title: '¡Éxito!',
@@ -327,8 +327,8 @@ async function guardarAuto() {
             const modalFormulario = bootstrap.Modal.getInstance(document.getElementById('modalFormularioInsertarAuto'));
             modalFormulario.hide();
 
-            // Aquí si tienes una función para actualizar la lista de autos, la llamas
-            // listarAutos();
+            //listar Autos de manera automatica, es opcional
+            //listarAutos();
 
         } else {
             Swal.fire('Error', 'Hubo un error al guardar el auto. Inténtelo de nuevo.', 'error');
@@ -340,7 +340,7 @@ async function guardarAuto() {
 }
 
 async function pedirIdAuto() {
-    // Usar SweetAlert2 para pedir el ID
+   
     const { value: idAuto } = await Swal.fire({
         title: 'Buscar Auto',
         text: 'Ingrese el ID del auto a buscar:',
@@ -363,7 +363,7 @@ async function pedirIdAuto() {
 
             if (!response.ok) throw new Error('Auto no encontrado');
 
-            // Ahora llamamos a verDetalles para mostrar el modal con los detalles
+           
             verDetalles(auto);
 
         } catch (error) {
@@ -378,7 +378,7 @@ async function pedirIdAuto() {
 }
 
 async function verDetalles(auto) {
-    // Crear el HTML para el modal
+   
     const modalHTML = `
     <div id="modalDetallesAuto" class="modal fade" tabindex="-1" aria-labelledby="modalDetallesLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg"> 
@@ -421,11 +421,11 @@ async function verDetalles(auto) {
     </div>
     `;
 
-    // Insertar el modal en el contenedor
+  
     const contenedor = document.getElementById('tablaResultados');
     contenedor.innerHTML = modalHTML;
 
-    // Mostrar el modal con Bootstrap
+  
     const myModal = new bootstrap.Modal(document.getElementById('modalDetallesAuto'));
     myModal.show();
 }
@@ -438,7 +438,7 @@ async function editarAuto(idAuto) {
 
         if (!response.ok) throw new Error('Auto no encontrado');
 
-        // Modal HTML
+        
         const modalHTML = `
     <div id="modalFormularioEditarAuto" class="modal fade" tabindex="-1" aria-labelledby="modalFormularioLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg"> 
@@ -544,7 +544,7 @@ async function editarAuto(idAuto) {
     </div>
 `;
 
-        // Insertar el modal en el contenedor
+        
         const contenedor = document.getElementById('tablaResultados');
         contenedor.innerHTML = modalHTML;
 
@@ -552,7 +552,7 @@ async function editarAuto(idAuto) {
         const coloresResponse = await fetch('/api/colores');
         const colores = await coloresResponse.json();
 
-        // Insertar los checkboxes de colores
+        
         const contenedorColores = document.getElementById('checkboxColores');
         colores.forEach(color => {
             const checkboxHTML = `
@@ -576,7 +576,7 @@ async function editarAuto(idAuto) {
             contenedorImagenes.appendChild(div);
         });
 
-        // Evento para manejar los cambios en los checkboxes de colores
+        
         contenedorColores.addEventListener('change', (event) => {
             const checkboxes = document.querySelectorAll('input[name="colores"]:checked');
             const contenedorImagenes = document.getElementById('imagenesPorColor');
@@ -585,7 +585,7 @@ async function editarAuto(idAuto) {
             const coloresMarcados = Array.from(checkboxes).map(cb => cb.value);
             const imagenesActuales = Array.from(contenedorImagenes.children).map(child => child.querySelector('input').id);
 
-            // Eliminar imágenes de los colores desmarcados
+            
             imagenesActuales.forEach(imagenId => {
                 const colorId = imagenId.replace('imagenColor', '');
                 if (!coloresMarcados.includes(colorId)) {
@@ -609,19 +609,19 @@ async function editarAuto(idAuto) {
             });
         });
 
-        // Mostrar el modal
+       
         const myModal = new bootstrap.Modal(document.getElementById('modalFormularioEditarAuto'));
         myModal.show();
         
-         // Evento para manejar el cierre del modal y la eliminación de la capa oscura
+         
         document.getElementById('modalFormularioEditarAuto').addEventListener('hidden.bs.modal', () => {
-            // Eliminar la capa oscura del fondo (si existe)
+           
             const backdrop = document.querySelector('.modal-backdrop');
             if (backdrop) {
                 backdrop.remove();
             }
 
-            // Restaurar el scroll del body
+            
             document.body.style.overflow = '';
         });
 
@@ -632,7 +632,7 @@ async function editarAuto(idAuto) {
 }
 
 async function guardarEdicionAuto(idAuto) {
-    // Obtener los datos del formulario
+    
     const modelo = document.getElementById('modelo').value.trim();
     const marca = document.getElementById('marca').value.trim();
     const ano = parseInt(document.getElementById('ano').value);
@@ -650,26 +650,26 @@ async function guardarEdicionAuto(idAuto) {
     
    
 
-    // Validar campos obligatorios
+    
     if (!modelo || !marca || !ano || !precio || !kilometraje || !transmision || !combustible || !categoria || !estado) {
         Swal.fire('Error', 'Por favor, complete todos los campos obligatorios.', 'error');
         return;
     }
 
-    // Obtener colores seleccionados
+    
     const checkboxesColores = document.querySelectorAll('input[name="colores"]:checked');
     if (checkboxesColores.length === 0) {
         Swal.fire('Error', 'Por favor, seleccione al menos un color.', 'error');
         return;
     }
 
-    // Armar lista de colores con id y nombre
+    
     const coloresSeleccionados = Array.from(checkboxesColores).map(cb => ({
         idColor: parseInt(cb.value),
         nombreColor: cb.dataset.nombre
     }));
 
-    // Obtener nombres de imagen para cada color
+    
     let imagenes;
     try {
         imagenes = coloresSeleccionados.map(color => {
@@ -688,7 +688,7 @@ async function guardarEdicionAuto(idAuto) {
         return;
     }
 
-    // Crear el objeto AutoDTO
+    
     const autoDTO = {
         modelo,
         marca,
@@ -707,7 +707,7 @@ async function guardarEdicionAuto(idAuto) {
         imagenes
     };
 
-    // Enviar los datos al servidor para actualizar el auto
+    
     try {
         const response = await fetch(`http://localhost:8081/api/autos/${idAuto}`, {
             method: 'PUT',
@@ -722,7 +722,7 @@ async function guardarEdicionAuto(idAuto) {
                 text: 'Auto actualizado correctamente',
                 confirmButtonText: 'Cerrar'
             });
-            // Cerrar el modal
+           
             const modalFormulario = bootstrap.Modal.getInstance(document.getElementById('modalFormularioEditarAuto'));
             modalFormulario.hide();
         } else {
@@ -735,7 +735,7 @@ async function guardarEdicionAuto(idAuto) {
 }
 
 async function eliminarAuto(idAuto) {
-    // Confirmar la eliminación del auto usando SweetAlert2
+   
     const { value: confirmacion } = await Swal.fire({
         title: '¿Estás seguro de que deseas eliminar este auto?',
         text: 'Esta acción no se puede deshacer.',
@@ -748,40 +748,40 @@ async function eliminarAuto(idAuto) {
 
     if (confirmacion) {
         try {
-            // Enviar solicitud DELETE al backend (Spring)
+            
             const response = await fetch(`http://localhost:8081/api/autos/${idAuto}`, {
-                method: 'DELETE',  // Usar el método DELETE
+                method: 'DELETE',  
                 headers: {
-                    'Content-Type': 'application/json'  // Esto asegura que la solicitud es entendida como JSON
+                    'Content-Type': 'application/json'  
                 }
             });
 
-            // Verificar si la respuesta fue exitosa
+            
             if (response.ok) {
-                // Mostrar un mensaje de éxito usando SweetAlert
+              
                 Swal.fire({
                     icon: 'success',
                     title: '¡Auto Eliminado!',
                     text: 'El auto ha sido eliminado correctamente.',
                     confirmButtonText: 'Cerrar'
                 }).then(() => {
-                    // Si el modal está abierto, lo cerramos (en caso de que estés usando un modal)
+                   
                     const myModal = bootstrap.Modal.getInstance(document.getElementById('modalFormularioVerAuto'));
                     if (myModal) {
-                        myModal.hide();  // Cerrar el modal de detalles del auto
+                        myModal.hide(); 
                     }
 
-                    // Eliminar la capa oscura del fondo (si existe)
+                   
                     const backdrop = document.querySelector('.modal-backdrop');
                     if (backdrop) {
                         backdrop.remove();
                     }
 
-                    // Restaurar el scroll del body
+                    
                     document.body.style.overflow = '';
 
-                    // Aquí se puede agregar la actualización de la lista de autos si es necesario
-                    listarAutos();  // Si tienes una función para actualizar la tabla de autos, la llamas aquí
+                   
+                    listarAutos();  
                 });
             } else {
                 Swal.fire({

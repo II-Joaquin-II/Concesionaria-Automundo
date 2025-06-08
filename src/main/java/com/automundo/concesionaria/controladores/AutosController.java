@@ -53,10 +53,7 @@ public class AutosController {
     
     @PutMapping("/{id}")
     public ResponseEntity<AutoDTO> editarAuto(@PathVariable Long id, @RequestBody AutoDTO autoDTO) {
-        // Llamar al servicio para editar el auto
         AutoDTO autoActualizado = autoService.editarAuto(id, autoDTO);
-
-        // Devolver el auto actualizado
         return ResponseEntity.ok(autoActualizado);
     }
     
