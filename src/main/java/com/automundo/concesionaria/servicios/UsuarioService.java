@@ -113,6 +113,12 @@ public class UsuarioService implements UserDetailsService{
         }
 
     }
+    
+    //Recupero los datos de usuario para usarlo en las reclamaciones
+    public Usuario obtenerUsuarioPorEmail(String email) {
+        return repo_clientes.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Correo no encontrado: " + email));
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

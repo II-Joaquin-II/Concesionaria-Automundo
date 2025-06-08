@@ -21,7 +21,7 @@ public class VistaController {
     public String cargarVistaVerAutos() {
         return "adminverautos";
     }
-    
+
      @GetMapping("/adminverreclamos")
     public String cargarVistaVerReclamos() {
         return "adminverreclamos";

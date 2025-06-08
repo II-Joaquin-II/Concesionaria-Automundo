@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/autos")
 
 public class AutosController {
-     private final AutosServicio autosServ;
+    private final AutosServicio autosServ;
 
     public AutosController(AutosServicio autosservicio) {
         this.autosServ = autosservicio;
@@ -31,32 +31,32 @@ public class AutosController {
     public List<Autos> listarAutos() {
         return autosServ.listarAutos();
     }
-    
-      @PostMapping
+
+    @PostMapping
     public ResponseEntity<String> insertarAuto(@RequestBody Autos auto) {
         autosServ.insertarAuto(auto);
         return ResponseEntity.ok("Auto insertado correctamente");
     }
-    
-   
-@GetMapping("/{id}")
-public ResponseEntity<Autos> buscarAutoPorId(@PathVariable Integer id) {
-    return autosServ.buscarAutoPorId(id)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
-}
-    
 
-@PutMapping("/{id}")
-public ResponseEntity<String> actualizarAuto(@PathVariable Integer id, @RequestBody Autos auto) {
-    auto.setIdAuto(id);
-    autosServ.insertarAuto(auto); // usa el mismo save() que para insertar
-    return ResponseEntity.ok("Auto actualizado correctamente");
-}
-@DeleteMapping("/{id}")
-public ResponseEntity<String> eliminarAuto(@PathVariable Integer id) {
-    autosServ.eliminarAuto(id);
-    return ResponseEntity.ok("Auto eliminado correctamente");
-}
+   
+    @GetMapping("/{id}")
+    public ResponseEntity<Autos> buscarAutoPorId(@PathVariable Integer id) {
+        return autosServ.buscarAutoPorId(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> actualizarAuto(@PathVariable Integer id, @RequestBody Autos auto) {
+        auto.setIdAuto(id);
+        autosServ.insertarAuto(auto); // usa el mismo save() que para insertar
+        return ResponseEntity.ok("Auto actualizado correctamente");
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> eliminarAuto(@PathVariable Integer id) {
+        autosServ.eliminarAuto(id);
+        return ResponseEntity.ok("Auto eliminado correctamente");
+    }
 
 }

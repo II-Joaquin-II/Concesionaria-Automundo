@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Service
 public class AutosServicio {
-     private final AutosRepositorio autoRepo;
+    private final AutosRepositorio autoRepo;
 
     public AutosServicio(AutosRepositorio autorepositorio) {
         this.autoRepo = autorepositorio;
@@ -18,17 +18,17 @@ public class AutosServicio {
     public List<Autos> listarAutos() {
         return autoRepo.findAll();
     }
-    
+
     public void insertarAuto(Autos auto) {
         autoRepo.save(auto);
     }
-    
-public Optional<Autos> buscarAutoPorId(Integer id) {
-    return autoRepo.findById(id);
-}
-    
-public void eliminarAuto(Integer id) {
-    autoRepo.deleteById(id);
+
+    public Optional<Autos> buscarAutoPorId(Integer id) {
+        return autoRepo.findById(id);
     }
-    
+
+    public void eliminarAuto(Integer id) {
+        autoRepo.deleteById(id);
+    }
+
 }
