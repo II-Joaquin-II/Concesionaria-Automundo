@@ -53,7 +53,6 @@ FROM usuario WHERE email = 'admin@admin.com';
 CREATE TABLE IF NOT EXISTS `autos` (
     `id_auto` INT PRIMARY KEY AUTO_INCREMENT,
     `modelo` VARCHAR(50),
-    `color` VARCHAR(30),
     `marca` VARCHAR(50),
     `ano` INT,
     `precio` DECIMAL(10,2),
@@ -64,20 +63,108 @@ CREATE TABLE IF NOT EXISTS `autos` (
     `equipamiento2` VARCHAR(50),
     `equipamiento3` VARCHAR(50),
     `equipamiento4` VARCHAR(50),
-    `imagen` VARCHAR(255),
     `categoria` VARCHAR(30),
     `estado` VARCHAR(30)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO autos (modelo, color, marca, ano, precio, kilometraje, transmision, combustible,equipamiento1, equipamiento2, equipamiento3, equipamiento4, imagen, categoria, estado) VALUES
-	('Civic EX', 'Rojo', 'Honda', 2020, 27500, 35000, 'Automática', 'Gasolina', 'Aire acondicionado', 'Frenos ABS', 'Bluetooth', 'Cámara de reversa', 'https://www.toyotacr.com/uploads/family/0317534a7f4d9a8295952c2ab64eea73c4188e67.png', 'Sedán', 'Disponible'),
-	('Corolla SE', 'Blanco', 'Toyota', 2021, 28500, 27000, 'Automática', 'Gasolina', 'Aire acondicionado', 'Sensor de estacionamiento', 'Pantalla táctil', 'Control crucero', 'https://example.com/corolla.jpg', 'Sedán', 'Disponible'),
-	('CX-5 Touring', 'Negro', 'Mazda', 2019, 31000, 45000, 'Automática', 'Gasolina', 'Asientos de piel', 'Cámara de reversa', 'Bluetooth', 'Sistema de sonido Bose', 'https://example.com/cx5.jpg', 'SUV', 'Disponible'),
-	('Model 3', 'Gris', 'Tesla', 2022, 45000, 15000, 'Automática', 'Eléctrico', 'Piloto automático', 'Pantalla táctil', 'Cámara 360', 'Aire acondicionado', 'https://example.com/model3.jpg', 'Sedán', 'Disponible'),
-	('Hilux SR5', 'Azul', 'Toyota', 2021, 38000, 60000, 'Manual', 'Diesel', 'Tracción 4x4', 'Control de descenso', 'Faros LED', 'Bluetooth', 'https://example.com/hilux.jpg', 'Pickup', 'Disponible');
+INSERT INTO autos (modelo, marca, ano, precio, kilometraje, transmision, combustible,equipamiento1, equipamiento2, equipamiento3, equipamiento4, categoria, estado) VALUES
+	('Civic EX', 'Honda', 2020, 27500, 35000, 'Automática', 'Gasolina', 'Aire acondicionado', 'Frenos ABS', 'Bluetooth', 'Cámara de reversa', 'Sedán', 'Disponible'),
+	('Corolla SE', 'Toyota', 2021, 28500, 27000, 'Automática', 'Gasolina', 'Aire acondicionado', 'Sensor de estacionamiento', 'Pantalla táctil', 'Control crucero', 'Sedán', 'Disponible'),
+	('CX-5 Touring', 'Mazda', 2019, 31000, 45000, 'Automática', 'Gasolina', 'Asientos de piel', 'Cámara de reversa', 'Bluetooth', 'Sistema de sonido Bose',  'SUV', 'Disponible'),
+	('Model 3','Tesla', 2022, 45000, 15000, 'Automática', 'Eléctrico', 'Piloto automático', 'Pantalla táctil', 'Cámara 360', 'Aire acondicionado', 'Sedán', 'Disponible'),
+	('Hilux SR5', 'Toyota', 2021, 38000, 60000, 'Manual', 'Diesel', 'Tracción 4x4', 'Control de descenso', 'Faros LED', 'Bluetooth', 'Pickup', 'Disponible');
 
 SELECT * FROM autos;
 DROP table autos;
+ALTER TABLE autos DROP COLUMN imagen;
+
+CREATE TABLE IF NOT EXISTS `colores`	 (
+    `id_color` INT PRIMARY KEY AUTO_INCREMENT,
+    `nombre_color` VARCHAR(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+drop table colores;
+
+INSERT INTO colores (nombre_color) VALUES 
+('Rojo'),
+('Azul'),
+('Negro'),
+('Blanco'),
+('Gris'),
+('Verde');
+
+
+CREATE TABLE IF NOT EXISTS `color_auto` (
+    `id_auto` INT NOT NULL,
+    `id_color` INT NOT NULL,
+    PRIMARY KEY (`id_auto`, `id_color`),
+    FOREIGN KEY (`id_auto`) REFERENCES `autos`(`id_auto`) ON DELETE CASCADE,
+    FOREIGN KEY (`id_color`) REFERENCES `colores`(`id_color`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+drop table color_auto;
+
+-- El auto con id 1 tendrá los colores Rojo (1), Azul (2), y Negro (3)
+INSERT INTO color_auto (id_auto, id_color) VALUES 
+(1, 2),
+(1, 3),
+(1, 4);
+
+-- Supongamos que el auto tiene id 1 y el color es azul con id 2
+INSERT INTO color_auto (id_auto, id_color) VALUES (1, 2);
+
+SELECT 
+    a.modelo,
+    c.nombre_color
+FROM autos a
+JOIN color_auto ca ON a.id_auto = ca.id_auto
+JOIN colores c ON ca.id_color = c.id_color
+WHERE a.id_auto = 1;
+
+CREATE TABLE IF NOT EXISTS `imagen_auto_color` (
+    `id_imagen` INT PRIMARY KEY AUTO_INCREMENT,
+    `id_auto` INT NOT NULL,
+    `id_color` INT NOT NULL,
+    `nombre_archivo` VARCHAR(255) NOT NULL,
+    FOREIGN KEY (`id_auto`) REFERENCES `autos`(`id_auto`) ON DELETE CASCADE,
+    FOREIGN KEY (`id_color`) REFERENCES `colores`(`id_color`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+drop table imagen_auto_color;
+
+
+INSERT INTO imagen_auto_color (id_auto, id_color, nombre_archivo)
+VALUES
+  (1, 1, 'Auto_id1.jpg'),
+  (1, 2, 'url_de_auto_azul.jpg'),
+  (1, 3, 'url_de_auto_negro.jpg');
+
+
+
+SELECT 
+    a.id_auto,
+    a.modelo,
+    a.marca,
+    a.ano,
+    a.precio,
+    a.kilometraje,
+    a.transmision,
+    a.combustible,
+    a.equipamiento1,
+    a.equipamiento2,
+    a.equipamiento3,
+    a.equipamiento4,
+    a.categoria,
+    a.estado,
+    GROUP_CONCAT(DISTINCT c.nombre_color SEPARATOR ', ') AS colores,
+    GROUP_CONCAT(DISTINCT i.nombre_archivo SEPARATOR ', ') AS imagenes
+FROM autos a
+LEFT JOIN color_auto ca ON a.id_auto = ca.id_auto
+LEFT JOIN colores c ON ca.id_color = c.id_color
+LEFT JOIN imagen_auto_color i ON a.id_auto = i.id_auto AND ca.id_color = i.id_color
+GROUP BY a.id_auto;
+
+
 
 INSERT INTO inventario (id_auto, cantidad_autos) VALUES
 (1, 3),
