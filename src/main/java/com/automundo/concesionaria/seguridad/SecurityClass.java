@@ -59,7 +59,7 @@ public class SecurityClass {
                 .permitAll()
                 
                 .requestMatchers("/admin/**").hasRole("ADMIN")
-
+                    
                 .requestMatchers("/detallesauto", "/comprar").hasRole("USER")
 
                 .anyRequest().authenticated() 
