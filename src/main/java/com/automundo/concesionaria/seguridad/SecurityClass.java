@@ -46,8 +46,21 @@ public class SecurityClass {
                 .requestMatchers("/login", "/registro", "/principal", "/index")
                 .permitAll()
              
-                .requestMatchers(HttpMethod.GET, "/api/autos").permitAll()
-                    
+                .requestMatchers(HttpMethod.GET, "/api/autos")
+                .permitAll()
+
+                .requestMatchers(HttpMethod.PUT, "/api/autos/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/autos/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/autos/**").hasRole("ADMIN")
+
+
+                .requestMatchers(HttpMethod.POST, "/api/reclamos").hasRole("USER")
+                .requestMatchers(HttpMethod.GET, "/api/reclamos").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/reclamos/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/reclamos/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/reclamos/**").hasRole("ADMIN")
+
+
                 .requestMatchers(HttpMethod.POST, "/api/clientes")
                 .permitAll()
 
