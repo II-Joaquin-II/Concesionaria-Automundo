@@ -1,11 +1,14 @@
 
 package com.automundo.concesionaria.controladores;
+import com.automundo.concesionaria.dto.AutoDTO;
+import com.automundo.concesionaria.model.Autos;
+import com.automundo.concesionaria.servicios.AutosServicio;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.automundo.concesionaria.model.Autos;
-import com.automundo.concesionaria.servicios.AutosServicio;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,49 +17,51 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
+
 import org.springframework.web.bind.annotation.RequestBody;
+
+
+
+
 
 
 @RestController
 @RequestMapping("/api/autos")
-
 public class AutosController {
-    private final AutosServicio autosServ;
 
-    public AutosController(AutosServicio autosservicio) {
-        this.autosServ = autosservicio;
-    }
+    @Autowired
+    private AutosServicio autoService;
 
-    @GetMapping
-    public List<Autos> listarAutos() {
-        return autosServ.listarAutos();
+     @GetMapping
+    public ResponseEntity<List<AutoDTO>> listarAutos() {
+        List<AutoDTO> autos = autoService.listarAutos();
+        return ResponseEntity.ok(autos);
     }
 
     @PostMapping
-    public ResponseEntity<String> insertarAuto(@RequestBody Autos auto) {
-        autosServ.insertarAuto(auto);
-        return ResponseEntity.ok("Auto insertado correctamente");
+    public ResponseEntity<AutoDTO> insertarAuto(@RequestBody AutoDTO autoDTO) {
+        AutoDTO autoCreado = autoService.insertarAuto(autoDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(autoCreado);
     }
 
-   
     @GetMapping("/{id}")
-    public ResponseEntity<Autos> buscarAutoPorId(@PathVariable Integer id) {
-        return autosServ.buscarAutoPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<AutoDTO> buscarAuto(@PathVariable Long id) {
+        AutoDTO auto = autoService.buscarAutoPorId(id);
+        return ResponseEntity.ok(auto);
     }
 
-
+    
     @PutMapping("/{id}")
-    public ResponseEntity<String> actualizarAuto(@PathVariable Integer id, @RequestBody Autos auto) {
-        auto.setIdAuto(id);
-        autosServ.insertarAuto(auto); // usa el mismo save() que para insertar
-        return ResponseEntity.ok("Auto actualizado correctamente");
+    public ResponseEntity<AutoDTO> editarAuto(@PathVariable Long id, @RequestBody AutoDTO autoDTO) {
+        AutoDTO autoActualizado = autoService.editarAuto(id, autoDTO);
+        return ResponseEntity.ok(autoActualizado);
     }
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarAuto(@PathVariable Integer id) {
-        autosServ.eliminarAuto(id);
-        return ResponseEntity.ok("Auto eliminado correctamente");
+    
+   @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarAuto(@PathVariable Long id) {
+        autoService.eliminarAuto(id);
+        return ResponseEntity.noContent().build();
     }
-
 }
+
+

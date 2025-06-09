@@ -1,0 +1,45 @@
+.modal-header {
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.modal-header .btn-close {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+}
+
+.modal.fade .modal-dialog {
+  transform: translateY(-70px) scale(0.95);
+  opacity: 0;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
+}
+
+.modal.fade.show .modal-dialog {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* Efecto hover con un poco más de "pop" */
+.modal-dialog {
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease;
+  max-width: 800px;
+  margin: 1.75rem auto;
+  border-radius: 0.5rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.modal-dialog:hover {
+  transform: scale(1.05);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+  cursor: default;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .modal-dialog:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+    cursor: default;
+  }
+}
