@@ -50,6 +50,7 @@ INSERT INTO usuario_roles (id_usuario, id_rol)
 SELECT id_usuario, (SELECT id_rol FROM roles WHERE nombre = 'ROLE_ADMIN') 
 FROM usuario WHERE email = 'admin@admin.com';
 
+
 CREATE TABLE IF NOT EXISTS `autos` (
     `id_auto` INT PRIMARY KEY AUTO_INCREMENT,
     `modelo` VARCHAR(50),
@@ -75,15 +76,14 @@ INSERT INTO autos (modelo, marca, ano, precio, kilometraje, transmision, combust
 	('Hilux SR5', 'Toyota', 2021, 38000, 60000, 'Manual', 'Diesel', 'Tracción 4x4', 'Control de descenso', 'Faros LED', 'Bluetooth', 'Pickup', 'Disponible');
 
 SELECT * FROM autos;
-DROP table autos;
+
+
 ALTER TABLE autos DROP COLUMN imagen;
 
 CREATE TABLE IF NOT EXISTS `colores`	 (
     `id_color` INT PRIMARY KEY AUTO_INCREMENT,
     `nombre_color` VARCHAR(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-drop table colores;
 
 INSERT INTO colores (nombre_color) VALUES 
 ('Rojo'),
@@ -102,16 +102,16 @@ CREATE TABLE IF NOT EXISTS `color_auto` (
     FOREIGN KEY (`id_color`) REFERENCES `colores`(`id_color`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-drop table color_auto;
-
 -- El auto con id 1 tendrá los colores Rojo (1), Azul (2), y Negro (3)
 INSERT INTO color_auto (id_auto, id_color) VALUES 
-(1, 2),
+(1, 1),
 (1, 3),
 (1, 4);
 
--- Supongamos que el auto tiene id 1 y el color es azul con id 2
-INSERT INTO color_auto (id_auto, id_color) VALUES (1, 2);
+select * from color_auto;
+
+-- Supongamos que el auto tiene id 1 y el color es rojo con id 1
+INSERT INTO color_auto (id_auto, id_color) VALUES (1, 1);
 
 SELECT 
     a.modelo,
@@ -130,16 +130,15 @@ CREATE TABLE IF NOT EXISTS `imagen_auto_color` (
     FOREIGN KEY (`id_color`) REFERENCES `colores`(`id_color`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-drop table imagen_auto_color;
-
 
 INSERT INTO imagen_auto_color (id_auto, id_color, nombre_archivo)
 VALUES
-  (1, 1, 'Auto_id1.jpg'),
-  (1, 2, 'url_de_auto_azul.jpg'),
-  (1, 3, 'url_de_auto_negro.jpg');
-
-
+  (1, 1, 'Toyota_Rojo.jpg'),
+  (1, 4, 'Toyota_Blanco.jpg'),
+  (1, 3, 'Toyota_Negro.jpg');
+  
+select * from imagen_auto_color;
+  
 
 SELECT 
     a.id_auto,
@@ -165,7 +164,20 @@ LEFT JOIN imagen_auto_color i ON a.id_auto = i.id_auto AND ca.id_color = i.id_co
 GROUP BY a.id_auto;
 
 
+INSERT INTO inventario (id_auto, cantidad_autos) VALUES
+(1, 3),
+(2, 2),
+(3, 1),
+(4, 4),
+(5, 2);
 
+select*from autos;
+
+select*from colores;
+
+select*from color_auto;
+
+select*from imagen_auto_color;
 
 CREATE TABLE IF NOT EXISTS reclamo (
     id_reclamo INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -193,12 +205,6 @@ VALUES
 
 
 
-INSERT INTO inventario (id_auto, cantidad_autos) VALUES
-(1, 3),
-(2, 2),
-(3, 1),
-(4, 4),
-(5, 2);
 
 CREATE TABLE venta (
     id_venta INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
