@@ -11,18 +11,37 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.document.AbstractXlsxView;
+import org.apache.poi.util.IOUtils;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Picture;
+import org.springframework.core.io.ClassPathResource;
+import java.io.InputStream;
 
 @Component("adminverreclamos.xlsx")
 public class ListarReclamosExcel extends AbstractXlsxView {
 //Formato en el que se crea excel
+
     @Override
     protected void buildExcelDocument(Map<String, Object> model, Workbook workbook, HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setHeader("Content-Disposition", "attachment; filename=\"listado-reclamos.xlsx\"");
         Sheet hoja = workbook.createSheet("Reclamos");
 
+        InputStream imagenStream = new ClassPathResource("static/img/logo.jpg").getInputStream();
+        byte[] bytes = IOUtils.toByteArray(imagenStream);
+        int imagenIndex = workbook.addPicture(bytes, Workbook.PICTURE_TYPE_JPEG);
+        imagenStream.close();
+
+        Drawing<?> dibujo = hoja.createDrawingPatriarch();
+        ClientAnchor anchor = workbook.getCreationHelper().createClientAnchor();
+        anchor.setCol1(0); // Columna A
+        anchor.setRow1(0); // Fila 1
+        Picture pict = dibujo.createPicture(anchor, imagenIndex);
+        pict.resize(); // Autoajusta el tamaño
+
         //Inicio del titulo, Fila 1 en excel
         Row filaTitulo = hoja.createRow(0);
-        Cell celda = filaTitulo.createCell(0);
+        Cell celda = filaTitulo.createCell(5);
         celda.setCellValue("LISTADO GENERAL DE RECLAMOS");
 
         //Inicio de la informacion, Fila 3 en excel
@@ -30,7 +49,7 @@ public class ListarReclamosExcel extends AbstractXlsxView {
         String[] Columnas = {"ID", "ID Usuario", "Fecha Incidente", "Motivo del Reclamo", "Tipo de Vehiculo", "Detalle", "Estado", "Fecha del Reclamo"};
 
         for (int i = 0; i < Columnas.length; i++) {
-            celda = filaData.createCell(i+1);
+            celda = filaData.createCell(i + 1);
             celda.setCellValue(Columnas[i]);
         }
 
