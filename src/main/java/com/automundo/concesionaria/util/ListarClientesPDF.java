@@ -2,11 +2,16 @@ package com.automundo.concesionaria.util;
 
 import com.automundo.concesionaria.model.Usuario;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Image;
+
 import org.springframework.stereotype.Component;
 import java.io.OutputStream;
 import java.util.List;
@@ -18,7 +23,22 @@ public class ListarClientesPDF {
 
         PdfWriter writer = new PdfWriter(outputStream);
         PdfDocument pdfDoc = new PdfDocument(writer);
+        pdfDoc.addNewPage();
         Document document = new Document(pdfDoc);
+
+
+        String imagePath = "src/main/resources/static/img/logo.jpg";
+        Image img = new Image(ImageDataFactory.create(imagePath));
+        img.setOpacity(0.3f);
+        img.scaleToFit(300, 300);
+
+        PdfPage page = pdfDoc.getFirstPage();
+        Rectangle pageSize = page.getPageSize();
+        float x = (pageSize.getWidth() - img.getImageScaledWidth()) / 2;
+        float y = (pageSize.getHeight() - img.getImageScaledHeight()) / 2;
+        img.setFixedPosition(x, y);
+
+        document.add(img); 
 
         document.add(new Paragraph("LISTADO GENERAL DE CLIENTES").setBold().setFontSize(16));
 
