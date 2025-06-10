@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.google.common.base.Preconditions;
 
 @Service
 public class AutosServicio {
@@ -134,8 +135,8 @@ public class AutosServicio {
     List<Color> colores = new ArrayList<>();
     if (autoDTO.getColores() != null) {
         for (ColorDTO colorDTO : autoDTO.getColores()) {
-            Color color = colorRepository.findById(colorDTO.getIdColor())
-                .orElseThrow(() -> new RuntimeException("Color no encontrado"));
+             Color color = colorRepository.findById(colorDTO.getIdColor()).orElse(null);
+            Preconditions.checkNotNull(color, "Color no encontrado");
             colores.add(color);
         }
         auto.setColores(colores);
@@ -145,8 +146,8 @@ public class AutosServicio {
 
     if (autoDTO.getImagenes() != null) {
         for (ImagenAutoColorDTO imgDTO : autoDTO.getImagenes()) {
-            Color color = colorRepository.findById(imgDTO.getIdColor())
-                .orElseThrow(() -> new RuntimeException("Color no encontrado para imagen"));
+            Color color = colorRepository.findById(imgDTO.getIdColor()).orElse(null);
+            Preconditions.checkNotNull(color, "Color no encontrado para imagen");
             ImagenAutoColor imagen = new ImagenAutoColor();
             imagen.setAuto(autoGuardado);
             imagen.setColor(color);
