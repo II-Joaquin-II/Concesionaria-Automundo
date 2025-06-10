@@ -1,11 +1,17 @@
 package com.automundo.concesionaria.util;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import com.automundo.concesionaria.model.Usuario;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.util.IOUtils;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Picture;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.document.AbstractXlsxView;
 import org.apache.poi.ss.usermodel.Row;
@@ -19,11 +25,22 @@ public class ListarClientesExcel extends AbstractXlsxView {
     protected void buildExcelDocument(Map<String, Object> model, Workbook workbook, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         response.setHeader("Content-Disposition", "attachment; filename=listado-clientes.xlsx");
-
         Sheet hoja = workbook.createSheet("Clientes");
 
+        InputStream imagenStream = new ClassPathResource("static/img/logo.jpg").getInputStream();
+        byte[] bytes = IOUtils.toByteArray(imagenStream);
+        int imagenIndex = workbook.addPicture(bytes, Workbook.PICTURE_TYPE_JPEG);
+        imagenStream.close();
+
+        Drawing<?> dibujo = hoja.createDrawingPatriarch();
+        ClientAnchor anchor = workbook.getCreationHelper().createClientAnchor();
+        anchor.setCol1(0); 
+        anchor.setRow1(0); 
+        Picture pict = dibujo.createPicture(anchor, imagenIndex);
+        pict.resize();
+
         Row filaTitulo = hoja.createRow(0);
-        Cell celda = filaTitulo.createCell(0);
+        Cell celda = filaTitulo.createCell(5);
         celda.setCellValue("LISTADO GENERAL DE CLIENTES");
 
         Row filaData = hoja.createRow(2);

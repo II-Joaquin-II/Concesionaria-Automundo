@@ -30,7 +30,7 @@ public class ImagenAutoColor {
     
    
     @JsonProperty("urlImagen")
-public String getUrlImagen() {
+    public String getUrlImagen() {
     return "/img/" + nombreArchivo; // solo ruta relativa
 }
     

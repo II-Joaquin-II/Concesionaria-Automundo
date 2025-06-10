@@ -158,6 +158,9 @@ select * from color_auto;
 -- Supongamos que el auto tiene id 1 y el color es rojo con id 1
 INSERT INTO color_auto (id_auto, id_color) VALUES (1, 1);
 
+-- Eliminación de la relación entre el auto con ID 1 y el color rojo id 1
+DELETE FROM color_auto WHERE id_auto = 1 AND id_color = 1;
+
 SELECT 
     a.modelo,
     c.nombre_color
