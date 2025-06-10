@@ -10,9 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.automundo.concesionaria.model.Usuario;
 import com.automundo.concesionaria.repositorio.UsuarioRepositorio;
-
+import org.apache.commons.lang3.StringUtils;
 import jakarta.persistence.EntityNotFoundException;
-
 import com.automundo.concesionaria.repositorio.RolRepositorio;
 
 
@@ -63,11 +62,21 @@ public class UsuarioService implements UserDetailsService{
         clienteExiste.setEmail(actualiza.getEmail());
         clienteExiste.setUsuario(actualiza.getUsuario());
 
+        /* 
         if (actualiza.getPass() != null && !actualiza.getPass().isEmpty()) {
 
         String passwordEncriptada = passwordEncoder.encode(actualiza.getPass());
         //clienteExiste.setPass(passwordEncriptada);(passwordEncriptada);
         clienteExiste.setPass(passwordEncriptada);
+        }
+        */
+
+        //implementacion de apache comments
+        if (StringUtils.isNotBlank(actualiza.getPass())) {
+
+            String passwordEncriptada = passwordEncoder.encode(actualiza.getPass());
+            clienteExiste.setPass(passwordEncriptada);
+
         }
 
         return repo_clientes.save(clienteExiste);
@@ -85,24 +94,7 @@ public class UsuarioService implements UserDetailsService{
         return repo_clientes.save(cliente);
     }
 
-    /* 
-    public void eliminar(int id_cli) {
-        //repo_clientes.deleteById(id_cli);
-
-        Optional<Usuario> cliente = repo_clientes.findById(id_cli);
-
-        if (cliente.isPresent() && cliente.get().getRoles().stream().anyMatch(r -> "ROLE_USER".equals(r.getNombre()))) 
-        {
-        repo_clientes.deleteById(id_cli);
-        } else {
-            throw new RuntimeException("Cliente no encontrado");
-        }
-
-    }
-    */
-
     public void eliminarPorDni(String dni) {
-
         Optional<Usuario> cliente = repo_clientes.findByDni(dni)
         .filter(c -> c.getRoles().stream().anyMatch(r -> "ROLE_USER".equals(r.getNombre())));
 

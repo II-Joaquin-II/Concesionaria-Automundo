@@ -44,11 +44,16 @@ CREATE TABLE usuario_roles (
 );
 
 INSERT INTO usuario_roles (id_usuario, id_rol)
-SELECT id_usuario, (SELECT id_rol FROM roles WHERE nombre = 'ROLE_USER') FROM usuario;
+SELECT u.id_usuario, r.id_rol
+FROM usuario u
+JOIN roles r ON r.nombre = 'ROLE_USER'
+WHERE u.email != 'admin@admin.com';
 
 INSERT INTO usuario_roles (id_usuario, id_rol)
-SELECT id_usuario, (SELECT id_rol FROM roles WHERE nombre = 'ROLE_ADMIN') 
-FROM usuario WHERE email = 'admin@admin.com';
+SELECT u.id_usuario, r.id_rol
+FROM usuario u
+JOIN roles r ON r.nombre = 'ROLE_ADMIN'
+WHERE u.email = 'admin@admin.com';
 
 
 CREATE TABLE IF NOT EXISTS `autos` (
