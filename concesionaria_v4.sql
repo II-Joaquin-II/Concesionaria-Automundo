@@ -68,12 +68,14 @@ CREATE TABLE IF NOT EXISTS `autos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO autos (modelo, marca, ano, precio, kilometraje, transmision, combustible,equipamiento1, equipamiento2, equipamiento3, equipamiento4, categoria, estado) VALUES
-	('Civic EX', 'Honda', 2020, 27500, 35000, 'Automática', 'Gasolina', 'Aire acondicionado', 'Frenos ABS', 'Bluetooth', 'Cámara de reversa', 'Sedán', 'Disponible'),
-	('Corolla SE', 'Toyota', 2021, 28500, 27000, 'Automática', 'Gasolina', 'Aire acondicionado', 'Sensor de estacionamiento', 'Pantalla táctil', 'Control crucero', 'Sedán', 'Disponible'),
-	('CX-5 Touring', 'Mazda', 2019, 31000, 45000, 'Automática', 'Gasolina', 'Asientos de piel', 'Cámara de reversa', 'Bluetooth', 'Sistema de sonido Bose',  'SUV', 'Disponible'),
-	('Model 3','Tesla', 2022, 45000, 15000, 'Automática', 'Eléctrico', 'Piloto automático', 'Pantalla táctil', 'Cámara 360', 'Aire acondicionado', 'Sedán', 'Disponible'),
-	('Hilux SR5', 'Toyota', 2021, 38000, 60000, 'Manual', 'Diesel', 'Tracción 4x4', 'Control de descenso', 'Faros LED', 'Bluetooth', 'Pickup', 'Disponible');
-
+	('S-Class S580', 'Mercedes-Benz', 2022, 115000, 18000, 'Automática', 'Gasolina', 'Asientos de piel', 'Cámara 360', 'Piloto automático', 'Sonido Burmester', 'Sedán', 'Disponible'),
+	('7 Series 750i', 'BMW', 2021, 105000, 25000, 'Automática', 'Gasolina', 'Pantalla táctil', 'Asistente de parqueo', 'Asientos ventilados', 'Head-Up Display', 'Sedán', 'Disponible'),
+	('A8 L', 'Audi', 2022, 98000, 22000, 'Automática', 'Gasolina', 'Suspensión adaptativa', 'Sonido Bang & Olufsen', 'Control crucero adaptativo', 'Asientos masajeadores', 'Sedán', 'Disponible'),
+	('Panamera 4 E-Hybrid', 'Porsche', 2021, 120000, 20000, 'Automática', 'Híbrido', 'Techo panorámico', 'Sistema BOSE', 'Navegación premium', 'Cámara de reversa', 'Deportivo', 'Disponible'),
+	('Model S Plaid', 'Tesla', 2023, 130000, 12000, 'Automática', 'Eléctrico', 'Piloto automático', 'Pantalla táctil', 'Cámara 360', 'Modo Ludicrous', 'Sedán', 'Disponible'),
+	('Range Rover Autobiography', 'Land Rover', 2022, 140000, 17000, 'Automática', 'Gasolina', 'Interior de lujo', 'Suspensión neumática', 'Sistema Meridian', 'Cámara 360', 'SUV', 'Disponible'),
+	('Levante Trofeo', 'Maserati', 2020, 125000, 30000, 'Automática', 'Gasolina', 'Motor V8', 'Sonido Harman Kardon', 'Alerón deportivo', 'Asientos deportivos', 'SUV', 'Disponible'),
+	('LC 500h', 'Lexus', 2022, 97000, 19000, 'Automática', 'Híbrido', 'Diseño coupé', 'Asistente de carril', 'Sonido Mark Levinson', 'Head-Up Display', 'Coupé', 'Disponible');
 SELECT * FROM autos;
 DROP table autos;
 ALTER TABLE autos DROP COLUMN imagen;
@@ -104,11 +106,49 @@ CREATE TABLE IF NOT EXISTS `color_auto` (
 
 drop table color_auto;
 
--- El auto con id 1 tendrá los colores Rojo (1), Azul (2), y Negro (3)
-INSERT INTO color_auto (id_auto, id_color) VALUES 
-(1, 2),
-(1, 3),
-(1, 4);
+-- El auto con id 1 tendrá los colores Negro (3), Gris (5), y Blanco (4)
+INSERT INTO color_auto (id_auto, id_color) VALUES
+-- S-Class
+(1, 3), -- Negro
+(1, 5), -- Gris
+(1, 4), -- Blanco
+
+-- BMW 7 Series
+(2, 3), -- Negro
+(2, 2), -- Azul
+(2, 5), -- Gris
+
+-- Audi A8
+(3, 4), -- Blanco
+(3, 5), -- Gris
+(3, 6), -- Verde
+
+-- Porsche Panamera
+(4, 1), -- Rojo
+(4, 3), -- Negro
+(4, 5), -- Gris
+(4, 2), -- Azul
+
+-- Tesla Model S
+(5, 3), -- Negro
+(5, 4), -- Blanco
+
+-- Range Rover
+(6, 2), -- Azul
+(6, 5), -- Gris
+(6, 4), -- Blanco
+(6, 3), -- Negro
+
+-- Maserati Levante
+(7, 1), -- Rojo
+(7, 3), -- Negro
+(7, 5), -- Gris
+
+-- Lexus LC 500h
+(8, 2), -- Azul
+(8, 4), -- Blanco
+(8, 6); -- Verde
+
 
 -- Supongamos que el auto tiene id 1 y el color es azul con id 2
 INSERT INTO color_auto (id_auto, id_color) VALUES (1, 2);
@@ -129,17 +169,51 @@ CREATE TABLE IF NOT EXISTS `imagen_auto_color` (
     FOREIGN KEY (`id_auto`) REFERENCES `autos`(`id_auto`) ON DELETE CASCADE,
     FOREIGN KEY (`id_color`) REFERENCES `colores`(`id_color`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
+ 
 drop table imagen_auto_color;
 
 
-INSERT INTO imagen_auto_color (id_auto, id_color, nombre_archivo)
-VALUES
-  (1, 1, 'Auto_id1.jpg'),
-  (1, 2, 'url_de_auto_azul.jpg'),
-  (1, 3, 'url_de_auto_negro.jpg');
+INSERT INTO imagen_auto_color (id_auto, id_color, nombre_archivo) VALUES
+-- S-Class
+(1, 3, 'SClass_negro.jpg'),
+(1, 5, 'SClass_gris.jpg'),
+(1, 4, 'SClass_blanco.jpg'),
 
+-- BMW 7 Series
+(2, 3, 'BMW7_negro.jpg'),
+(2, 2, 'BMW7_azul.jpg'),
+(2, 5, 'BMW7_gris.jpg'),
 
+-- Audi A8
+(3, 4, 'A8_blanco.jpg'),
+(3, 5, 'A8_gris.jpg'),
+(3, 6, 'A8_verde.jpg'),
+
+-- Porsche Panamera
+(4, 1, 'Panamera_rojo.jpg'),
+(4, 3, 'Panamera_negro.jpg'),
+(4, 5, 'Panamera_gris.jpg'),
+(4, 2, 'Panamera_azul.jpg'),
+
+-- Tesla Model S
+(5, 3, 'ModelS_negro.jpg'),
+(5, 4, 'ModelS_blanco.jpg'),
+
+-- Range Rover
+(6, 2, 'RangeRover_azul.jpg'),
+(6, 5, 'RangeRover_gris.jpg'),
+(6, 4, 'RangeRover_blanco.jpg'),
+(6, 3, 'RangeRover_negro.jpg'),
+
+-- Maserati Levante
+(7, 1, 'Levante_rojo.jpg'),
+(7, 3, 'Levante_negro.jpg'),
+(7, 5, 'Levante_gris.jpg'),
+
+-- Lexus LC 500h
+(8, 2, 'LC500h_azul.jpg'),
+(8, 4, 'LC500h_blanco.jpg'),
+(8, 6, 'LC500h_verde.jpg');
 
 SELECT 
     a.id_auto,
