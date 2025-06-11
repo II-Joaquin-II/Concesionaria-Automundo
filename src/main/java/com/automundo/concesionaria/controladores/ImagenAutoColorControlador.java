@@ -1,6 +1,9 @@
 package com.automundo.concesionaria.controladores;
 
 
+import com.automundo.concesionaria.dto.ColorDTO;
+import com.automundo.concesionaria.dto.ImagenAutoColorDTO;
+import com.automundo.concesionaria.model.Color;
 import com.automundo.concesionaria.model.ImagenAutoColor;
 import com.automundo.concesionaria.repositorio.ImagenAutoColorRepositorio;
 import com.automundo.concesionaria.servicios.ImagenAutoColorServicio;
@@ -19,9 +22,10 @@ public class ImagenAutoColorControlador {
      @Autowired
     private ImagenAutoColorServicio imagenServicio;
 
-    @GetMapping
-    public List<ImagenAutoColor> getAllImagenes() {
-        return imagenServicio.getAll();
+  @GetMapping
+    public ResponseEntity<List<ImagenAutoColorDTO>> listarImagenes() {
+        List<ImagenAutoColorDTO> imagenes = imagenServicio.listarTodas();
+        return ResponseEntity.ok(imagenes);
     }
     
     /*
@@ -48,6 +52,20 @@ public class ImagenAutoColorControlador {
     @PostMapping
     public ImagenAutoColor agregar(@RequestBody ImagenAutoColor imagen) {
         return imagenServicio.save(imagen);
+    }
+    
+    //para poder ver el api de auto con sus colores solos con DTO
+      @GetMapping("/{idAuto}/colores")
+    public List<ColorDTO> obtenerColoresPorAuto(@PathVariable Long idAuto) {
+        List<Color> colores = imagenServicio.obtenerColoresPorAutoId(idAuto);
+
+        // Convertir Color a ColorDTO
+        return colores.stream().map(c -> {
+            ColorDTO dto = new ColorDTO();
+            dto.setIdColor(c.getIdColor());
+            dto.setNombreColor(c.getNombreColor());
+            return dto;
+        }).toList();
     }
 
    @DeleteMapping("/{id}")

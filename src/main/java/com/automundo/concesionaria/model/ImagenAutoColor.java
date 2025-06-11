@@ -17,8 +17,9 @@ public class ImagenAutoColor {
 
     @ManyToOne
     @JoinColumn(name = "id_auto", nullable = false)
+    /*@JsonManagedReference*/ //para quitar apis infinitos
     private Autos auto;
-
+    
      
     @ManyToOne
     @JoinColumn(name = "id_color", nullable = false)
