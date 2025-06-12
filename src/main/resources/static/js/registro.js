@@ -76,14 +76,14 @@ document.getElementById('register').addEventListener('click', function (event) {
     }
 
     const cliente = {
-        nombre_cli: username,
-        apellidos_cli: lastname,
+        nombre_usuario: username,
+        apellidos_usuario: lastname,
         dni: dni,
         fecha_nac: fechaNacInput,
         celular: celular,
         email: email,
-        usuario_cli: document.getElementById('usuario').value,
-        pass_cli: password
+        usuario: document.getElementById('usuario').value,
+        pass: password
     };
 
     fetch('/api/clientes', {

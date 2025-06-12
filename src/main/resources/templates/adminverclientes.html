@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link rel="stylesheet" href="/estiloAdmin.css">
+        <link rel="stylesheet" href="/css/estiloAdmin.css">
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <title>VerClienteAdmin</title>
     </head>
@@ -31,10 +31,21 @@
                         </a>
                     </div>
                     <div class="col-12 col-md-4 text-center text-md-end">
+
                         <div>
-                            <a href="" class="btn btn-outline-light btn-sm me-2">Iniciar sesión</a>
-                            <a href="" class="btn btn-warning btn-sm me-2">Registrarse</a>
+
+                            <div th:if="${#authorization.expression('isAuthenticated()')}">
+                                <span th:text="${nombreUsuario}"></span>
+                                <a th:href="@{/logout}" class="btn btn-warning btn-sm me-2">Cerrar sesión</a>
+                            </div>
+
+                            <div th:if="${#authorization.expression('!isAuthenticated()')}">
+                                <a th:href="@{/login}" class="btn btn-outline-light btn-sm me-2">Iniciar sesión</a>
+                                <a th:href="@{/registro}" class="btn btn-warning btn-sm me-2">Registrarse</a>
+                            </div>
+
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -59,17 +70,30 @@
 
                 <!--Buscar -->
                 <div class="col-12 col-md-auto">
-                    <button type="button" class="btn btn-primary" onclick="buscarClienteId()">
-                        <i class="fas fa-search"></i> Buscar Cliente
+
+                    <button type="button" class="btn btn-primary" onclick="buscarClienteDni()">
+                        <i class="fas fa-id-card"></i> Buscar por DNI
                     </button>
+
+                    <button type="button" class="btn btn-primary" onclick="buscarClienteCelular()">
+                        <i class="fas fa-phone"></i> Buscar por Celular
+                    </button>
+
                 </div>
+
+
             </div>
             <!--Listar -->
-            <div class="mt-4">
+            <div class="mt-4 d-flex gap-3">
                 <button type="button" class="btn btn-primary" onclick="listarClientes()">
                     <i class="fas fa-book"></i> Listar Clientes
                 </button>
+
+                <a href="/adminverclientes/descargar-excel" class="btn btn-success">Exportar a Excel</a>
+
+                <a href="/adminverclientes/descargar-pdf" class="btn btn-danger">Exportar a PDF</a>
             </div>
+
 
             <hr>
         </div>
@@ -80,15 +104,19 @@
 
                 <!-- Botones a la izquierda -->
                 <div class="d-flex flex-wrap gap-3 justify-content-start">
+
                     <button type="button" class="btn btn-outline-success" onclick="abrirInsertarCliente()">
                         <i class="fas fa-plus"></i> Agregar
                     </button>
-                    <button type="button" class="btn btn-outline-warning" onclick="abrirActualizarCliente()">
+
+                    <button id="abrirActualizarCliente" class="btn btn-outline-warning">
                         <i class="fas fa-edit"></i> Editar
                     </button>
+
                     <button type="button" class="btn btn-outline-danger" onclick="abrirEliminarCliente()">
                         <i class="fas fa-trash"></i> Borrar
                     </button>
+
                 </div>
 
                 <!-- Botón a la derecha -->
@@ -105,188 +133,7 @@
 
         <div id="tablaResultados"></div>
 
-        <script>
-            function listarClientes() {
-                fetch('/api/clientes')
-                        .then(r => r.json())
-                        .then(data => {
-                            let tabla = `
-                     <div class="table-responsive">
-                     <table class="table table-sm table-striped table-hover align-middle text-center">
-                     <thead class="table-dark">
-                     <tr>
-                     <th>ID</th>
-                     <th>Nombre</th>
-                     <th>Apellidos</th>
-                     <th>DNI</th>
-                     <th>Fecha Nacimiento</th>
-                     <th>Celular</th>
-                     <th>Email</th>
-                     <th>Usuario</th>
-                     </tr>
-                     </thead>
-                     <tbody >
-                     `;
-                            data.forEach(l => {
-                                tabla += `<tr><td>${l.id_cli}</td><td>${l.nombre_cli}</td><td>${l.apellidos_cli}</td><td>${l.dni}</td><td>${l.fecha_nac}</td><td>${l.celular}</td>
-                              <td>${l.email}</td><td>${l.usuario_cli}</td></tr>`;
-                            });
-                            tabla += `
-                        </tbody>
-                        </table>
-                        </div>
-                        `;
-                            document.getElementById('tablaResultados').innerHTML = tabla;
-                        });
-            }
-
-            function buscarClienteId() {
-                const id = prompt("Ingrese ID del cliente:");
-                if (id) {
-                    fetch(`/api/clientes/${id}`)
-                            .then(r => {
-                                if (!r.ok)
-                                    throw new Error();
-                                return r.json();
-                            })
-                            .then(cliente => {
-                                let tabla = `
-                        <div class="table-responsive">
-                        <table class="table table-sm table-striped table-hover align-middle text-center">
-                        <thead class="table-dark">
-                        <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Apellidos</th>
-                        <th>DNI</th>
-                        <th>Fecha Nacimiento</th>
-                        <th>Celular</th>
-                        <th>Email</th>
-                        <th>Usuario</th>
-                        <th>Contraseña</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                              <tr><td>${cliente.id_cli}</td><td>${cliente.nombre_cli}</td><td>${cliente.apellidos_cli}</td><td>${cliente.dni}</td><td>${cliente.fecha_nac}</td><td>$${cliente.celular}</td>
-                              <td>${cliente.email}</td><td>${cliente.usuario_cli}</td><td>${cliente.pass_cli}</td></tr>
-                        </tbody>
-                        </table>
-                        </div>
-                            `;
-                                document.getElementById('tablaResultados').innerHTML = tabla;
-                            })
-                            .catch(() => Swal.fire('Error', 'Cliente no encontrado', 'error'));
-                }
-            }
-
-            function abrirActualizarCliente() {
-                Swal.fire({
-                    title: 'Actualizar cliente',
-                    html: `
-                        <input id="id" type="number" class="swal2-input" placeholder="ID Cliente">
-                        <input id="nombre" class="swal2-input" placeholder="Nombre">
-                        <input id="apellido" class="swal2-input" placeholder="Apellido">
-                        <input id="dni" class="swal2-input" placeholder="DNI">
-                        <input id="fecha_nac" type="date" class="swal2-input">
-                        <input id="celular" class="swal2-input" placeholder="Celular">
-                        <input id="email" type="email" class="swal2-input" placeholder="Email">
-                        <input id="usuario" class="swal2-input" placeholder="Usuario">
-                        <input id="password" class="swal2-input" placeholder="Contraseña">
-                        `,
-                    confirmButtonText: 'Actualizar',
-                    showCancelButton: true,
-                    preConfirm: () => {
-                        const id = document.getElementById('id').value;
-                        const data = {
-                            nombre_cli: document.getElementById('nombre').value,
-                            apellidos_cli: document.getElementById('apellido').value,
-                            dni: document.getElementById('dni').value,
-                            fecha_nac: document.getElementById('fecha_nac').value,
-                            celular: document.getElementById('celular').value,
-                            email: document.getElementById('email').value,
-                            usuario_cli: document.getElementById('usuario').value,
-                            pass_cli: document.getElementById('password').value
-                        };
-                        return fetch(`/api/clientes/${id}`, {
-                            method: 'PUT',
-                            headers: {'Content-Type': 'application/json'},
-                            body: JSON.stringify(data)
-                        }).then(r => {
-                            if (!r.ok)
-                                throw new Error();
-                            Swal.fire('Éxito', 'Cliente actualizado', 'success');
-                            listarClientes();
-                        }).catch(() => Swal.fire('Error', 'No se pudo actualizar', 'error'));
-                    }
-                });
-            }
-
-            function abrirEliminarCliente() {
-                Swal.fire({
-                    title: 'Eliminar cliente',
-                    input: 'number',
-                    inputLabel: 'Ingrese ID del cliente',
-                    showCancelButton: true,
-                    confirmButtonText: 'Eliminar',
-                    preConfirm: (id) => {
-                        return fetch(`/api/clientes/${id}`, {method: 'DELETE'})
-                                .then(r => {
-                                    if (!r.ok)
-                                        throw new Error();
-                                    Swal.fire('Éxito', 'Cliente eliminado', 'success');
-                                    listarClientes();
-                                }).catch(() => Swal.fire('Error', 'No se pudo eliminar', 'error'));
-                    }
-                });
-            }
-
-            function abrirInsertarCliente() {
-                Swal.fire({
-                    title: 'Insertar cliente',
-                    html: `
-                        <input id="id" type="number" class="swal2-input" placeholder="ID Cliente">
-                        <input id="nombre" class="swal2-input" placeholder="Nombre">
-                        <input id="apellido" class="swal2-input" placeholder="Apellido">
-                        <input id="dni" class="swal2-input" placeholder="DNI">
-                        <input id="fecha_nac" type="date" class="swal2-input">
-                        <input id="celular" class="swal2-input" placeholder="Celular">
-                        <input id="email" type="email" class="swal2-input" placeholder="Email">
-                        <input id="usuario" class="swal2-input" placeholder="Usuario">
-                        <input id="password" class="swal2-input" placeholder="Contraseña">
-                        `,
-                    confirmButtonText: 'Insertar',
-                    showCancelButton: true,
-                    preConfirm: () => {
-                        const data = {
-                            nombre_cli: document.getElementById('nombre').value,
-                            apellidos_cli: document.getElementById('apellido').value,
-                            dni: document.getElementById('dni').value,
-                            fecha_nac: document.getElementById('fecha_nac').value,
-                            celular: document.getElementById('celular').value,
-                            email: document.getElementById('email').value,
-                            usuario_cli: document.getElementById('usuario').value,
-                            pass_cli: document.getElementById('password').value
-                        };
-                        return fetch('/api/clientes', {
-                            method: 'POST',
-                            headers: {'Content-Type': 'application/json'},
-                            body: JSON.stringify(data)
-                        }).then(r => {
-                            if (!r.ok)
-                                throw new Error();
-                            Swal.fire('Éxito', 'Cliente insertado', 'success');
-                            listarClientes();
-                        }).catch(() => Swal.fire('Error', 'No se pudo insertar', 'error'));
-                    }
-                });
-            }
-
-
-
-
-        </script>
-
-        <div id="tablaResultados"></div>
+        <script src="../js/admin/clientes/metodos.js"></script>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     </body>

@@ -1,0 +1,33 @@
+[33m19ec01c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mPruebas[m[33m)[m Cambios en chatbot desde Pruebas
+[33md3e6bd8[m[33m ([m[1;31morigin/Pruebas[m[33m)[m Fusión de ramas JoaquinRamirez y AnthonyYuvaniTorresIzaguirre en pruebas
+[33ma1db440[m Actualización de la base de datos para implementar roles admin y user.
+[33m13df096[m Implementación de roles USER y ADMIN, cambios en el nombre de la entidad 'clientes' a 'usuario' y vista de administración de clientes funcional.
+[33m62ba249[m Ajuste api/autos
+[33mf5daa60[m hize que se mostrara los autos agregados por admin
+[33m7197dd2[m Hize CRUD para la vista admin de auto y listado
+[33mc57e6de[m Hize codigo para cuando se implemente el usuario "admin"
+[33mbb37c47[m Modifique la tabla antigua de autos para que pueda funciona todas las letras y con id incrementable
+[33m7ccd980[m Fusionar rama Pruebas en main.
+[33m17f50ee[m Merge origin/Pruebas into main
+[33md0e1ab0[m Haciendo privado el endpoint api/clientes y ajustando las restricciones de registro para el campo email
+[33m86533cd[m Actualización de la base de datos
+[33mb097db1[m Añadir restricciones de validación a la vista de registro
+[33m080ba2b[m Modifique el security para que el spring pueda dejar hacer "Post" a registro y funcione. Y hize privado el api/clientes
+[33m56ed82f[m Unión de las demás ramas a la rama prueba
+[33mf3bf434[m Merge origin/CrisNuñez into AnthonyYuvaniTorresIzaguirre
+[33m2b7f09a[m Nuevo estilo en las tarjetas
+[33m4438a04[m cambié de nombre
+[33mcb6729b[m Merge origin/AnghelloVelasquez into AnthonyYuvaniTorresIzaguirre
+[33m4913119[m Merge origin/EdsonRosalesIzquierdo into AnthonyYuvaniTorresIzaguirre
+[33mef98c85[m Agrege vistas y validaciones para el login y registro
+[33mf807bab[m Agregue vistas para admin y sus botones principales, animación a los botones y responsive para cada uno.
+[33m97ec128[m Agregue la vista de la página principal, css y su controlador, junto con algunas imágenes que se utilizaron
+[33m2b43bc5[m Revert "Agregue la vista de la página principal, css y su controlador, junto con algunas imágenes que se utilizaron"
+[33ma2b97cf[m Agregue la vista de la página principal, css y su controlador, junto con algunas imágenes que se utilizaron
+[33m0061049[m Implementación de botones Buscar, Actualizar, Eliminar e Insertar en vista admin del cliente.
+[33m8fe1820[m Subiendo la base de datos
+[33m849ec76[m Agrege responsive y diseño en botones y tablas. Modifiqué el header para que se pueda hacer click y agregue boton cerrar sesión.
+[33m2f91b6a[m Implementé el modelo, repositorio, dto, servicio y controlador para la gestión de clientes del administrador
+[33md145d97[m Agregue carpeta vista
+[33m668dfd1[m Create README.md
+[33m187d41d[m Subiendo la estructura del proyecto
