@@ -2,6 +2,7 @@
 package com.automundo.concesionaria.model;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;  
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -38,15 +39,10 @@ public class Autos {
     private String categoria;
     private String estado;
     
-     @ManyToMany
-    @JoinTable(
-        name = "color_auto",
-        joinColumns = @JoinColumn(name = "id_auto"),
-        inverseJoinColumns = @JoinColumn(name = "id_color")
-    )
-     private List<Color> colores = new ArrayList<>();
+    
    
     @OneToMany(mappedBy = "auto", cascade = CascadeType.ALL, orphanRemoval = true)
+      /*@JsonManagedReference*/
     private List<ImagenAutoColor> imagenes = new ArrayList<>();
    
    

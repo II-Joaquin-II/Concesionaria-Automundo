@@ -205,19 +205,32 @@ async function listarAutos() {
 
         // Evento para mostrar inputs de nombre de imagen cuando seleccionen colores
         contenedorColores.addEventListener('change', () => {
-            contenedorImagenes.innerHTML = '';
-            const seleccionados = document.querySelectorAll('input[name="colores"]:checked');
-            seleccionados.forEach(cb => {
-                const idColor = cb.value;
-                const nombreColor = cb.dataset.nombre;
-                const div = document.createElement('div');
-                div.classList.add('mb-2');
-                div.innerHTML = `
-                    <label for="imagenColor${idColor}">Imagen para ${nombreColor}:</label>
-                    <input type="text" class="form-control" id="imagenColor${idColor}" name="imagenColor${idColor}" placeholder="ejemplo: auto_${nombreColor.toLowerCase()}.jpg" required>
-                `;
-                contenedorImagenes.appendChild(div);
-            });
+        const seleccionados = document.querySelectorAll('input[name="colores"]:checked');
+        const coloresSeleccionados = Array.from(seleccionados).map(cb => ({
+        idColor: cb.value,
+        nombreColor: cb.dataset.nombre
+        }));
+
+       const imagenesExistentes = Array.from(document.querySelectorAll('#imagenesPorColor input'))
+        .reduce((mapa, input) => {
+            const id = input.id.replace('imagenColor', '');
+            mapa[id] = input.value;
+            return mapa;
+        }, {});
+
+        // Limpiar el contenedor
+         contenedorImagenes.innerHTML = '';
+
+        coloresSeleccionados.forEach(({ idColor, nombreColor }) => {
+        const valorAnterior = imagenesExistentes[idColor] || '';
+        const div = document.createElement('div');
+        div.classList.add('mb-2');
+        div.innerHTML = `
+            <label for="imagenColor${idColor}">Imagen para ${nombreColor}:</label>
+            <input type="text" class="form-control" id="imagenColor${idColor}" name="imagenColor${idColor}" value="${valorAnterior}" placeholder="ejemplo: auto_${nombreColor.toLowerCase()}.jpg" required>
+        `;
+        contenedorImagenes.appendChild(div);
+             });
         });
 
     } catch (error) {
@@ -250,7 +263,7 @@ async function guardarAuto() {
     const estado = document.getElementById('estado').value.trim();
 
     
-    if (!modelo || !marca || !ano || !precio || !kilometraje || !transmision || !combustible || !categoria || !estado) {
+    if (!modelo || !marca || !ano || !precio || isNaN(kilometraje) || !transmision || !combustible || !categoria || !estado) {
         Swal.fire('Error', 'Por favor, complete todos los campos obligatorios.', 'error');
         return;
     }
@@ -651,7 +664,7 @@ async function guardarEdicionAuto(idAuto) {
    
 
     
-    if (!modelo || !marca || !ano || !precio || !kilometraje || !transmision || !combustible || !categoria || !estado) {
+    if (!modelo || !marca || !ano || !precio || isNaN(kilometraje) || !transmision || !combustible || !categoria || !estado) {
         Swal.fire('Error', 'Por favor, complete todos los campos obligatorios.', 'error');
         return;
     }

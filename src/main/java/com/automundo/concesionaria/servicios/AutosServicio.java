@@ -30,93 +30,19 @@ public class AutosServicio {
     @Autowired
     private ImagenAutoColorRepositorio imagenAutoColorRepository;
 
-    public List<AutoDTO> listarAutos() {
-        List<Autos> autos = autoRepository.findAll();
-
-        return autos.stream().map(auto -> {
-            AutoDTO dto = new AutoDTO();
-            dto.setIdAuto(auto.getIdAuto());
-            dto.setModelo(auto.getModelo());
-            dto.setMarca(auto.getMarca());
-            dto.setAno(auto.getAno());
-            dto.setPrecio(auto.getPrecio());
-            dto.setKilometraje(auto.getKilometraje());
-            dto.setTransmision(auto.getTransmision());
-            dto.setCombustible(auto.getCombustible());
-            dto.setEquipamiento1(auto.getEquipamiento1());
-            dto.setEquipamiento2(auto.getEquipamiento2());
-            dto.setEquipamiento3(auto.getEquipamiento3());
-            dto.setEquipamiento4(auto.getEquipamiento4());
-            dto.setCategoria(auto.getCategoria());
-            dto.setEstado(auto.getEstado());
-
-            // Mapear colores
-            List<ColorDTO> colorDTOs = auto.getColores().stream().map(c -> {
-                ColorDTO cdto = new ColorDTO();
-                cdto.setIdColor(c.getIdColor());
-                cdto.setNombreColor(c.getNombreColor());
-                return cdto;
-            }).collect(Collectors.toList());
-
-            // Mapear imágenes
-            List<ImagenAutoColorDTO> imagenDTOs = auto.getImagenes().stream().map(img -> {
-                ImagenAutoColorDTO idto = new ImagenAutoColorDTO();
-                idto.setIdImagen(img.getIdImagen());
-                idto.setNombreArchivo(img.getNombreArchivo());
-                idto.setIdColor(img.getColor().getIdColor());
-                idto.setNombreColor(img.getColor().getNombreColor());
-                return idto;
-            }).collect(Collectors.toList());
-
-            dto.setColores(colorDTOs);
-            dto.setImagenes(imagenDTOs);
-            return dto;
-
-        }).collect(Collectors.toList());
-    }
+   public List<AutoDTO> listarAutos() {
+    return autoRepository.findAll().stream()
+            .map(this::mapearAutoADTO)
+            .collect(Collectors.toList());
+}
 
     public AutoDTO buscarAutoPorId(Long idAuto) {
-        Autos auto = autoRepository.findById(idAuto).orElseThrow(() -> new RuntimeException("Auto no encontrado"));
-        AutoDTO dto = new AutoDTO();
-        dto.setIdAuto(auto.getIdAuto());
-        dto.setModelo(auto.getModelo());
-        dto.setMarca(auto.getMarca());
-        dto.setAno(auto.getAno());
-        dto.setPrecio(auto.getPrecio());
-        dto.setKilometraje(auto.getKilometraje());
-        dto.setTransmision(auto.getTransmision());
-        dto.setCombustible(auto.getCombustible());
-        dto.setEquipamiento1(auto.getEquipamiento1());
-        dto.setEquipamiento2(auto.getEquipamiento2());
-        dto.setEquipamiento3(auto.getEquipamiento3());
-        dto.setEquipamiento4(auto.getEquipamiento4());
-        dto.setCategoria(auto.getCategoria());
-        dto.setEstado(auto.getEstado());
-
-        // Mapear colores
-        List<ColorDTO> colorDTOs = auto.getColores().stream().map(c -> {
-            ColorDTO cdto = new ColorDTO();
-            cdto.setIdColor(c.getIdColor());
-            cdto.setNombreColor(c.getNombreColor());
-            return cdto;
-        }).collect(Collectors.toList());
-
-        // Mapear imágenes
-        List<ImagenAutoColorDTO> imagenDTOs = auto.getImagenes().stream().map(img -> {
-            ImagenAutoColorDTO idto = new ImagenAutoColorDTO();
-            idto.setIdImagen(img.getIdImagen());
-            idto.setNombreArchivo(img.getNombreArchivo());
-            idto.setIdColor(img.getColor().getIdColor());
-            idto.setNombreColor(img.getColor().getNombreColor());
-            return idto;
-        }).collect(Collectors.toList());
-
-        dto.setColores(colorDTOs);
-        dto.setImagenes(imagenDTOs);
-        return dto;
-    }
+    Autos auto = autoRepository.findById(idAuto)
+        .orElseThrow(() -> new RuntimeException("Auto no encontrado"));
+    return mapearAutoADTO(auto);
+}
     
-     public AutoDTO insertarAuto(AutoDTO autoDTO) {
+    public AutoDTO insertarAuto(AutoDTO autoDTO) {
     Autos auto = new Autos();
     auto.setModelo(autoDTO.getModelo());
     auto.setMarca(autoDTO.getMarca());
@@ -132,20 +58,11 @@ public class AutosServicio {
     auto.setCategoria(autoDTO.getCategoria());
     auto.setEstado(autoDTO.getEstado());
 
-    List<Color> colores = new ArrayList<>();
-    if (autoDTO.getColores() != null) {
-        for (ColorDTO colorDTO : autoDTO.getColores()) {
-             Color color = colorRepository.findById(colorDTO.getIdColor()).orElse(null);
-            Preconditions.checkNotNull(color, "Color no encontrado");
-            colores.add(color);
-        }
-        auto.setColores(colores);
-    }
-
     Autos autoGuardado = autoRepository.save(auto);
 
     if (autoDTO.getImagenes() != null) {
         for (ImagenAutoColorDTO imgDTO : autoDTO.getImagenes()) {
+            //uso de la libreria google guava
             Color color = colorRepository.findById(imgDTO.getIdColor()).orElse(null);
             Preconditions.checkNotNull(color, "Color no encontrado para imagen");
             ImagenAutoColor imagen = new ImagenAutoColor();
@@ -156,15 +73,18 @@ public class AutosServicio {
         }
     }
 
-    return autoDTO;
+    // Refrescar entidad para mapear con imágenes y colores guardados
+    Autos autoRefrescado = autoRepository.findById(autoGuardado.getIdAuto())
+        .orElseThrow(() -> new RuntimeException("Error cargando auto insertado"));
+
+    return mapearAutoADTO(autoRefrescado);
 }
      
      
        public AutoDTO editarAuto(Long idAuto, AutoDTO autoDTO) {
     Autos autoExistente = autoRepository.findById(idAuto)
             .orElseThrow(() -> new RuntimeException("Auto no encontrado"));
-
-    // Actualizar los datos básicos del auto
+    
     autoExistente.setModelo(autoDTO.getModelo());
     autoExistente.setMarca(autoDTO.getMarca());
     autoExistente.setAno(autoDTO.getAno());
@@ -179,38 +99,75 @@ public class AutosServicio {
     autoExistente.setCategoria(autoDTO.getCategoria());
     autoExistente.setEstado(autoDTO.getEstado());
 
-    // Actualizar los colores del auto
-    autoExistente.getColores().clear(); // Limpiar los colores existentes
-    for (ColorDTO colorDTO : autoDTO.getColores()) {
-        Color colorExistente = colorRepository.findById(colorDTO.getIdColor())
-                .orElseThrow(() -> new RuntimeException("Color no encontrado"));
-        autoExistente.getColores().add(colorExistente);
-    }
+    // Actualizar imágenes
+    imagenAutoColorRepository.deleteAll(autoExistente.getImagenes());
+    autoExistente.getImagenes().clear();
 
-    // Actualizar las imágenes del auto
-    autoExistente.getImagenes().clear(); // Limpiar las imágenes existentes
     for (ImagenAutoColorDTO imagenDTO : autoDTO.getImagenes()) {
-        Color color = colorRepository.findById(imagenDTO.getIdColor())
-                .orElseThrow(() -> new RuntimeException("Color no encontrado"));
+        Color color = colorRepository.findById(imagenDTO.getIdColor()).orElse(null);
+        Preconditions.checkNotNull(color, "Color no encontrado");
 
         ImagenAutoColor imagenAutoColor = new ImagenAutoColor();
         imagenAutoColor.setAuto(autoExistente);
         imagenAutoColor.setColor(color);
         imagenAutoColor.setNombreArchivo(imagenDTO.getNombreArchivo());
 
-        imagenAutoColorRepository.save(imagenAutoColor); // Guardar la nueva imagen
-
-        // Agregar la imagen a la lista de imágenes del auto
+        imagenAutoColor = imagenAutoColorRepository.save(imagenAutoColor);
         autoExistente.getImagenes().add(imagenAutoColor);
     }
 
-    // Guardar el auto actualizado
-    autoRepository.save(autoExistente);
+    Autos autoGuardado = autoRepository.save(autoExistente);
 
-    // Devolver el AutoDTO con los datos actualizados (sin conversión intermedia)
-    autoDTO.setIdAuto(autoExistente.getIdAuto());  // Establecer el ID del auto
-    return autoDTO;
+    // Devolver DTO actualizado mapeado desde la entidad guardada
+    return mapearAutoADTO(autoGuardado);
 }
+       
+       //Servicio que hara que listar,buscar,insertar,editar sirvan con DTO
+       private AutoDTO mapearAutoADTO(Autos auto) {
+    AutoDTO dto = new AutoDTO();
+    dto.setIdAuto(auto.getIdAuto());
+    dto.setModelo(auto.getModelo());
+    dto.setMarca(auto.getMarca());
+    dto.setAno(auto.getAno());
+    dto.setPrecio(auto.getPrecio());
+    dto.setKilometraje(auto.getKilometraje());
+    dto.setTransmision(auto.getTransmision());
+    dto.setCombustible(auto.getCombustible());
+    dto.setEquipamiento1(auto.getEquipamiento1());
+    dto.setEquipamiento2(auto.getEquipamiento2());
+    dto.setEquipamiento3(auto.getEquipamiento3());
+    dto.setEquipamiento4(auto.getEquipamiento4());
+    dto.setCategoria(auto.getCategoria());
+    dto.setEstado(auto.getEstado());
+
+    // Mapear colores únicos
+    List<Color> colores = imagenAutoColorRepository.findColoresByAutoId(auto.getIdAuto());
+    List<ColorDTO> colorDTOs = colores.stream()
+            .map(c -> {
+                ColorDTO cdto = new ColorDTO();
+                cdto.setIdColor(c.getIdColor());
+                cdto.setNombreColor(c.getNombreColor());
+                return cdto;
+            })
+            .collect(Collectors.toList());
+    dto.setColores(colorDTOs);
+
+    // Mapear imágenes
+    List<ImagenAutoColorDTO> imagenDTOs = auto.getImagenes().stream()
+            .map(img -> {
+                ImagenAutoColorDTO idto = new ImagenAutoColorDTO();
+                idto.setIdImagen(img.getIdImagen());
+                idto.setNombreArchivo(img.getNombreArchivo());
+                idto.setIdColor(img.getColor().getIdColor());
+                idto.setNombreColor(img.getColor().getNombreColor());
+                return idto;
+            })
+            .collect(Collectors.toList());
+    dto.setImagenes(imagenDTOs);
+
+    return dto;
+}
+       
      
         public void eliminarAuto(Long idAuto) {
         Autos auto = autoRepository.findById(idAuto).orElseThrow(() -> new RuntimeException("Auto no encontrado"));
@@ -232,6 +189,8 @@ public class AutosServicio {
         autoRepository.deleteById(id);
     }
     
+    
+    /* Por el momento no necesario porque ya usamos listar
    public List<AutoDTO> getAllAutosConDetalle() {
         List<Autos> autos = autoRepository.findAll();
 
@@ -253,12 +212,13 @@ public class AutosServicio {
             dto.setEstado(auto.getEstado());
 
             // Mapear colores
-            List<ColorDTO> colorDTOs = auto.getColores().stream().map(c -> {
-                ColorDTO cdto = new ColorDTO();
-                cdto.setIdColor(c.getIdColor());
-                cdto.setNombreColor(c.getNombreColor());
-                return cdto;
-            }).collect(Collectors.toList());
+              List<Color> colores = imagenAutoColorRepository.findColoresByAutoId(auto.getIdAuto());
+        List<ColorDTO> colorDTOs = colores.stream().map(c -> {
+            ColorDTO cdto = new ColorDTO();
+            cdto.setIdColor(c.getIdColor());
+            cdto.setNombreColor(c.getNombreColor());
+            return cdto;
+        }).collect(Collectors.toList());
 
             // Mapear imágenes
             List<ImagenAutoColorDTO> imagenDTOs = auto.getImagenes().stream().map(img -> {
@@ -277,6 +237,6 @@ public class AutosServicio {
         }).collect(Collectors.toList());
     }
     
-    
+    */
     
 }

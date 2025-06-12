@@ -100,7 +100,7 @@ INSERT INTO colores (nombre_color) VALUES
 ('Gris'),
 ('Verde');
 
-
+/*
 CREATE TABLE IF NOT EXISTS `color_auto` (
     `id_auto` INT NOT NULL,
     `id_color` INT NOT NULL,
@@ -168,6 +168,7 @@ FROM autos a
 JOIN color_auto ca ON a.id_auto = ca.id_auto
 JOIN colores c ON ca.id_color = c.id_color
 WHERE a.id_auto = 1;
+*/
 
 CREATE TABLE IF NOT EXISTS `imagen_auto_color` (
     `id_imagen` INT PRIMARY KEY AUTO_INCREMENT,
