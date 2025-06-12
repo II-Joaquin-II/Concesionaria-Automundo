@@ -422,3 +422,13 @@ INSERT INTO detalle_boleta_alquiler (id_boleta_alquiler, cantidad, precio_unitar
 (3, 1, 600.00, 600.00, 108.00, 708.00),
 (4, 1, 1000.00, 1000.00, 180.00, 1180.00),
 (5, 1, 800.00, 800.00, 144.00, 944.00);
+
+CREATE TABLE accesorio (
+    id_acc BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100),
+    descripcion TEXT,
+    imagen VARCHAR(1000),
+    colores VARCHAR(255),
+    precio DOUBLE
+);
+SELECT * FROM ACCESORIO;
