@@ -45,7 +45,7 @@
               ` : ''}
               <div class="d-flex gap-2 mb-3">
                 <button class="btn btn-outline-primary ">ALQUILAR</button>
-                <button class="btn btn-outline-success">COMPRAR</button>
+                <button class="btn btn-outline-success" onclick="window.location.href='/vista-accesorios.html'">COMPRAR</button>
               </div>
             </div>
           </div>
