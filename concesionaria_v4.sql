@@ -431,4 +431,10 @@ CREATE TABLE accesorio (
     colores VARCHAR(255),
     precio DOUBLE
 );
+
+INSERT INTO accesorio (nombre, descripcion, imagen, colores, precio) VALUES
+('Asiento Deportivo', 'Funda Premium para asiento', 'asiento-rojo.jpg,asiento-negro.jpg,asiento-azul.jpg', 'Rojo,Negro,Azul', 500),
+('Volante Deportivo', 'Cubre volante premium', 'volante-rojo.jpg,volante-negro.jpg,volante-azul.jpg', 'Rojo,Negro,Azul', 150),
+('Palanca de Cambio Deportiva', 'Diseño premium', 'palanca-roja.jpg,palanca-negra.jpg,palanca-verde.jpg', 'Rojo,Negro,Verde', 100);
+
 SELECT * FROM ACCESORIO;
