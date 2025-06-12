@@ -73,7 +73,7 @@ public class SecurityClass {
                 
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                     
-                .requestMatchers("/detallesauto", "/comprar").hasRole("USER")
+                .requestMatchers("/detallesauto", "/vista-accesorios").hasRole("USER")
 
                 .anyRequest().authenticated() 
 
