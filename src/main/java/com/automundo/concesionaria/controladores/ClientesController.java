@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.automundo.concesionaria.model.Usuario;
+import com.automundo.concesionaria.servicios.EmailServicio;
 import com.automundo.concesionaria.servicios.UsuarioService;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +27,9 @@ public class ClientesController {
 
     @Autowired
     private UsuarioService serv_cliente;
+
+    @Autowired
+    private EmailServicio serv_email;
 
     @GetMapping
     public ResponseEntity<List<Usuario>> listarTodos() {
@@ -40,14 +44,7 @@ public class ClientesController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    /*
-    @GetMapping("/dni/{dni}")
-    public ResponseEntity<Usuario> BuscarDNI(@PathVariable String dni) {
-        Optional<Usuario> cliente = serv_cliente.BuscarDNI(dni);
-        return cliente.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-     */
+
     @GetMapping("/dni/{dni}")
     public ResponseEntity<Usuario> BuscarDNI(@PathVariable String dni) {
         if (StringUtils.isBlank(dni)) {
@@ -58,14 +55,7 @@ public class ClientesController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    /*
-    @GetMapping("/celular/{celular}")
-    public ResponseEntity<Usuario> buscarCelular(@PathVariable String celular) {
-        Optional<Usuario> cliente = serv_cliente.buscarCelular(celular);
-        return cliente.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-     */
+
     @GetMapping("/celular/{celular}")
     public ResponseEntity<Usuario> buscarCelular(@PathVariable String celular) {
         if (StringUtils.isBlank(celular)) {
@@ -86,23 +76,71 @@ public class ClientesController {
         }
     }
 
+
+
+
+    /* 
+
+
+
     @PostMapping
     public ResponseEntity<Usuario> insertar(@RequestBody Usuario in_cliente) {
         Usuario insertado = serv_cliente.Guardar(in_cliente);
         return new ResponseEntity<>(insertado, HttpStatus.CREATED);
     }
-    
-    /*
-    @DeleteMapping("/dni/{dni}")
-    public ResponseEntity<Void> borrarClientePorDNI(@PathVariable String dni) {
-        try {
-            serv_cliente.eliminarPorDni(dni);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
+
     */
+
+
+    @PostMapping
+    public ResponseEntity<?> insertar(@RequestBody Usuario in_cliente) {
+        Optional<Usuario> existentePorDni = serv_cliente.BuscarDNI(in_cliente.getDni());
+
+        if (existentePorDni.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("El DNI ya está registrado.");
+        }
+
+        Optional<Usuario> existentePorCelular = serv_cliente.buscarCelular(in_cliente.getCelular());
+        if (existentePorCelular.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("El número de celular ya está registrado.");
+        }
+
+        Optional<Usuario> existentePorEmail = serv_cliente.buscarPorEmail(in_cliente.getEmail());
+        if (existentePorEmail.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("El correo electrónico ya está registrado.");
+        }
+
+        Usuario insertado = serv_cliente.Guardar(in_cliente);
+
+        if (StringUtils.isNotBlank(insertado.getEmail())) {
+            String para = insertado.getEmail();
+            String asunto = "Bienvenido a AutoMundo Perú";
+            String mensaje = "Hola " + insertado.getNombre_usuario() + " " + insertado.getApellidos_usuario() + ",\n\n"
+                    + "¡Gracias por registrarte en AutoMundo Perú!\n"
+                    + "Estamos encantados de tenerte con nosotros.\n\n"
+                    + "Saludos,\nEl equipo de AutoMundo.";
+            serv_email.enviarEmail(para, asunto, mensaje);
+        }
+
+        return new ResponseEntity<>(insertado, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<Usuario> buscarPorEmail(@PathVariable String email) {
+        if (StringUtils.isBlank(email)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        String emailNormalizado = email.trim().toLowerCase();
+        Optional<Usuario> cliente = serv_cliente.buscarPorEmail(emailNormalizado);
+        return cliente.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+    
+
+
 
     @DeleteMapping("/dni/{dni}")
     public ResponseEntity<Void> borrarClientePorDNI(@PathVariable String dni) {

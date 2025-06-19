@@ -49,6 +49,11 @@ public class UsuarioService implements UserDetailsService{
         .filter(c -> c.getRoles().stream().anyMatch(r -> "ROLE_USER".equals(r.getNombre())));
     }
 
+    public Optional<Usuario> buscarPorEmail(String email) {
+    return repo_clientes.findByEmail(email)
+        .filter(c -> c.getRoles().stream().anyMatch(r -> "ROLE_USER".equals(r.getNombre())));
+    }
+
     public Usuario Actualizar(int id_cli, Usuario actualiza) {
         
         Usuario clienteExiste = repo_clientes.findById(id_cli)
