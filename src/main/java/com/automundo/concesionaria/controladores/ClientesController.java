@@ -1,8 +1,9 @@
 package com.automundo.concesionaria.controladores;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,26 +45,46 @@ public class ClientesController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-
     @GetMapping("/dni/{dni}")
-    public ResponseEntity<Usuario> BuscarDNI(@PathVariable String dni) {
+    public ResponseEntity<Map<String, Object>> BuscarDNI(@PathVariable String dni) {
+        Map<String, Object> response = new HashMap<>();
+
         if (StringUtils.isBlank(dni)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            response.put("error", "DNI vacío o inválido");
+            return ResponseEntity.badRequest().body(response);
         }
+
         Optional<Usuario> cliente = serv_cliente.BuscarDNI(dni);
-        return cliente.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        response.put("cliente", cliente.orElse(null));
+        return ResponseEntity.ok(response);
     }
 
-
     @GetMapping("/celular/{celular}")
-    public ResponseEntity<Usuario> buscarCelular(@PathVariable String celular) {
+    public ResponseEntity<Map<String, Object>> buscarCelular(@PathVariable String celular) {
+        Map<String, Object> response = new HashMap<>();
+
         if (StringUtils.isBlank(celular)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            response.put("error", "Celular vacío o inválido");
+            return ResponseEntity.badRequest().body(response);
         }
+
         Optional<Usuario> cliente = serv_cliente.buscarCelular(celular);
-        return cliente.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        response.put("cliente", cliente.orElse(null));
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/usuario/{usuario}")
+    public ResponseEntity<Map<String, Object>> buscarPorUsuario(@PathVariable String usuario) {
+        Map<String, Object> response = new HashMap<>();
+
+        if (StringUtils.isBlank(usuario)) {
+            response.put("error", "Nombre de usuario vacío o inválido");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        Optional<Usuario> cliente = serv_cliente.buscarPorUsuario(usuario);
+        response.put("cliente", cliente.orElse(null));
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
@@ -75,22 +96,6 @@ public class ClientesController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-
-
-
-    /* 
-
-
-
-    @PostMapping
-    public ResponseEntity<Usuario> insertar(@RequestBody Usuario in_cliente) {
-        Usuario insertado = serv_cliente.Guardar(in_cliente);
-        return new ResponseEntity<>(insertado, HttpStatus.CREATED);
-    }
-
-    */
-
 
     @PostMapping
     public ResponseEntity<?> insertar(@RequestBody Usuario in_cliente) {
@@ -113,6 +118,12 @@ public class ClientesController {
                     .body("El correo electrónico ya está registrado.");
         }
 
+        Optional<Usuario> existentePorUsuario = serv_cliente.buscarPorUsuario(in_cliente.getUsuario());
+        if (existentePorUsuario.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("El nombre de usuario ya está registrado.");
+        }
+
         Usuario insertado = serv_cliente.Guardar(in_cliente);
 
         if (StringUtils.isNotBlank(insertado.getEmail())) {
@@ -129,18 +140,19 @@ public class ClientesController {
     }
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<Usuario> buscarPorEmail(@PathVariable String email) {
+    public ResponseEntity<Map<String, Object>> buscarPorEmail(@PathVariable String email) {
+        Map<String, Object> response = new HashMap<>();
+
         if (StringUtils.isBlank(email)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            response.put("error", "Email vacío o inválido");
+            return ResponseEntity.badRequest().body(response);
         }
+
         String emailNormalizado = email.trim().toLowerCase();
         Optional<Usuario> cliente = serv_cliente.buscarPorEmail(emailNormalizado);
-        return cliente.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        response.put("cliente", cliente.orElse(null));
+        return ResponseEntity.ok(response);
     }
-    
-
-
 
     @DeleteMapping("/dni/{dni}")
     public ResponseEntity<Void> borrarClientePorDNI(@PathVariable String dni) {
