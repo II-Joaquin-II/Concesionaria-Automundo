@@ -84,6 +84,22 @@ INSERT INTO autos (modelo, marca, ano, precio, kilometraje, transmision, combust
 	('LC 500h', 'Lexus', 2022, 97000, 19000, 'Automática', 'Híbrido', 'Diseño coupé', 'Asistente de carril', 'Sonido Mark Levinson', 'Head-Up Display', 'Coupé', 'Disponible');
 SELECT * FROM autos;
 
+CREATE TABLE IF NOT EXISTS `alquiler_auto` (
+    `id_alquiler` INT PRIMARY KEY AUTO_INCREMENT,
+    `id_auto` INT NOT NULL,
+    `disponible_alquiler` ENUM('sí', 'no') DEFAULT 'sí',
+    FOREIGN KEY (`id_auto`) REFERENCES `autos`(`id_auto`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO alquiler_auto (id_auto, disponible_alquiler) VALUES
+(1, 'sí'),
+(2, 'sí'),
+(3, 'sí'),
+(4, 'no'),  -- Este auto está alquilado
+(5, 'sí'),
+(6, 'no'),  -- Este también está alquilado
+(7, 'sí'),
+(8, 'sí');
 
 ALTER TABLE autos DROP COLUMN imagen;
 
@@ -239,10 +255,12 @@ SELECT
     a.equipamiento4,
     a.categoria,
     a.estado,
+    alq.disponible_alquiler,
     GROUP_CONCAT(DISTINCT c.nombre_color SEPARATOR ', ') AS colores,
     GROUP_CONCAT(DISTINCT i.nombre_archivo SEPARATOR ', ') AS imagenes
 FROM autos a
-LEFT JOIN color_auto ca ON a.id_auto = ca.id_auto
+LEFT JOIN alquiler_auto alq ON a.id_auto = alq.id_auto
+LEFT JOIN imagen_auto_color ca ON a.id_auto = ca.id_auto
 LEFT JOIN colores c ON ca.id_color = c.id_color
 LEFT JOIN imagen_auto_color i ON a.id_auto = i.id_auto AND ca.id_color = i.id_color
 GROUP BY a.id_auto;
