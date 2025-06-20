@@ -2,102 +2,84 @@
 <html lang="es">
     <head>
         <meta charset="UTF-8" />
-        <title>Agrega accesorios a tu compra</title>
-        <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Accesorios para Autos</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         <style>
-            body {
-                font-family: Arial, sans-serif;
-                background-color: #f7f7f7;
-                margin: 0;
-                padding: 0px;
-                text-align: center;
+            .accesorio-card img {
+                width: 100%;
+                height: auto;
             }
-            h1 {
-                margin-bottom: 40px;
-                color: #333;
-            }
-            .grid-accesorios {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-                gap: 30px;
-                max-width: 1200px;
-                margin: 0 auto;
-            }
-            .card {
-                background: white;
-                border-radius: 10px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-                padding: 15px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-            .card h3 {
-                margin: 15px 0 10px;
-                color: #222;
-            }
-            .imagen-principal {
-                width: 250px;
-                height: 250px;
-                object-fit: contain;
-                border-radius: 8px;
+            .accesorio-card {
+                margin: 15px 0;
                 border: 1px solid #ddd;
+                border-radius: 8px;
+                overflow: hidden;
             }
-            .miniaturas {
-                margin-top: 15px;
-                display: flex;
-                gap: 10px;
-                justify-content: center;
+            .accesorio-card-body {
+                padding: 15px;
             }
-            .miniatura {
-                width: 50px;
-                height: 50px;
-                object-fit: contain;
-                border-radius: 6px;
-                border: 2px solid transparent;
-                cursor: pointer;
-                transition: border-color 0.3s;
-            }
-            .miniatura.selected {
-                border-color: #007bff;
-            }
-            .cantidad {
-                margin-top: 15px;
-            }
-            .input-cantidad {
-                width: 60px;
-                padding: 5px;
-                font-size: 1rem;
-                text-align: center;
-            }
-            .btn-agregar {
-                margin-top: 15px;
-                padding: 10px 20px;
+            .btn-primary {
                 background-color: #007bff;
                 border: none;
-                color: white;
-                font-size: 1rem;
-                border-radius: 5px;
+            }
+            /* Imagen principal grande */
+            .main-image {
+                width: 100%;
+                max-height: 300px;
+                object-fit: contain;
+                margin-bottom: 15px;
+                border-radius: 8px;
+                border: 1px solid #ccc;
+            }
+            /* Contenedor de miniaturas */
+            .thumbnails-container {
+                display: flex;
+                justify-content: center; /* Centrar las miniaturas */
+                overflow-x: auto; /* Permite hacer scroll horizontal si las miniaturas son muchas */
+                gap: 10px; /* Espacio entre miniaturas */
+                padding: 5px 0; /* Padding vertical para las miniaturas */
+            }
+
+            /* Miniaturas pequeñas */
+            .thumbnail {
+                width: 60px;   /* Tamaño pequeño para las miniaturas */
+                height: 60px;
                 cursor: pointer;
-                transition: background-color 0.3s;
+                border-radius: 8px;
+                border: 2px solid transparent;
+                object-fit: cover;   /* Asegura que las imágenes se ajusten sin distorsión */
+                transition: border-color 0.3s, opacity 0.3s;
+                max-width: 60px;   /* Evita que se estiren */
+                max-height: 60px;  /* Mantiene las miniaturas dentro del tamaño definido */
             }
-            .btn-agregar:hover {
-                background-color: #0056b3;
+
+            .thumbnail:hover {
+                opacity: 0.8;
             }
-            .precio {
-                font-size: 1.1rem;
-                font-weight: 700;
-                color: #e63946;
-                margin: 10px 0 15px 0;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                letter-spacing: 0.05em;
-                text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+
+            .thumbnail.active {
+                border-color: #007bff;
             }
-            h1 {
-                margin-top: 30px; 
-                margin-bottom: 40px;
+
+            /* Estilo para el nombre y el precio */
+            .card-title {
+                font-weight: bold;
+                font-size: 1.2rem;
                 color: #333;
+            }
+
+            .card-text.price {
+                font-size: 1.1rem;
+                color: #007bff;
+                font-weight: bold;
+            }
+
+            /* Centrar el botón "Agregar" sin cambiar su tamaño */
+            .add-to-cart {
+                text-align: center;
+                margin-top: 15px;
             }
         </style>
     </head>
@@ -111,12 +93,12 @@
                                 <a href="" class="nav-link fw-bold text-white px-3">NOSOTROS</a>
                             </li>
                             <li class="nav-item">
-                                <a th:href="@{/index}" class="nav-link fw-bold text-white px-3">AUTOS</a>
+                                <a href="" class="nav-link fw-bold text-white px-3">AUTOS</a>
                             </li>
                         </ul>
                     </div>
                     <div class="col-12 col-md-4 text-center mb-3 mb-md-0">
-                        <a th:href="@{/principal}">
+                        <a>
                             <img src="img/LOGOV.4.png" class="img-fluid" alt="Logo">
                         </a>
                     </div>
@@ -138,71 +120,66 @@
                 </div>
             </div>
         </header>
+        <div class="container mt-5">
+            <h2 class="text-center mb-4">Accesorios Disponibles</h2>
 
-        <h1>Agrega accesorios a tu compra</h1>
+            <div class="row">
+                <div class="col-md-4" th:each="acc, iterStat : ${accesorios}">
+                    <div class="card accesorio-card">
+                        <div class="accesorio-card-body">
+                            <!-- Nombre del accesorio con estilo resaltado -->
+                            <h5 class="card-title" th:text="${acc.nombre}">Nombre del Accesorio</h5>
 
-        <div class="grid-accesorios">
+                            <!-- Descripción -->
+                            <p class="card-text" th:text="${acc.descripcion}">Descripción del accesorio</p>
 
-            <div class="card">
-                <h3>Asiento Deportivo</h3>
-                <p>Funda Premium para asiento</p>
-                <p class="precio">S/ 500.00</p>
-                <img src="/img/asiento-rojo.jpg" alt="Imagen principal Asiento" class="imagen-principal" />
-                <div class="miniaturas">
-                    <img src="/img/asiento-rojo.jpg" alt="Rojo" class="miniatura selected" />
-                    <img src="/img/asiento-azul.jpg" alt="Azul" class="miniatura" />
-                    <img src="/img/asiento-negro.jpg" alt="Negro" class="miniatura" />
+                            <!-- Precio con estilo resaltado -->
+                            <p class="card-text price">Precio: S/. <span th:text="${'%.2f'.formatted(acc.precio)}">0.00</span></p>
+
+                            <!-- Colores disponibles -->
+                            <p class="card-text">Colores: <span th:text="${acc.colores}">Colores disponibles</span></p>
+
+                            <!-- Imagen principal grande -->
+                            <img th:id="'main-image-' + ${iterStat.index}"
+                                 th:src="@{'/img/' + ${#strings.arraySplit(acc.imagen, ',')[0]}}"
+                                 alt="Imagen principal"
+                                 class="main-image" />
+
+                            <!-- Contenedor para las miniaturas centradas -->
+                            <div class="thumbnails-container">
+                                <img th:each="img, imgStat : ${#strings.arraySplit(acc.imagen, ',')}"
+                                     th:src="@{'/img/' + ${img}}"
+                                     class="thumbnail"
+                                     th:classappend="${imgStat.index == 0} ? ' active' : ''"
+                                     alt="Miniatura"
+                                     th:onclick="'changeImage(' + ${iterStat.index} + ', this)'"
+                                     />
+                            </div>
+
+                            <!-- Botón de agregar centrado -->
+                            <div class="add-to-cart">
+                                <a href="#" class="btn btn-primary">Agregar</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <button class="btn-agregar">Agregar</button>
-            </div>
-
-            <div class="card">
-                <h3>Palanca</h3>
-                <p>Diseño premium</p>
-                <p class="precio">S/ 100.00</p>
-                <img src="/img/palanca-negra.jpg" alt="Imagen principal Palanca" class="imagen-principal" />
-
-                <div class="miniaturas">
-                    <img src="/img/palanca-negra.jpg" alt="Negra" class="miniatura selected" />
-                    <img src="/img/palanca-roja.jpg" alt="Roja" class="miniatura" />
-                    <img src="/img/palanca-verde.jpg" alt="Verde" class="miniatura" />
-                </div>
-
-                <button class="btn-agregar">Agregar</button>
-            </div>
-
-            <div class="card">
-                <h3>Volante Deportivo</h3>
-                <p>Cubre volante premium</p>
-                <p class="precio">S/ 150.00</p>
-                <img src="/img/volante-negro.jpg" alt="Imagen principal Volante Negro" class="imagen-principal" />
-
-                <div class="miniaturas">
-                    <img src="/img/volante-negro.jpg" alt="Volante Negro" class="miniatura selected" />
-                    <img src="/img/volante-rojo.jpg" alt="Volante Rojo" class="miniatura" />
-                    <img src="/img/volante-azul.jpg" alt="Volante Azul" class="miniatura" />
-                </div>
-                <button class="btn-agregar">Agregar</button>
             </div>
         </div>
+
         <script>
-            // Código para cambiar imagen principal al hacer clic en miniaturas
-            document.querySelectorAll('.card').forEach(card => {
-                const imgPrincipal = card.querySelector('.imagen-principal');
-                const miniaturas = card.querySelectorAll('.miniatura');
+            function changeImage(index, imgElement) {
+                const mainImage = document.getElementById('main-image-' + index);
+                if (!mainImage)
+                    return;
+                mainImage.src = imgElement.src;
 
-                miniaturas.forEach(mini => {
-                    mini.addEventListener('click', () => {
-                        // Cambiar imagen principal
-                        imgPrincipal.src = mini.src;
-
-                        // Actualizar selección
-                        miniaturas.forEach(m => m.classList.remove('selected'));
-                        mini.classList.add('selected');
-                    });
-                });
-            });
+                // Actualizar miniaturas activas
+                const thumbnailsContainer = imgElement.parentElement;
+                const thumbnails = thumbnailsContainer.querySelectorAll('.thumbnail');
+                thumbnails.forEach(thumb => thumb.classList.remove('active'));
+                imgElement.classList.add('active');
+            }
         </script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     </body>
 </html>
