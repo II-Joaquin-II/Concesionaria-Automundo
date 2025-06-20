@@ -48,6 +48,7 @@ public class SecurityClass {
              
                 .requestMatchers(HttpMethod.GET, "/api/autos")
                 .permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/autos/{id}").permitAll() // Detalle público por id
 
                 .requestMatchers(HttpMethod.PUT, "/api/autos/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/autos/**").hasRole("ADMIN")
