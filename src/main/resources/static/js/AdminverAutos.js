@@ -21,7 +21,8 @@ async function listarAutos() {
                     <th>Kilometraje</th>
                     <th>Transmisión</th>
                     <th>Combustible</th>
-                    
+        
+                    <th>Alquiler</th>
                     <th>Categoría</th>
                     <th>Estado</th>
                     <th>Colores</th>
@@ -33,7 +34,7 @@ async function listarAutos() {
 
         autos.forEach(auto => {
             const colores = auto.colores.map(color => color.nombreColor).join(", ");
-
+            const alquilerDisponible = auto.disponibleAlquiler;
             
             const imagenes = auto.imagenes.map(imagen => 
                 `<img src="/img/${imagen.nombreArchivo}" class="img-thumbnail" width="90" height="90" alt="Imagen del auto">`
@@ -50,6 +51,7 @@ async function listarAutos() {
                 <td>${auto.transmision}</td>
                 <td>${auto.combustible}</td>
                 
+                <td>${alquilerDisponible}</td>
                 <td>${auto.categoria}</td>
                 <td>${auto.estado}</td>
                 <td>${colores}</td>
@@ -165,7 +167,23 @@ async function listarAutos() {
                             <label class="form-label">Imágenes para cada color (nombre del archivo con extensión)</label>
                             <div id="imagenesPorColor"></div>
                         </div>
-
+                        
+                        <div class="mb-3">
+                <label class="form-label">¿Disponible para alquiler?</label>
+                    <div class="form-check">
+                  <input class="form-check-input" type="radio" name="disponibleAlquiler" id="alquilerSi" value="sí" checked>
+                 <label class="form-check-label" for="alquilerSi">
+                             Sí
+                       </label>
+                    </div>  
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="disponibleAlquiler" id="alquilerNo" value="no">
+              <label class="form-check-label" for="alquilerNo">
+                              No
+                 </label>
+                     </div>
+                        </div>
+                        
                         <div class="d-flex justify-content-center gap-3">
                             <button type="submit" class="btn btn-primary">Insertar Auto</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -255,6 +273,7 @@ async function guardarAuto() {
     const kilometraje = parseInt(document.getElementById('kilometraje').value);
     const transmision = document.getElementById('transmision').value.trim();
     const combustible = document.getElementById('combustible').value.trim();
+    const disponibleAlquiler = document.querySelector('input[name="disponibleAlquiler"]:checked').value;
     const equipamiento1 = document.getElementById('equipamiento1').value.trim();
     const equipamiento2 = document.getElementById('equipamiento2').value.trim();
     const equipamiento3 = document.getElementById('equipamiento3').value.trim();
@@ -309,6 +328,7 @@ async function guardarAuto() {
         kilometraje,
         transmision,
         combustible,
+        disponibleAlquiler,
         equipamiento1,
         equipamiento2,
         equipamiento3,
@@ -408,6 +428,7 @@ async function verDetalles(auto) {
                     <p><strong>Kilometraje:</strong> ${auto.kilometraje}</p>
                     <p><strong>Transmisión:</strong> ${auto.transmision}</p>
                     <p><strong>Combustible:</strong> ${auto.combustible}</p>
+                    <p><strong>Disponible para alquiler:</strong> ${auto.disponibleAlquiler === 'sí' ? 'Sí' : 'No'}</p>
                     <p><strong>Equipamiento 1:</strong> ${auto.equipamiento1}</p>
                     <p><strong>Equipamiento 2:</strong> ${auto.equipamiento2}</p>
                     <p><strong>Equipamiento 3:</strong> ${auto.equipamiento3}</p>
@@ -546,6 +567,19 @@ async function editarAuto(idAuto) {
                             <div id="imagenesPorColor"></div>
                         </div>
 
+                        
+                        <div class="mb-3">
+                        <label class="form-label">¿Disponible para alquiler?</label>
+                     <div class="form-check">
+                     <input class="form-check-input" type="radio" name="disponibleAlquiler" id="alquilerSi" value="sí" ${auto.disponibleAlquiler === 'sí' ? 'checked' : ''}>
+                         <label class="form-check-label" for="alquilerSi">Sí</label>
+                        </div>
+                         <div class="form-check">
+                         <input class="form-check-input" type="radio" name="disponibleAlquiler" id="alquilerNo" value="no" ${auto.disponibleAlquiler === 'no' ? 'checked' : ''}>
+                         <label class="form-check-label" for="alquilerNo">No</label>
+                            </div>
+                            </div>
+                        
                         <div class="d-flex justify-content-center gap-3">
                             <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -653,6 +687,7 @@ async function guardarEdicionAuto(idAuto) {
     const kilometraje = parseInt(document.getElementById('kilometraje').value);
     const transmision = document.getElementById('transmision').value.trim();
     const combustible = document.getElementById('combustible').value.trim();
+    const disponibleAlquiler = document.querySelector('input[name="disponibleAlquiler"]:checked').value;    
     const equipamiento1 = document.getElementById('equipamiento1').value.trim();
     const equipamiento2 = document.getElementById('equipamiento2').value.trim();
     const equipamiento3 = document.getElementById('equipamiento3').value.trim();
@@ -710,6 +745,7 @@ async function guardarEdicionAuto(idAuto) {
         kilometraje,
         transmision,
         combustible,
+        disponibleAlquiler,
         categoria,
         estado,
         equipamiento1,

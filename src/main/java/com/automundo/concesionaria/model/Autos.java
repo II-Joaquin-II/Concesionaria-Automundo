@@ -44,6 +44,5 @@ public class Autos {
     @OneToMany(mappedBy = "auto", cascade = CascadeType.ALL, orphanRemoval = true)
       /*@JsonManagedReference*/
     private List<ImagenAutoColor> imagenes = new ArrayList<>();
-   
-   
+    
 }

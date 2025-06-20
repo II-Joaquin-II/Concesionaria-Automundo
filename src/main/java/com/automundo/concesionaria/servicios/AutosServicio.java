@@ -3,11 +3,13 @@ package com.automundo.concesionaria.servicios;
 import com.automundo.concesionaria.dto.AutoDTO;
 import com.automundo.concesionaria.dto.ColorDTO;
 import com.automundo.concesionaria.dto.ImagenAutoColorDTO;
+import com.automundo.concesionaria.model.AlquilerAuto;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import com.automundo.concesionaria.model.Autos;
 import com.automundo.concesionaria.model.Color;
 import com.automundo.concesionaria.model.ImagenAutoColor;
+import com.automundo.concesionaria.repositorio.AlquilerAutoRepositorio;
 
 import com.automundo.concesionaria.repositorio.AutosRepositorio;
 import com.automundo.concesionaria.repositorio.ColorRepositorio;
@@ -29,6 +31,9 @@ public class AutosServicio {
 
     @Autowired
     private ImagenAutoColorRepositorio imagenAutoColorRepository;
+    
+    @Autowired
+    private AlquilerAutoRepositorio alquilerAutoRepositorio; 
 
    public List<AutoDTO> listarAutos() {
     return autoRepository.findAll().stream()
@@ -71,6 +76,14 @@ public class AutosServicio {
             imagen.setNombreArchivo(imgDTO.getNombreArchivo());
             imagenAutoColorRepository.save(imagen);
         }
+    }
+    
+     if (autoDTO.getDisponibleAlquiler() != null) {
+        AlquilerAuto alquiler = new AlquilerAuto();
+        alquiler.setAuto(autoGuardado);
+        alquiler.setDisponibleAlquiler(autoDTO.getDisponibleAlquiler()); // "sí" o "no"
+
+        alquilerAutoRepositorio.save(alquiler);
     }
 
     // Refrescar entidad para mapear con imágenes y colores guardados
@@ -117,6 +130,25 @@ public class AutosServicio {
     }
 
     Autos autoGuardado = autoRepository.save(autoExistente);
+    
+    if (autoDTO.getDisponibleAlquiler() != null) {
+    String disponible = autoDTO.getDisponibleAlquiler().trim().toLowerCase();
+
+    // Validar valor
+    if (!disponible.equals("sí") && !disponible.equals("no")) {
+        throw new IllegalArgumentException("Valor de disponibleAlquiler inválido: " + disponible);
+    }
+
+    AlquilerAuto alquiler = alquilerAutoRepositorio.findByAuto_IdAuto(autoGuardado.getIdAuto())
+    .orElseGet(() -> {
+        AlquilerAuto nuevo = new AlquilerAuto();
+        nuevo.setAuto(autoGuardado);
+        return nuevo;
+    });
+
+    alquiler.setDisponibleAlquiler(disponible); // ✅ Guardar en minúscula
+    alquilerAutoRepositorio.save(alquiler);
+}
 
     // Devolver DTO actualizado mapeado desde la entidad guardada
     return mapearAutoADTO(autoGuardado);
@@ -164,7 +196,14 @@ public class AutosServicio {
             })
             .collect(Collectors.toList());
     dto.setImagenes(imagenDTOs);
-
+    
+    
+// Obtener disponibilidad de alquiler, en minúsculas para que el front coincida
+    alquilerAutoRepositorio.findByAuto_IdAuto(auto.getIdAuto())
+        .ifPresentOrElse(
+            alquiler -> dto.setDisponibleAlquiler(alquiler.getDisponibleAlquiler().toLowerCase()),
+            () -> dto.setDisponibleAlquiler("no disponible") // puedes poner "no" si prefieres
+        );
     return dto;
 }
        
