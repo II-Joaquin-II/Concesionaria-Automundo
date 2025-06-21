@@ -62,7 +62,16 @@
             <div class="row justify-content-center">
                 <div class="col-12 col-sm-6 col-md-3 mb-4 d-grid gap-4">
                     <a href="adminverclientes" class="btn btn-outline-primary btn-lg" type="button">Ver cliente</a>
+                    <!--
                     <a href="adminverautos" class="btn btn-outline-primary btn-lg" type="button">Ver autos</a>
+                    -->
+                    <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        Ver autos
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="adminverautos">ver autos</a></li>
+                        <li><a class="dropdown-item" href="admin-accesorios">ver accesorios</a></li>
+                    </ul>
                 </div>
                 <div class="col-12 col-sm-6 col-md-3 mb-4 d-grid gap-4">
 
@@ -75,9 +84,7 @@
                     </ul>
                     <a href="adminverreclamos" class="btn btn-outline-primary btn-lg" type="button">Ver reclamos</a>
                 </div>
-                <div class="col-12 col-sm-6 col-md-4">
-                        <a href="admin-accesorios" class="btn btn-outline-primary btn-lg"> Ver accesorios </a>
-                </div>
+                
             </div>
         </div>
 
