@@ -53,9 +53,21 @@ if (auto.imagenes && auto.imagenes.length > 1) {
         document.getElementById('auto-precio').textContent = `$${auto.precio.toLocaleString()}`;
 
         
-        document.getElementById('btn-alquilar').onclick = () => {
-          window.location.href = '/vista-alquiler.html?idAuto=' + idAuto;
-        };
+         // Botón de alquiler
+    const btnAlquilar = document.getElementById('btn-alquilar');
+    if (!auto.disponibleAlquiler || auto.disponibleAlquiler.toLowerCase() === 'no') {
+      btnAlquilar.style.textDecoration = 'line-through';
+      btnAlquilar.disabled = true;
+      btnAlquilar.onclick = null;
+    } else {
+      btnAlquilar.style.textDecoration = 'none';
+      btnAlquilar.disabled = false;
+      btnAlquilar.onclick = () => {
+        window.location.href = '/vista-alquiler.html?idAuto=' + idAuto;
+      };
+    }
+    
+    
         document.getElementById('btn-comprar').onclick = () => {
   const nombreArchivo = document.getElementById('auto-imagen').dataset.nombreArchivo || 'default-car.jpg';
   const encodedNombre = encodeURIComponent(nombreArchivo);
