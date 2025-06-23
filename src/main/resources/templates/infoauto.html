@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html lang="es">
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Automundo - Detalle Auto</title>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Automundo - Detalle Auto</title>
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="/css/infoauto.css" />
-    
-</head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+        <link rel="stylesheet" href="/css/infoauto.css" />
 
-<body>
- <header class="p-3 text-bg-dark header">
+    </head>
+
+    <body>
+        <header class="p-3 text-bg-dark header">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-12 col-md-4 mb-3 mb-md-0 text-md-start">
@@ -51,34 +51,40 @@
             </div>
         </header>
 
-  <main class="container my-5">
-    <div class="main-container">
-      <div class="auto-header">
-        <div class="auto-img text-center">
-  <img id="auto-imagen" src="" alt="Imagen del auto" />
-  <div id="miniaturas-container" class="d-flex justify-content-center gap-2 mt-3 flex-wrap"></div>
-</div>
-        <div class="auto-info-right">
-          <h3 id="auto-nombre"></h3>
-          <h4 class="text-danger" id="auto-precio"></h4>
-          <div class="buttons d-flex gap-2">
-            <button class="btn btn-outline-primary" id="btn-alquilar">ALQUILAR</button>
-            <button class="btn btn-outline-success" id="btn-comprar">COMPRAR</button>
-          </div>
-        </div>
-      </div>
+        <main class="container my-5">
+            <div class="main-container">
+                <div class="auto-header">
+                    <div class="auto-img text-center">
+                        <img id="auto-imagen" src="" alt="Imagen del auto" />
+                        <div id="miniaturas-container" class="d-flex justify-content-center gap-2 mt-3 flex-wrap"></div>
+                    </div>
+                    <div class="auto-info-right">
+                        <h3 id="auto-nombre"></h3>
+                        <h4 class="text-danger" id="auto-precio"></h4>
+                        <div class="buttons d-flex gap-2">
+                            <button class="btn btn-outline-primary" id="btn-alquilar">ALQUILAR</button>
+                            <button class="btn btn-outline-success" id="btn-comprar">COMPRAR</button>
+                        </div>
+                        <div class="mb-3">
+                            <label for="color-select" class="form-label fw-semibold">Selecciona un color:</label>
+                            <select id="color-select" class="form-select form-select-sm">
+                                <!-- Opciones serán cargadas dinámicamente desde JavaScript -->
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
-      <div class="details-container" id="auto-detalles">
-        <!-- Info detallada del auto -->
-      </div>
-    </div>
-  </main>
+                <div class="details-container" id="auto-detalles">
+                    <!-- Info detallada del auto -->
+                </div>
+            </div>
+        </main>
 
-   
-     <script src="/js/infoauto.js"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-</body>
+        <script src="/js/infoauto.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    </body>
 
 </html>
