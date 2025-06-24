@@ -4,12 +4,12 @@ function getIdAutoFromUrl() {
 }
 
 function agregarAlCarrito(id, nombre, precio, color) {
-  const params = new URLSearchParams({ id, nombre, precio, color });
-  return fetch("/carrito/agregar", {
-      method : "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body   : params
-  }).then(r => r.json());          // ← devuelve la promesa
+    const params = new URLSearchParams({id, nombre, precio, color});
+    return fetch("/carrito/agregar", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: params
+    }).then(r => r.json());          // ← devuelve la promesa
 }
 async function cargarAuto() {
     const idAuto = getIdAutoFromUrl();
@@ -20,7 +20,8 @@ async function cargarAuto() {
 
     try {
         const response = await fetch(`http://localhost:8081/api/autos/${idAuto}`);
-        if (!response.ok) throw new Error('Auto no encontrado');
+        if (!response.ok)
+            throw new Error('Auto no encontrado');
         const auto = await response.json();
 
 
@@ -53,39 +54,52 @@ async function cargarAuto() {
         }
 
         document.getElementById('auto-imagen').alt = auto.marca + ' ' + auto.modelo;
-
-
-
-
         document.getElementById('auto-nombre').textContent = `${auto.marca} ${auto.modelo}`;
         document.getElementById('auto-precio').textContent = `$${auto.precio.toLocaleString()}`;
-
 
         document.getElementById('btn-alquilar').onclick = () => {
             window.location.href = '/vista-alquiler.html?idAuto=' + idAuto;
         };
 
-document.getElementById("btn-comprar").onclick = () => {
-  const color = document.getElementById("color-select").value || "";
 
-  localStorage.setItem("idAutoElegido", 1000);   // lo usaremos luego
+        /* infoauto.js (fragmento) */
+        document.getElementById("btn-comprar").onclick = () => {
+            const color = document.getElementById("color-select").value || "";
 
-  agregarAlCarrito(
-      1000,                         // ID real del auto
-      `${auto.marca} ${auto.modelo}`,
-      auto.precio,
-      color
-  ).then(data => {
-      /* cuando el servidor responda OK, pasamos a accesorios */
-      if (data.success) {
-        const nombreArchivo = document.getElementById("auto-imagen").dataset.nombreArchivo
-                              || "default-car.jpg";
-        const encoded = encodeURIComponent(nombreArchivo);
-        window.location.href =
-             `/vista-accesorios.html?idAuto=${auto.idAuto}&img=${encoded}`;
-      }
-  });
-};
+            /* 1. Guardamos en localStorage el ID REAL del auto  */
+            localStorage.setItem("idAutoReal", auto.idAuto);   // <— id real
+            localStorage.setItem("colorAuto", color);
+
+            /* 2. Añadimos el auto al carrito con ID 1000 para la UI */
+            agregarAlCarrito(
+                    1000, // ← placeholder
+                    `${auto.marca} ${auto.modelo}`,
+                    auto.precio,
+                    color
+                    )
+                    .then(() => {
+                        /* 3. Antes de redirigir, mandamos el ID real al backend
+                         para guardarlo en sesión                                     */
+                        return fetch("/carrito/seleccionAuto", {
+                            method: "POST",
+                            headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                            body: new URLSearchParams({
+                                idAuto: auto.idAuto, // real
+                                color: color
+                            })
+                        });
+                    })
+                    .then(() => {
+                        /* 4. Redirigimos a accesorios */
+                        window.location.href =
+                                `/vista-accesorios.html?idAuto=${auto.idAuto}`;
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert("No se pudo registrar la selección del auto.");
+                    });
+        };
+
         const coloresDisponibles = auto.colores && auto.colores.length > 0 ? auto.colores.map(c => c.nombreColor).join(', ') : 'N/A';
         const equipamientoList = [auto.equipamiento1, auto.equipamiento2, auto.equipamiento3, auto.equipamiento4].filter(e => e && e.trim() !== '');
         const equipamientoHtml = `
@@ -127,37 +141,37 @@ document.getElementById("btn-comprar").onclick = () => {
 `;
         document.getElementById('auto-detalles').innerHTML = detallesHtml;
 
-const colorSelect = document.getElementById('color-select');
-colorSelect.innerHTML = ''; // Limpiar opciones previas
+        const colorSelect = document.getElementById('color-select');
+        colorSelect.innerHTML = ''; // Limpiar opciones previas
 
-if (auto.colores && auto.colores.length > 0) {
-    auto.colores.forEach((color, index) => {
-        const option = document.createElement('option');
-        option.value = color.nombreColor;
-        option.textContent = color.nombreColor;
+        if (auto.colores && auto.colores.length > 0) {
+            auto.colores.forEach((color, index) => {
+                const option = document.createElement('option');
+                option.value = color.nombreColor;
+                option.textContent = color.nombreColor;
 
-        // Selecciona automáticamente el primer color
-        if (index === 0) {
-            option.selected = true;
-            localStorage.setItem('colorSeleccionado', color.nombreColor);
-            localStorage.setItem('idAutoSeleccionado', idAuto);
+                // Selecciona automáticamente el primer color
+                if (index === 0) {
+                    option.selected = true;
+                    localStorage.setItem('colorSeleccionado', color.nombreColor);
+                    localStorage.setItem('idAutoSeleccionado', idAuto);
+                }
+
+                colorSelect.appendChild(option);
+            });
+        } else {
+            const option = document.createElement('option');
+            option.disabled = true;
+            option.textContent = 'No hay colores disponibles';
+            colorSelect.appendChild(option);
         }
 
-        colorSelect.appendChild(option);
-    });
-} else {
-    const option = document.createElement('option');
-    option.disabled = true;
-    option.textContent = 'No hay colores disponibles';
-    colorSelect.appendChild(option);
-}
-
 // Guardar color seleccionado en localStorage cuando el usuario lo cambie
-colorSelect.addEventListener('change', (e) => {
-    const colorSeleccionado = e.target.value;
-    localStorage.setItem('colorSeleccionado', colorSeleccionado);
-    localStorage.setItem('idAutoSeleccionado', idAuto);
-});
+        colorSelect.addEventListener('change', (e) => {
+            const colorSeleccionado = e.target.value;
+            localStorage.setItem('colorSeleccionado', colorSeleccionado);
+            localStorage.setItem('idAutoSeleccionado', idAuto);
+        });
     } catch (error) {
         console.error(error);
         alert('Error al cargar la información del auto.');

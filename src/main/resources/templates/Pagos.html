@@ -49,7 +49,7 @@
             </div>
         </header>
         <br>
-        
+
         <div class="container mt-5">
             <h2 class="mb-4 text-center">Resumen de Compra</h2>
             <table class="table table-bordered">
@@ -77,7 +77,7 @@
                 </tfoot>
             </table>
         </div>
-        
+
         <br>
         <form id="formPago" th:action="@{/confirmacion}" method="post">
             <div class="container">
@@ -140,6 +140,8 @@
                         </div>
                     </div>
 
+                    <input type="hidden" name="idAuto"   th:value="${idAutoSeleccionado}" />
+                    <input type="hidden" name="colorAuto" th:value="${colorAutoSeleccionado}" />
                     <!-- Botón -->
                     <div class="d-grid">
                         <button id="btnEnviarVenta" type="submit" class="btn btn-outline-primary btn-lg">Confirmar y Pagar</button>
@@ -147,19 +149,6 @@
 
                 </div>
 
-            <!--    <div class="form-check my-4">
-                    <p>Ingresa los detalles de tu solicitud. También incluye información adicional que nos pueda servir
-                        para entender de mejor forma tu solicitud.</p>
-                    <input class="form-check-input" type="checkbox" id="flexCheckDefault" required="">
-                    <label class="form-check-label" for="flexCheckDefault">
-                        He leído y acepto los términos y condiciones de la política de privacidad vigente.
-                        <a href="">(Ver términos y condiciones)</a>
-                    </label>
-                </div>
-
-                <div class="text-center">
-                    <button id="btnEnviarVenta" type="button" class="btn btn-warning">Enviar</button>
-                </div>-->
             </div>
         </form>
 
@@ -232,6 +221,7 @@
             </div>
         </footer>
 
+        <script src="/js/Pagos.js"></script>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     </body>

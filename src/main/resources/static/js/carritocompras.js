@@ -83,6 +83,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const color = colorSelect ? colorSelect.value : "";
 
             agregarAlCarrito(id, nombre, precio, color);
+            fetch("/carrito/seleccionAuto", {
+                method: "POST",
+                headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                body: new URLSearchParams({
+                    idAutoReal: auto.idAuto,
+                    colorAuto: color
+                })
+            }).then(() => {
+                const nombreArchivo = document.getElementById("auto-imagen").dataset.nombreArchivo || "default-car.jpg";
+                const encoded = encodeURIComponent(nombreArchivo);
+                window.location.href = `/vista-accesorios.html?idAuto=${auto.idAuto}&img=${encoded}`;
+            });
         });
     });
 
