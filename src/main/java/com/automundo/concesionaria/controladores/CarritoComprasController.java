@@ -24,7 +24,15 @@ public class CarritoComprasController {
     public Carrito carrito() {
         return new Carrito();
     }
-
+    
+    @GetMapping("/obtener")
+    public Map<String, Object> obtener(@ModelAttribute("carrito") Carrito carrito) {
+        return Map.of(
+            "success", true,
+            "total",   carrito.getTotal(),
+            "items",   carrito.getItems()
+        );
+    }
     @GetMapping("/carritocompras")
     public String verCarrito(@ModelAttribute("carrito") Carrito carrito, Model model) {
         model.addAttribute("items", carrito.getItems());

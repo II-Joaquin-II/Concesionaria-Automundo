@@ -1,34 +1,40 @@
+
 function agregarAlCarrito(id, nombre, precio, color) {
-    const params = new URLSearchParams({ id, nombre, precio, color });
+    const params = new URLSearchParams({id, nombre, precio, color});
     fetch("/carrito/agregar", {
         method: "POST",
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: params
     })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            actualizarVistaCarrito(data);
-        }
-    });
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    actualizarVistaCarrito(data);
+                }
+            });
 }
 function eliminarDelCarrito(id) {
-    const params = new URLSearchParams({ id });
+    const params = new URLSearchParams({id});
     fetch("/carrito/eliminar", {
         method: "POST",
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: params
     })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            actualizarVistaCarrito(data);
-        }
-    });
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    actualizarVistaCarrito(data);
+                }
+            });
 }
+
 function actualizarVistaCarrito(data) {
     const contenedor = document.getElementById("carrito-items");
     const totalSpan = document.getElementById("carrito-total");
+    if (!contenedor || !totalSpan)
+        return;
+
+    const idAuto = parseInt(localStorage.getItem("idAutoElegido") || "-1", 10);
 
     contenedor.innerHTML = "";
 
@@ -39,13 +45,17 @@ function actualizarVistaCarrito(data) {
             </tr>`;
     } else {
         data.items.forEach(item => {
+            const esAuto = parseInt(item.id) === idAuto;
+
             contenedor.innerHTML += `
                 <tr>
                     <td>${item.nombre}</td>
-                    <td>S/. ${item.precio.toFixed(2)}</td>
+                    <td>S/. ${parseFloat(item.precio).toFixed(2)}</td>
                     <td>${item.color}</td>
                     <td>
-                        <button class="btn btn-danger btn-sm" onclick="eliminarDelCarrito(${item.id})">✕</button>
+                        ${esAuto ? "" : `
+                            <button class="btn btn-danger btn-sm"
+                                    onclick="eliminarDelCarrito(${item.id})">✕</button>`}
                     </td>
                 </tr>`;
         });
@@ -54,7 +64,14 @@ function actualizarVistaCarrito(data) {
     totalSpan.innerText = "S/. " + data.total.toFixed(2);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
+    // Cargar carrito al abrir la página
+    /* carritocompras.js – al cargar accesorios */
+    fetch('/carrito/obtener', {credentials: 'include'})   // incluye cookies de sesión
+            .then(r => r.json())
+            .then(d => actualizarVistaCarrito(d))
+            .catch(err => console.error('Error obteniendo carrito', err));
+    // Acciones de agregar accesorio al carrito
     document.querySelectorAll(".btn-agregar-accesorio").forEach(button => {
         button.addEventListener("click", () => {
             const id = button.dataset.id;
@@ -68,13 +85,14 @@ document.addEventListener("DOMContentLoaded", () => {
             agregarAlCarrito(id, nombre, precio, color);
         });
     });
-});
 
-document.addEventListener("DOMContentLoaded", () => {
+    // Mostrar/ocultar carrito flotante
     const cartButton = document.getElementById("cart-button");
     const floatingCart = document.getElementById("floating-cart");
 
-    cartButton.addEventListener("click", () => {
-        floatingCart.style.display = floatingCart.style.display === "none" ? "block" : "none";
-    });
+    if (cartButton && floatingCart) {
+        cartButton.addEventListener("click", () => {
+            floatingCart.style.display = floatingCart.style.display === "none" ? "block" : "none";
+        });
+    }
 });

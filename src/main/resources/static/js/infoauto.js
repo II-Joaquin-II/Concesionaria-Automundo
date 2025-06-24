@@ -3,6 +3,14 @@ function getIdAutoFromUrl() {
     return params.get('idAuto');
 }
 
+function agregarAlCarrito(id, nombre, precio, color) {
+  const params = new URLSearchParams({ id, nombre, precio, color });
+  return fetch("/carrito/agregar", {
+      method : "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body   : params
+  }).then(r => r.json());          // ← devuelve la promesa
+}
 async function cargarAuto() {
     const idAuto = getIdAutoFromUrl();
     if (!idAuto) {
@@ -56,13 +64,28 @@ async function cargarAuto() {
         document.getElementById('btn-alquilar').onclick = () => {
             window.location.href = '/vista-alquiler.html?idAuto=' + idAuto;
         };
-        document.getElementById('btn-comprar').onclick = () => {
-            const nombreArchivo = document.getElementById('auto-imagen').dataset.nombreArchivo || 'default-car.jpg';
-            const encodedNombre = encodeURIComponent(nombreArchivo);
-            window.location.href = `/vista-accesorios.html?idAuto=${idAuto}&img=${encodedNombre}`;
-        };
 
+document.getElementById("btn-comprar").onclick = () => {
+  const color = document.getElementById("color-select").value || "";
 
+  localStorage.setItem("idAutoElegido", 1000);   // lo usaremos luego
+
+  agregarAlCarrito(
+      1000,                         // ID real del auto
+      `${auto.marca} ${auto.modelo}`,
+      auto.precio,
+      color
+  ).then(data => {
+      /* cuando el servidor responda OK, pasamos a accesorios */
+      if (data.success) {
+        const nombreArchivo = document.getElementById("auto-imagen").dataset.nombreArchivo
+                              || "default-car.jpg";
+        const encoded = encodeURIComponent(nombreArchivo);
+        window.location.href =
+             `/vista-accesorios.html?idAuto=${auto.idAuto}&img=${encoded}`;
+      }
+  });
+};
         const coloresDisponibles = auto.colores && auto.colores.length > 0 ? auto.colores.map(c => c.nombreColor).join(', ') : 'N/A';
         const equipamientoList = [auto.equipamiento1, auto.equipamiento2, auto.equipamiento3, auto.equipamiento4].filter(e => e && e.trim() !== '');
         const equipamientoHtml = `

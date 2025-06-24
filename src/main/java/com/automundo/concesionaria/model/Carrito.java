@@ -14,15 +14,6 @@ public class Carrito {
         this.items = items;
     }
 
-    /*public void agregarItem(Item nuevo) {
-        for (Item item : items) {
-            if (item.getId().equals(nuevo.getId())) {
-                return;
-            }
-        }
-        items.add(nuevo);
-    }*/
-
     public void agregarItem(Item nuevo) {
     for (Item item : items) {
         if (item.getId().equals(nuevo.getId())) {
