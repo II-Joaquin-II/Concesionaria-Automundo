@@ -1,33 +1,20 @@
 package com.automundo.concesionaria.controladores;
 
-
-import com.automundo.concesionaria.model.Accesorio;
-import com.automundo.concesionaria.model.Autos;
-import com.automundo.concesionaria.model.Pedido;
-import com.automundo.concesionaria.model.PedidoItem;
+import com.automundo.concesionaria.model.Carrito;
 import com.automundo.concesionaria.model.Usuario;
-import com.automundo.concesionaria.repositorio.AccesorioRepositorio;
-import com.automundo.concesionaria.repositorio.AutosRepositorio;
-import com.automundo.concesionaria.repositorio.PedidoRepositorio;
 import com.automundo.concesionaria.servicios.PedidoServicio;
 import com.automundo.concesionaria.servicios.UsuarioService;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.math.BigDecimal;
-import java.util.List;
+import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
+//TARJETA
 @Controller
 public class PagosController {
 
@@ -38,27 +25,75 @@ public class PagosController {
     private PedidoServicio pedidoService;
 
     @GetMapping("/pagos")
-    public String mostrarPagos(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    public String mostrarFormularioCompra(Model model, @AuthenticationPrincipal UserDetails userDetails, HttpSession session) {
+        //Obtengo los datos del usuario por authentication, usa Base de datos
         String email = userDetails.getUsername();
         Usuario usuario = usuarioService.obtenerUsuarioPorEmail(email);
         model.addAttribute("usuario", usuario);
-        return "Pagos";
-    }
-
-    @PostMapping("/pagos")
-    public String procesarPago(@ModelAttribute Pedido pedido, @AuthenticationPrincipal UserDetails userDetails) {
-        String email = userDetails.getUsername();
-        Usuario usuario = usuarioService.obtenerUsuarioPorEmail(email);
-
-        pedido.setUsuario(usuario);
-
-        if (pedido.getItems() != null) {
-            pedido.getItems().forEach(item -> item.setPedido(pedido));
+        session.setAttribute("enProcesoPago", true);
+        //Obtengo los datos del carrito por session, no usa Base de datos
+        Carrito carrito = (Carrito) session.getAttribute("carrito");
+        if (carrito != null) {
+            model.addAttribute("carrito", carrito.getItems());
+            model.addAttribute("total", carrito.getTotal());
+        } else {
+            model.addAttribute("carrito", null);
+            model.addAttribute("total", 0.0);
         }
 
-        pedidoService.guardarPedido(pedido);
-        return "redirect:/ResumenPedidos";
+        return "Pagos";
+    }
+    
+
+/*@PostMapping("/confirmacion")
+public String mostrarResumenFinal(HttpSession session, Model model) {
+    Carrito carrito = (Carrito) session.getAttribute("carrito");
+    if (carrito != null) {
+            model.addAttribute("carrito", carrito.getItems());
+            model.addAttribute("total", carrito.getTotal());
+
+    } else {
+        model.addAttribute("carrito", null);
+        model.addAttribute("total", 0.0);
+    }
+    session.setAttribute("enProcesoPago", true);
+    return "ResumenPedidos";
+}*/
+    
+   @PostMapping("/confirmacion")
+public String mostrarResumenFinal(HttpSession session, Model model) {
+    Carrito carrito = (Carrito) session.getAttribute("carrito");
+    if (carrito != null) {
+        // Clonas los ítems antes de vaciar
+        var copiaItems = new ArrayList<>(carrito.getItems());
+        double total = carrito.getTotal();
+
+        // Vacias el carrito (afecta solo la sesión)
+        carrito.vaciar();
+        session.setAttribute("enProcesoPago", false);
+
+        // Pasas la copia al modelo (no se afecta por el vaciado)
+        model.addAttribute("carrito", copiaItems);
+        model.addAttribute("total", total);
+    } else {
+        model.addAttribute("carrito", null);
+        model.addAttribute("total", 0.0);
     }
 
-    
+    return "ResumenPedidos";
+}
+
+@GetMapping("/confirmacion")
+public String mostrarResumenFinalGet(HttpSession session, Model model) {
+    Carrito carrito = (Carrito) session.getAttribute("carrito");
+    if (carrito != null) {
+        model.addAttribute("carrito", carrito.getItems());
+        model.addAttribute("total", carrito.getTotal());
+    } else {
+        model.addAttribute("carrito", null);
+        model.addAttribute("total", 0.0);
+    }
+    session.setAttribute("enProcesoPago", true);
+    return "ResumenPedidos";
+}
 }

@@ -48,26 +48,57 @@
                 </div>
             </div>
         </header>
-<br>
+        <br>
 
         <div class="container py-5">
             <h1 class="mb-4 text-center">¡Gracias por tu compra!</h1>
+        </div>
 
-            <div class="card shadow-sm">
+
+        <div class="container d-flex justify-content-center align-items-center mb-5">
+            <div class="card shadow-sm w-100" style="max-width: 800px;">
                 <div class="card-header bg-primary text-white">
                     Resumen de tu pedido
                 </div>
                 <div class="card-body">
                     <p>Tu pedido ha sido recibido y está en proceso. Aquí tienes el resumen:</p>
-                    <p>Items en carrito: </p>
+                    <p>Items en carrito: <span th:text="${carrito != null ? carrito.size() : 0}">0</span></p>
 
-                    <p class="text-end fw-bold fs-5">
-                        Total a pagar: 
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Producto</th>
+                                <th>Color</th>
+                                <th>Precio (S/.)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="item, stat : ${carrito}">
+                                <td th:text="${stat.index + 1}">1</td>
+                                <td th:text="${item.nombre}">Producto</td>
+                                <td th:text="${item.color}">Color</td>
+                                <td th:text="${#numbers.formatDecimal(item.precio, 1, 'POINT', 2, 'POINT')}">0.00</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr class="fw-bold">
+                                <td colspan="3" class="text-end">Total:</td>
+                                <td th:text="${#numbers.formatDecimal(total, 1, 'POINT', 2, 'POINT')}">0.00</td>
+                            </tr>
+                        </tfoot>
+                    </table>
 
+                    <p class="text-end fw-bold fs-5 mt-3">
+                        Total a pagar:
+                        <span>S/. </span><span th:text="${#numbers.formatDecimal(total, 1, 'POINT', 2, 'POINT')}">0.00</span>
                     </p>
+
                     <div class="d-flex justify-content-end gap-2 mt-3">
+                        <button class="btn btn-success" onclick="window.print()">Imprimir Recibo</button>
                         <button class="btn btn-primary" disabled>Descargar PDF</button>
                     </div>
+
                     <div class="alert alert-info mt-4 mb-0" role="alert">
                         Recibirás un correo con los detalles y la fecha estimada de entrega.
                     </div>
@@ -75,76 +106,82 @@
             </div>
         </div>
 
-<br>
-        <footer class="text-bg-dark text-light pt-5 pb-4 columnas">
-            <div class="container">
+        <div th:if="${carrito == null or #lists.isEmpty(carrito)}" class="container">
+            <div class="alert alert-warning">
+                El carrito está vacío. No se encontró ningún producto en tu pedido.
+            </div>
+        </div>
+    </div>
+    <br>
+    <footer class="text-bg-dark text-light pt-5 pb-4 columnas">
+        <div class="container">
 
-                <div class="row text-center text-md-start"><!--Fila principal donde estaran los divisiones-->
+            <div class="row text-center text-md-start"><!--Fila principal donde estaran los divisiones-->
 
-                    <!--DIV RECLAMACIONES-->
-                    <div class="col-12 col-md-3 mb-4">
-                        <h5 class="text-uppercase mb-4 fw-bold text-danger">Reclamaciones</h5>
-                        <hr class="mb-4">
-                        <div class="mt-3">
-                            <a th:href="@{/reclamos}"> <!-- Link de la pagina de reclamaciones -->
-                                <img src="img/libro.png" width="150" height="80">
-                            </a>
-                        </div>
-                    </div>
-                    <!--DIV CONTACTOS-->
-                    <div class="col-12 col-md-3 mb-4">
-                        <h5 class="text-uppercase mb-4 fw-bold text-danger">Contacto</h5>
-                        <hr class="mb-4">
-                        <p><i class="fas fa-home me-2"></i> Av. Andrés Aramburú, 1105, San Isidro</p>
-                        <p><i class="fas fa-envelope me-2"></i> Lunes a Sábado de 09:00 am - 06:00 pm</p>
-                        <p><i class="fas fa-phone me-2"></i>
-                            <a href="https://chat.whatsapp.com/FcHo3U2scUO3hlYxQvarL3" class="text-light" style="text-decoration: none;">+51 925 222 579</a>
-                        </p>
-                    </div>
-
-
-                    <!--DIV Inicio y nosotros-->
-                    <div class="col-12 col-md-3 mb-4">
-                        <h5 class="text-uppercase mb-4 fw-bold text-danger">Inicio</h5>
-                        <hr class="mb-4">
-                        <p><a href="" class="text-light" style="text-decoration: none;">Nuestros Autos</a></p>
-                        <p><a href="" class="text-light" style="text-decoration: none;">Financia tu auto</a></p>
-                        <p><a href="https://chat.whatsapp.com/FcHo3U2scUO3hlYxQvarL3" class="text-light" style="text-decoration: none;">Contacto</a></p>
-                    </div>
-
-                    <!--DIV REDES-->
-                    <div class="col-12 col-md-3 mb-4">
-                        <h5 class="text-uppercase mb-4 fw-bold text-danger">NUESTRAS REDES</h5>
-                        <hr class="mb-4">
-                        <ul class="list-unstyled d-flex justify-content-center justify-content-md-start gap-3">
-                            <li class="list-inline-item">
-                                <a href="https://www.facebook.com/AutomundoPe?mibextid=ZbWKwL" class="text-light"><i class="fab fa-facebook"></i></a>
-                            </li>   
-                            <li class="list-inline-item">
-                                <a href="https://x.com/automundo" class="text-light"><i class="fab fa-twitter"></i></a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a href="https://www.linkedin.com/company/automundope/?originalSubdomain=pe" class="text-light"><i class="fab fa-linkedin-in"></i></a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a href="https://www.youtube.com/channel/UCtYJf45k8xS7GdIfvVgAjlw" class="text-light"><i class="fab fa-youtube"></i></a>
-                            </li>
-                        </ul>
-                        <a href="principal">
-                            <img src="img/LOGOV.4.png">
+                <!--DIV RECLAMACIONES-->
+                <div class="col-12 col-md-3 mb-4">
+                    <h5 class="text-uppercase mb-4 fw-bold text-danger">Reclamaciones</h5>
+                    <hr class="mb-4">
+                    <div class="mt-3">
+                        <a th:href="@{/reclamos}"> <!-- Link de la pagina de reclamaciones -->
+                            <img src="img/libro.png" width="150" height="80">
                         </a>
                     </div>
                 </div>
+                <!--DIV CONTACTOS-->
+                <div class="col-12 col-md-3 mb-4">
+                    <h5 class="text-uppercase mb-4 fw-bold text-danger">Contacto</h5>
+                    <hr class="mb-4">
+                    <p><i class="fas fa-home me-2"></i> Av. Andrés Aramburú, 1105, San Isidro</p>
+                    <p><i class="fas fa-envelope me-2"></i> Lunes a Sábado de 09:00 am - 06:00 pm</p>
+                    <p><i class="fas fa-phone me-2"></i>
+                        <a href="https://chat.whatsapp.com/FcHo3U2scUO3hlYxQvarL3" class="text-light" style="text-decoration: none;">+51 925 222 579</a>
+                    </p>
+                </div>
 
-                <!--Mensaje final del aplicativo-->
-                <hr class="mb-2">
-                <div class="text-center mb-2">
-                    <p>Concesionaria AUTOMUNDO | Todos los derechos reservados © 2025</p>
+
+                <!--DIV Inicio y nosotros-->
+                <div class="col-12 col-md-3 mb-4">
+                    <h5 class="text-uppercase mb-4 fw-bold text-danger">Inicio</h5>
+                    <hr class="mb-4">
+                    <p><a href="" class="text-light" style="text-decoration: none;">Nuestros Autos</a></p>
+                    <p><a href="" class="text-light" style="text-decoration: none;">Financia tu auto</a></p>
+                    <p><a href="https://chat.whatsapp.com/FcHo3U2scUO3hlYxQvarL3" class="text-light" style="text-decoration: none;">Contacto</a></p>
+                </div>
+
+                <!--DIV REDES-->
+                <div class="col-12 col-md-3 mb-4">
+                    <h5 class="text-uppercase mb-4 fw-bold text-danger">NUESTRAS REDES</h5>
+                    <hr class="mb-4">
+                    <ul class="list-unstyled d-flex justify-content-center justify-content-md-start gap-3">
+                        <li class="list-inline-item">
+                            <a href="https://www.facebook.com/AutomundoPe?mibextid=ZbWKwL" class="text-light"><i class="fab fa-facebook"></i></a>
+                        </li>   
+                        <li class="list-inline-item">
+                            <a href="https://x.com/automundo" class="text-light"><i class="fab fa-twitter"></i></a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="https://www.linkedin.com/company/automundope/?originalSubdomain=pe" class="text-light"><i class="fab fa-linkedin-in"></i></a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="https://www.youtube.com/channel/UCtYJf45k8xS7GdIfvVgAjlw" class="text-light"><i class="fab fa-youtube"></i></a>
+                        </li>
+                    </ul>
+                    <a href="principal">
+                        <img src="img/LOGOV.4.png">
+                    </a>
                 </div>
             </div>
-        </footer>
+
+            <!--Mensaje final del aplicativo-->
+            <hr class="mb-2">
+            <div class="text-center mb-2">
+                <p>Concesionaria AUTOMUNDO | Todos los derechos reservados © 2025</p>
+            </div>
+        </div>
+    </footer>
 
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-    </body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+</body>
 </html>

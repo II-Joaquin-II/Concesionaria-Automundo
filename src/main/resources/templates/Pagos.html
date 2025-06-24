@@ -51,34 +51,35 @@
         <br>
         
         <div class="container mt-5">
-    <h2 class="mb-4 text-center">Resumen de Compra</h2>
-    <table class="table table-bordered">
-        <thead class="table-light">
-            <tr>
-                <th>#</th>
-                <th>Producto</th>
-                <th>Color</th>
-                <th>Precio (S/.)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="item, stat : ${items}">
-                <td th:text="${stat.index + 1}">1</td>
-                <td th:text="${item.nombre}">Nombre</td>
-                <td th:text="${item.color}">Color</td>
-                <td th:text="${'%.2f'.formatted(item.precio)}">0.00</td>
-            </tr>
-        </tbody>
-        <tfoot>
-            <tr class="fw-bold">
-                <td colspan="3" class="text-end">Total:</td>
-                <td th:text="${'%.2f'.formatted(total)}">S/. 0.00</td>
-            </tr>
-        </tfoot>
-    </table>
-</div>
+            <h2 class="mb-4 text-center">Resumen de Compra</h2>
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Producto</th>
+                        <th>Color</th>
+                        <th>Precio (S/.)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item, stat : ${carrito}">
+                        <td th:text="${stat.index + 1}">1</td>
+                        <td th:text="${item.nombre}">Nombre</td>
+                        <td th:text="${item.color}">Color</td>
+                        <td th:text="${'%.2f'.formatted(item.precio)}">0.00</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="fw-bold">
+                        <td colspan="3" class="text-end">Total:</td>
+                        <td th:text="${'%.2f'.formatted(total)}">S/. 0.00</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
         <br>
-        <form id="formPago">
+        <form id="formPago" th:action="@{/confirmacion}" method="post">
             <div class="container">
                 <div class="row g-4">
                     <h1 class="mb-4">Identificación del Consumidor</h1>
@@ -141,12 +142,12 @@
 
                     <!-- Botón -->
                     <div class="d-grid">
-                        <button type="submit" class="btn btn-outline-primary btn-lg">Confirmar y Pagar</button>
+                        <button id="btnEnviarVenta" type="submit" class="btn btn-outline-primary btn-lg">Confirmar y Pagar</button>
                     </div>
 
                 </div>
 
-                <div class="form-check my-4">
+            <!--    <div class="form-check my-4">
                     <p>Ingresa los detalles de tu solicitud. También incluye información adicional que nos pueda servir
                         para entender de mejor forma tu solicitud.</p>
                     <input class="form-check-input" type="checkbox" id="flexCheckDefault" required="">
@@ -158,7 +159,7 @@
 
                 <div class="text-center">
                     <button id="btnEnviarVenta" type="button" class="btn btn-warning">Enviar</button>
-                </div>
+                </div>-->
             </div>
         </form>
 
