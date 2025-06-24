@@ -78,6 +78,8 @@ public class SecurityClass {
                     
                 .requestMatchers("/detallesauto", "/vista-accesorios").hasRole("USER")
 
+                .requestMatchers("/reset-password/**", "/forgot-password/**").permitAll()
+
                 .anyRequest().authenticated() 
 
             )
@@ -114,6 +116,8 @@ public class SecurityClass {
         }
     };
     }
+
+    
 
 
 
