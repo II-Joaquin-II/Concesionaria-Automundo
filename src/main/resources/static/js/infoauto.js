@@ -57,11 +57,43 @@ async function cargarAuto() {
         document.getElementById('auto-nombre').textContent = `${auto.marca} ${auto.modelo}`;
         document.getElementById('auto-precio').textContent = `$${auto.precio.toLocaleString()}`;
 
-        document.getElementById('btn-alquilar').onclick = () => {
-            window.location.href = '/vista-alquiler.html?idAuto=' + idAuto;
-        };
 
 
+document.getElementById("btn-alquilar").onclick = () => {
+
+  const color = document.getElementById("color-select").value || "";
+
+  /* 1. Guarda info en localStorage (opcional, por si la necesitas luego) */
+  localStorage.setItem("idAutoReal", auto.idAuto);
+  localStorage.setItem("colorAuto",  color);
+
+  /* 2. Añade el placeholder al carrito (id = 1000) */
+  agregarAlCarrito(
+      1000,
+      `${auto.marca} ${auto.modelo}`,
+      auto.precio,
+      color
+  )
+  /* 3. Envia el id real + color a la sesión del backend */
+  .then(() => {
+      return fetch("/carrito/seleccionAuto", {
+          method: "POST",
+          headers: {"Content-Type": "application/x-www-form-urlencoded"},
+          body: new URLSearchParams({
+              idAuto: auto.idAuto,  // id real
+              color:  color
+          })
+      });
+  })
+  /* 4. Redirige directo a Pagos */
+  .then(() => {
+      window.location.href = "/pagos";
+  })
+  .catch(err => {
+      console.error(err);
+      alert("No se pudo procesar la solicitud de alquiler.");
+  });
+};
         /* infoauto.js (fragmento) */
         document.getElementById("btn-comprar").onclick = () => {
             const color = document.getElementById("color-select").value || "";
