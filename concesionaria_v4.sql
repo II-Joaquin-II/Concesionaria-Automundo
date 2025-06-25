@@ -457,3 +457,26 @@ INSERT INTO accesorio (nombre, descripcion, imagen, colores, precio) VALUES
 ('Palanca de Cambio Deportiva', 'Diseño premium', 'palanca-roja.jpg,palanca-negra.jpg,palanca-verde.jpg', 'Rojo,Negro,Verde', 100);
 
 SELECT * FROM ACCESORIO;
+
+CREATE TABLE IF NOT EXISTS pedido (
+    id_pedido BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    id_auto INT NOT NULL,
+    colorauto VARCHAR(30) NOT NULL,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    total DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELETE CASCADE,
+    FOREIGN KEY (id_auto) REFERENCES autos(id_auto) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE IF NOT EXISTS pedido_item (
+    id_item BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id_pedido BIGINT NOT NULL,
+    id_acc BIGINT NOT NULL,
+    coloracc VARCHAR(30) NOT NULL,
+    precio_unitario DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (id_pedido) REFERENCES pedido(id_pedido) ON DELETE CASCADE,
+    FOREIGN KEY (id_acc) REFERENCES accesorio(id_acc) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+select*from pedido;
