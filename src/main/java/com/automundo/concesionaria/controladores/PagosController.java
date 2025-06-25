@@ -11,10 +11,14 @@ import com.automundo.concesionaria.repositorio.AccesorioRepositorio;
 import com.automundo.concesionaria.repositorio.AutosRepositorio;
 import com.automundo.concesionaria.repositorio.PedidoRepositorio;
 import com.automundo.concesionaria.servicios.UsuarioService;
+import com.automundo.concesionaria.util.ResumenPedidoPDF;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -41,6 +45,9 @@ public class PagosController {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Autowired
+    private ResumenPedidoPDF carritoPdf;
+     
     @GetMapping("/pagos")
     public String mostrarFormularioCompra(Model model, @AuthenticationPrincipal UserDetails userDetails, HttpSession session) {
         //Obtengo los datos del usuario por authentication, usa Base de datos
@@ -108,6 +115,8 @@ public String confirmarPago(HttpSession session,
     /* 5. Preparamos la vista y vaciamos el carrito */
     var copia = new ArrayList<>(carrito.getItems());
     double total = carrito.getTotal();
+    session.setAttribute("carritoFinal", copia);       // ⬅️ guardamos para el PDF
+    session.setAttribute("totalFinal",   total); 
     carrito.vaciar();
     session.removeAttribute("idAutoSeleccionado");
     session.removeAttribute("colorAutoSeleccionado");
@@ -115,7 +124,24 @@ public String confirmarPago(HttpSession session,
     model.addAttribute("carrito", copia);
     model.addAttribute("total", total);
     session.setAttribute("enProcesoPago", false);
-    return "ResumenPedidos";
+    return "redirect:/resumen";
+}
+
+@GetMapping("/resumen")
+public String mostrarResumen(HttpSession session, Model model) {
+
+    @SuppressWarnings("unchecked")
+    List<Item> items  = (List<Item>) session.getAttribute("carritoFinal");
+    Double     total  = (Double)       session.getAttribute("totalFinal");
+
+    if (items == null || items.isEmpty()) {
+        // No hay datos → vuelve a la página de pago o muestra un aviso
+        return "redirect:/pagos";
+    }
+
+    model.addAttribute("carrito", items);
+    model.addAttribute("total",   total);
+    return "ResumenPedidos";   // tu misma plantilla
 }
 
 @PostMapping("/carrito/seleccionAuto")
@@ -128,5 +154,25 @@ public ResponseEntity<String> guardarSeleccionAuto(HttpSession session,
     return ResponseEntity.ok("ok");
 }
 
+ @GetMapping("/pedido/pdf")
+    public void descargarPdfPedido(HttpSession session,
+                                   HttpServletResponse response) throws Exception {
 
+        @SuppressWarnings("unchecked")
+        List<Item> items = (List<Item>) session.getAttribute("carritoFinal");
+        Double     total = (Double)       session.getAttribute("totalFinal");
+
+        if (items == null || items.isEmpty()) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST,
+                               "No hay datos para generar el PDF.");
+            return;
+        }
+
+        response.setContentType("application/pdf");
+        String filename = "pedido_" + LocalDate.now() + ".pdf";
+        response.setHeader("Content-Disposition",
+                           "attachment; filename=" + filename);
+
+        carritoPdf.exportar(items, total, response.getOutputStream());
+    }
 }
