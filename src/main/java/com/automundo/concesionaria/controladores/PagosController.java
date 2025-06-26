@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -68,25 +70,27 @@ public class PagosController {
         return "Pagos";
     }
  
-@PostMapping("/confirmacion")
+@PostMapping(value = "/confirmacion", consumes = "application/json")
 @Transactional
-public String confirmarPago(HttpSession session,
-                             Model model,
-                             @AuthenticationPrincipal UserDetails user) {
+public ResponseEntity<String> confirmarPago(@RequestBody Map<String, Object> payload,
+                                            HttpSession session,
+                                            @AuthenticationPrincipal UserDetails user) {
 
-    // 1. Recuperar selección real
-    Long   idAutoReal = (Long)  session.getAttribute("idAutoSeleccionado");
-    String colorAuto  = (String) session.getAttribute("colorAutoSeleccionado");
-    if (idAutoReal == null) throw new IllegalStateException("No hay auto en sesión");
+    // Estos strings no están en uso 
+    String orderId = (String) payload.get("orderId");
+    String payerName = (String) payload.get("payerName");
+    String payerEmail = (String) payload.get("payerEmail");
+    
+    // Recuperar selección 
+    Long idAutoReal = (Long) session.getAttribute("idAutoSeleccionado");
+    String colorAuto = (String) session.getAttribute("colorAutoSeleccionado");
+    if (idAutoReal == null) return ResponseEntity.badRequest().body("No hay auto en sesión");
 
-    // 2. Obtener el carrito (contiene item id 1000 + accesorios)
     Carrito carrito = (Carrito) session.getAttribute("carrito");
-    if (carrito == null) throw new IllegalStateException("Carrito vacío");
+    if (carrito == null) return ResponseEntity.badRequest().body("Carrito vacío");
 
-    // 3. Construir y guardar el Pedido
     Usuario usuario = usuarioService.obtenerUsuarioPorEmail(user.getUsername());
-    Autos   auto    = autosRepo.findById(idAutoReal)
-                               .orElseThrow(() -> new IllegalArgumentException("Auto no encontrado"));
+    Autos auto = autosRepo.findById(idAutoReal).orElseThrow(() -> new IllegalArgumentException("Auto no encontrado"));
 
     Pedido pedido = new Pedido();
     pedido.setUsuario(usuario);
@@ -94,13 +98,10 @@ public String confirmarPago(HttpSession session,
     pedido.setColorauto(colorAuto);
     pedido.setTotal(BigDecimal.valueOf(carrito.getTotal()));
 
-    // 4. Crear items SOLO para los accesorios (id ≠ 1000)
     for (Item it : carrito.getItems()) {
-        if (it.getId() == 1000) continue;              // omitimos placeholder
+        if (it.getId() == 1000) continue;
         Accesorio acc = accesorioRepo.findById(it.getId())
-                                     .orElseThrow(() ->
-                                         new IllegalArgumentException(
-                                             "Accesorio no encontrado, id=" + it.getId()));
+                .orElseThrow(() -> new IllegalArgumentException("Accesorio no encontrado, id=" + it.getId()));
 
         PedidoItem pi = new PedidoItem();
         pi.setPedido(pedido);
@@ -110,21 +111,21 @@ public String confirmarPago(HttpSession session,
         pedido.getItems().add(pi);
     }
 
-    pedidoRepo.save(pedido);   // <— persistimos
+    pedidoRepo.save(pedido);
 
-    /* 5. Preparamos la vista y vaciamos el carrito */
+    // Guardamos para resumen
     var copia = new ArrayList<>(carrito.getItems());
     double total = carrito.getTotal();
-    session.setAttribute("carritoFinal", copia);       // ⬅️ guardamos para el PDF
-    session.setAttribute("totalFinal",   total); 
+    session.setAttribute("carritoFinal", copia);
+    session.setAttribute("totalFinal", total);
+
+    // Limpiamos carrito y sesión
     carrito.vaciar();
     session.removeAttribute("idAutoSeleccionado");
     session.removeAttribute("colorAutoSeleccionado");
-
-    model.addAttribute("carrito", copia);
-    model.addAttribute("total", total);
     session.setAttribute("enProcesoPago", false);
-    return "redirect:/resumen";
+
+    return ResponseEntity.ok("Pago confirmado");
 }
 
 @GetMapping("/resumen")
