@@ -1,15 +1,4 @@
-document.getElementById("formPago").addEventListener("submit", function (event) {
-    event.preventDefault(); // Detiene el envío por defecto
-
-    const idAuto = localStorage.getItem("idAutoSeleccionado");
-    const color = localStorage.getItem("colorSeleccionado");
-
-    if (!idAuto || !color) {
-        alert("Faltan datos del auto seleccionado. Verifique el color o ID.");
-        return;
-    }
-
-    // Guardar selección en sesión del backend
+   // Guardar selección en sesión del backend
     fetch("/carrito/seleccionAuto", {
         method: "POST",
         headers: {"Content-Type": "application/x-www-form-urlencoded"},
@@ -28,4 +17,3 @@ document.getElementById("formPago").addEventListener("submit", function (event) 
                 console.error(error);
                 alert("No se pudo completar el registro del auto en sesión.");
             });
-});
