@@ -71,7 +71,7 @@ document.getElementById("btn-alquilar").onclick = () => {
   agregarAlCarrito(
       1000,
       `${auto.marca} ${auto.modelo}`,
-      auto.precio,
+      auto.pagoalquiler,
       color
   )
   /* 3. Envia el id real + color a la sesión del backend */
@@ -81,7 +81,8 @@ document.getElementById("btn-alquilar").onclick = () => {
           headers: {"Content-Type": "application/x-www-form-urlencoded"},
           body: new URLSearchParams({
               idAuto: auto.idAuto,  // id real
-              color:  color
+              color:  color,
+              pagoAlquiler: auto.pagoAlquiler
           })
       });
   })
@@ -156,6 +157,7 @@ document.getElementById("btn-alquilar").onclick = () => {
     <div class="detail-item"><span class="detail-label">Transmisión:</span> ${auto.transmision}</div>
     <div class="detail-item"><span class="detail-label">Categoría:</span> ${auto.categoria}</div>
     <div class="detail-item"><span class="detail-label">Disponible alquiler:</span> ${auto.disponibleAlquiler || 'No'}</div>
+    <div class="detail-item"><span class="detail-label">Pago alquiler:</span> ${auto.pagoalquiler} USD/día</div>
     <div class="detail-item"><span class="detail-label">Combustible:</span> ${auto.combustible}</div>
     <div class="detail-item"><span class="detail-label">Estado:</span> ${auto.estado}</div>
 <div class="detail-item colores-item">

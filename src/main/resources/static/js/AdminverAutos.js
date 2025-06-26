@@ -23,6 +23,7 @@ async function listarAutos() {
                     <th>Combustible</th>
         
                     <th>Alquiler</th>
+                    <th>Pago por Alquiler</th>
                     <th>Categoría</th>
                     <th>Estado</th>
                     <th>Colores</th>
@@ -35,6 +36,7 @@ async function listarAutos() {
         autos.forEach(auto => {
             const colores = auto.colores.map(color => color.nombreColor).join(", ");
             const alquilerDisponible = auto.disponibleAlquiler;
+            const pagoalquiler = auto.pagoalquiler;
             
             const imagenes = auto.imagenes.map(imagen => 
                 `<img src="/img/${imagen.nombreArchivo}" class="img-thumbnail" width="90" height="90" alt="Imagen del auto">`
@@ -51,6 +53,7 @@ async function listarAutos() {
                 <td>${auto.transmision}</td>
                 <td>${auto.combustible}</td>
                 
+                <td>${pagoalquiler}</td>
                 <td>${alquilerDisponible}</td>
                 <td>${auto.categoria}</td>
                 <td>${auto.estado}</td>
@@ -155,6 +158,10 @@ async function listarAutos() {
                             <div class="col-12 col-md-6 mb-3">
                                 <label for="equipamiento4" class="form-label">Equipamiento 4</label>
                                 <input type="text" class="form-control" id="equipamiento4">
+                            </div>
+                            <div class="col-12 col-md-6 mb-3">
+                            <label for="pagoAlquiler" class="form-label">Precio de Alquiler (USD/día)</label>
+                            <input type="number" class="form-control" id="pagoAlquiler">
                             </div>
                         </div>
 
@@ -274,6 +281,7 @@ async function guardarAuto() {
     const transmision = document.getElementById('transmision').value.trim();
     const combustible = document.getElementById('combustible').value.trim();
     const disponibleAlquiler = document.querySelector('input[name="disponibleAlquiler"]:checked').value;
+    const pagoalquiler = parseFloat(document.getElementById('pagoAlquiler').value);
     const equipamiento1 = document.getElementById('equipamiento1').value.trim();
     const equipamiento2 = document.getElementById('equipamiento2').value.trim();
     const equipamiento3 = document.getElementById('equipamiento3').value.trim();
@@ -286,6 +294,11 @@ async function guardarAuto() {
         Swal.fire('Error', 'Por favor, complete todos los campos obligatorios.', 'error');
         return;
     }
+    
+        if (pagoalquiler === null || isNaN(pagoalquiler) || pagoalquiler <= 0) {
+         Swal.fire('Error', 'Por favor, ingrese un pago de alquiler válido y mayor que cero.', 'error');
+         return;
+                }
 
     
     const checkboxesColores = document.querySelectorAll('input[name="colores"]:checked');
@@ -329,6 +342,7 @@ async function guardarAuto() {
         transmision,
         combustible,
         disponibleAlquiler,
+        pagoalquiler,
         equipamiento1,
         equipamiento2,
         equipamiento3,
@@ -429,6 +443,7 @@ async function verDetalles(auto) {
                     <p><strong>Transmisión:</strong> ${auto.transmision}</p>
                     <p><strong>Combustible:</strong> ${auto.combustible}</p>
                     <p><strong>Disponible para alquiler:</strong> ${auto.disponibleAlquiler === 'sí' ? 'Sí' : 'No'}</p>
+                    <p><strong>Precio de Alquiler:</strong> ${auto.pagoalquiler ? `${auto.pagoalquiler} USD/día` : 'N/A'}</p>
                     <p><strong>Equipamiento 1:</strong> ${auto.equipamiento1}</p>
                     <p><strong>Equipamiento 2:</strong> ${auto.equipamiento2}</p>
                     <p><strong>Equipamiento 3:</strong> ${auto.equipamiento3}</p>
@@ -555,6 +570,10 @@ async function editarAuto(idAuto) {
                                 <label for="equipamiento4" class="form-label">Equipamiento 4</label>
                                 <input type="text" class="form-control" id="equipamiento4" value="${auto.equipamiento4}" required>
                             </div>
+                            <div class="col-12 col-md-6 mb-3">
+                             <label for="pagoAlquiler" class="form-label">Precio de Alquiler (USD/día)</label>
+                                 <input type="number" class="form-control" id="pagoAlquiler" value="${auto.pagoalquiler ?? ''}">
+                            </div>
                         </div>
 
                         <div class="mb-3">
@@ -579,7 +598,7 @@ async function editarAuto(idAuto) {
                          <label class="form-check-label" for="alquilerNo">No</label>
                             </div>
                             </div>
-                        
+        
                         <div class="d-flex justify-content-center gap-3">
                             <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -687,7 +706,8 @@ async function guardarEdicionAuto(idAuto) {
     const kilometraje = parseInt(document.getElementById('kilometraje').value);
     const transmision = document.getElementById('transmision').value.trim();
     const combustible = document.getElementById('combustible').value.trim();
-    const disponibleAlquiler = document.querySelector('input[name="disponibleAlquiler"]:checked').value;    
+    const disponibleAlquiler = document.querySelector('input[name="disponibleAlquiler"]:checked').value;
+    const pagoalquiler = parseFloat(document.getElementById('pagoAlquiler').value);
     const equipamiento1 = document.getElementById('equipamiento1').value.trim();
     const equipamiento2 = document.getElementById('equipamiento2').value.trim();
     const equipamiento3 = document.getElementById('equipamiento3').value.trim();
@@ -703,6 +723,11 @@ async function guardarEdicionAuto(idAuto) {
         Swal.fire('Error', 'Por favor, complete todos los campos obligatorios.', 'error');
         return;
     }
+    
+     if (pagoalquiler === null || isNaN(pagoalquiler) || pagoalquiler <= 0) {
+         Swal.fire('Error', 'Por favor, ingrese un pago de alquiler válido y mayor que cero.', 'error');
+         return;
+                }
 
     
     const checkboxesColores = document.querySelectorAll('input[name="colores"]:checked');
@@ -746,6 +771,7 @@ async function guardarEdicionAuto(idAuto) {
         transmision,
         combustible,
         disponibleAlquiler,
+        pagoalquiler,
         categoria,
         estado,
         equipamiento1,
