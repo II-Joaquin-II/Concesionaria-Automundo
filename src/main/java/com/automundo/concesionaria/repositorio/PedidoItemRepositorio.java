@@ -11,4 +11,7 @@ public interface PedidoItemRepositorio extends JpaRepository<PedidoItem, Long> {
 
     @Query("SELECT pi FROM PedidoItem pi WHERE pi.pedido.id_pedido = :id")
     List<PedidoItem> findPedidoById(Long id);
+
+    @Query("SELECT pi.accesorio.nombre, COUNT(pi) FROM PedidoItem pi GROUP BY pi.accesorio.nombre ORDER BY COUNT(pi) DESC")
+    List<Object[]> contarAccesoriosVendidos();
 }
