@@ -56,6 +56,21 @@ JOIN roles r ON r.nombre = 'ROLE_ADMIN'
 WHERE u.email = 'admin@admin.com';
 
 
+CREATE TABLE IF NOT EXISTS `password_reset_token` (
+    `id_token` INT PRIMARY KEY AUTO_INCREMENT,
+    `token` VARCHAR(255) NOT NULL,
+    `user_id` INT NOT NULL,
+    `expiry_date` DATETIME NOT NULL,
+    CONSTRAINT `fk_user_reset_token`
+        FOREIGN KEY (`user_id`)
+        REFERENCES `usuario`(`id_usuario`)
+        ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+select*from password_reset_token;
+
+
+
 CREATE TABLE IF NOT EXISTS `autos` (
     `id_auto` INT PRIMARY KEY AUTO_INCREMENT,
     `modelo` VARCHAR(50),

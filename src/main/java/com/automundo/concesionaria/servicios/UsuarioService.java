@@ -14,11 +14,9 @@ import org.apache.commons.lang3.StringUtils;
 import jakarta.persistence.EntityNotFoundException;
 import com.automundo.concesionaria.repositorio.RolRepositorio;
 
-
 @Service
-public class UsuarioService implements UserDetailsService{
+public class UsuarioService implements UserDetailsService {
 
-    
     @Autowired
     private UsuarioRepositorio repo_clientes;
 
@@ -41,18 +39,28 @@ public class UsuarioService implements UserDetailsService{
 
     public Optional<Usuario> BuscarDNI(String dni) {
         return repo_clientes.findByDni(dni)
-        .filter(c -> c.getRoles().stream().anyMatch(r -> "ROLE_USER".equals(r.getNombre())));
+                .filter(c -> c.getRoles().stream().anyMatch(r -> "ROLE_USER".equals(r.getNombre())));
     }
 
     public Optional<Usuario> buscarCelular(String celular) {
         return repo_clientes.findByCelular(celular)
-        .filter(c -> c.getRoles().stream().anyMatch(r -> "ROLE_USER".equals(r.getNombre())));
+                .filter(c -> c.getRoles().stream().anyMatch(r -> "ROLE_USER".equals(r.getNombre())));
+    }
+
+    public Optional<Usuario> buscarPorEmail(String email) {
+        return repo_clientes.findByEmail(email)
+                .filter(c -> c.getRoles().stream().anyMatch(r -> "ROLE_USER".equals(r.getNombre())));
+    }
+
+    public Optional<Usuario> buscarPorUsuario(String usuario) {
+        return repo_clientes.findByUsuario(usuario)
+                .filter(c -> c.getRoles().stream().anyMatch(r -> "ROLE_USER".equals(r.getNombre())));
     }
 
     public Usuario Actualizar(int id_cli, Usuario actualiza) {
-        
+
         Usuario clienteExiste = repo_clientes.findById(id_cli)
-        .orElseThrow(() -> new RuntimeException("Cliente no existe: " + id_cli));
+                .orElseThrow(() -> new RuntimeException("Cliente no existe: " + id_cli));
 
         clienteExiste.setNombre_usuario(actualiza.getNombre_usuario());
         clienteExiste.setApellidos_usuario(actualiza.getApellidos_usuario());
@@ -61,15 +69,6 @@ public class UsuarioService implements UserDetailsService{
         clienteExiste.setCelular(actualiza.getCelular());
         clienteExiste.setEmail(actualiza.getEmail());
         clienteExiste.setUsuario(actualiza.getUsuario());
-
-        /* 
-        if (actualiza.getPass() != null && !actualiza.getPass().isEmpty()) {
-
-        String passwordEncriptada = passwordEncoder.encode(actualiza.getPass());
-        //clienteExiste.setPass(passwordEncriptada);(passwordEncriptada);
-        clienteExiste.setPass(passwordEncriptada);
-        }
-        */
 
         //implementacion de apache comments
         if (StringUtils.isNotBlank(actualiza.getPass())) {
@@ -87,7 +86,7 @@ public class UsuarioService implements UserDetailsService{
         cliente.setPass(passwordEncriptada);
 
         var rolUser = repo_rol.findByNombre("ROLE_USER")
-        .orElseThrow(() -> new RuntimeException("Rol ROLE_USER no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Rol ROLE_USER no encontrado"));
 
         cliente.setRoles(List.of(rolUser));
 
@@ -96,16 +95,16 @@ public class UsuarioService implements UserDetailsService{
 
     public void eliminarPorDni(String dni) {
         Optional<Usuario> cliente = repo_clientes.findByDni(dni)
-        .filter(c -> c.getRoles().stream().anyMatch(r -> "ROLE_USER".equals(r.getNombre())));
+                .filter(c -> c.getRoles().stream().anyMatch(r -> "ROLE_USER".equals(r.getNombre())));
 
         if (cliente.isPresent()) {
-        repo_clientes.deleteById(cliente.get().getId_usuario());
+            repo_clientes.deleteById(cliente.get().getId_usuario());
         } else {
-        throw new EntityNotFoundException("Cliente no encontrado con DNI: " + dni);
+            throw new EntityNotFoundException("Cliente no encontrado con DNI: " + dni);
         }
 
     }
-    
+
     //Recupero los datos de usuario para usarlo en las reclamaciones
     public Usuario obtenerUsuarioPorEmail(String email) {
         return repo_clientes.findByEmail(email)
@@ -119,4 +118,3 @@ public class UsuarioService implements UserDetailsService{
     }
 
 }
-    
