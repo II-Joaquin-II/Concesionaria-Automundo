@@ -87,19 +87,20 @@ SELECT * FROM autos;
 CREATE TABLE IF NOT EXISTS `alquiler_auto` (
     `id_alquiler` INT PRIMARY KEY AUTO_INCREMENT,
     `id_auto` INT NOT NULL,
+    `pago_alquiler` DECIMAL(10,2),
     `disponible_alquiler` ENUM('sí', 'no') DEFAULT 'sí',
     FOREIGN KEY (`id_auto`) REFERENCES `autos`(`id_auto`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO alquiler_auto (id_auto, disponible_alquiler) VALUES
-(1, 'sí'),
-(2, 'sí'),
-(3, 'sí'),
-(4, 'no'),  -- Este auto está alquilado
-(5, 'sí'),
-(6, 'no'),  -- Este también está alquilado
-(7, 'sí'),
-(8, 'sí');
+INSERT INTO alquiler_auto (id_auto, disponible_alquiler, pago_alquiler) VALUES
+(1, 'sí', 600),   -- Mercedes-Benz S-Class S580
+(2, 'sí', 550),   -- BMW 7 Series 750i
+(3, 'sí', 500),   -- Audi A8 L
+(4, 'no', 700),   -- Porsche Panamera 4 E-Hybrid (Este auto está alquilado)
+(5, 'sí', 800),   -- Tesla Model S Plaid
+(6, 'no', 650),   -- Land Rover Range Rover Autobiography (Este auto está alquilado)
+(7, 'sí', 750),   -- Maserati Levante Trofeo
+(8, 'sí', 550);   -- Lexus LC 500h
 
 ALTER TABLE autos DROP COLUMN imagen;
 
@@ -256,6 +257,7 @@ SELECT
     a.categoria,
     a.estado,
     alq.disponible_alquiler,
+    alq.pago_alquiler,
     GROUP_CONCAT(DISTINCT c.nombre_color SEPARATOR ', ') AS colores,
     GROUP_CONCAT(DISTINCT i.nombre_archivo SEPARATOR ', ') AS imagenes
 FROM autos a
@@ -265,13 +267,14 @@ LEFT JOIN colores c ON ca.id_color = c.id_color
 LEFT JOIN imagen_auto_color i ON a.id_auto = i.id_auto AND ca.id_color = i.id_color
 GROUP BY a.id_auto;
 
-
+/*
 INSERT INTO inventario (id_auto, cantidad_autos) VALUES
 (1, 3),
 (2, 2),
 (3, 1),
 (4, 4),
 (5, 2);
+*/
 
 select*from autos;
 
@@ -306,7 +309,7 @@ VALUES
 (2, '2025-05-28', 'Luces defectuosas', 'nuevo', 'Las luces delanteras parpadean de forma intermitente.', 'pendiente');
 
 
-
+/*
 
 CREATE TABLE venta (
     id_venta INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -391,6 +394,8 @@ INSERT INTO detalle_factura (id_factura, cantidad, precio_unitario, subtotal, to
 (4, 1, 35000.00, 35000.00, 41300.00),
 (5, 1, 27000.00, 27000.00, 31860.00);
 
+
+
 CREATE TABLE alquiler (
     id_alquiler INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     precio DECIMAL(10,2) NOT NULL,
@@ -401,6 +406,7 @@ CREATE TABLE alquiler (
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
     FOREIGN KEY (id_auto) REFERENCES autos(id_auto)
 );
+
 
 INSERT INTO alquiler (precio, id_usuario, id_auto, tiempo_alquilado, tipo_comprobante) VALUES
 (500.00, 1, 2, 3, 'Boleta'),
@@ -441,6 +447,7 @@ INSERT INTO detalle_boleta_alquiler (id_boleta_alquiler, cantidad, precio_unitar
 (3, 1, 600.00, 600.00, 108.00, 708.00),
 (4, 1, 1000.00, 1000.00, 180.00, 1180.00),
 (5, 1, 800.00, 800.00, 144.00, 944.00);
+*/
 
 CREATE TABLE accesorio (
     id_acc BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -457,3 +464,26 @@ INSERT INTO accesorio (nombre, descripcion, imagen, colores, precio) VALUES
 ('Palanca de Cambio Deportiva', 'Diseño premium', 'palanca-roja.jpg,palanca-negra.jpg,palanca-verde.jpg', 'Rojo,Negro,Verde', 100);
 
 SELECT * FROM ACCESORIO;
+
+CREATE TABLE IF NOT EXISTS pedido (
+    id_pedido BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    id_auto INT NOT NULL,
+    colorauto VARCHAR(30) NOT NULL,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    total DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELETE CASCADE,
+    FOREIGN KEY (id_auto) REFERENCES autos(id_auto) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE IF NOT EXISTS pedido_item (
+    id_item BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id_pedido BIGINT NOT NULL,
+    id_acc BIGINT NOT NULL,
+    coloracc VARCHAR(30) NOT NULL,
+    precio_unitario DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (id_pedido) REFERENCES pedido(id_pedido) ON DELETE CASCADE,
+    FOREIGN KEY (id_acc) REFERENCES accesorio(id_acc) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+select*from pedido;

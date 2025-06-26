@@ -27,5 +27,6 @@ public class AutoDTO {
     private List<ColorDTO> colores;
     private List<ImagenAutoColorDTO> imagenes;
     
+    private BigDecimal pagoalquiler;
     private String disponibleAlquiler;
 }

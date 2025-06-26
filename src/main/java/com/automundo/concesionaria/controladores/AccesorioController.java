@@ -1,6 +1,8 @@
 package com.automundo.concesionaria.controladores;
 
 import com.automundo.concesionaria.model.Accesorio;
+import com.automundo.concesionaria.model.Carrito;
+import com.automundo.concesionaria.model.Item;
 import com.automundo.concesionaria.servicios.AccesorioServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -61,5 +63,15 @@ public class AccesorioController {
         model.addAttribute("accesorios", accesorios);
         return "vista-accesorios"; 
     }
+    
+   /* @PostMapping("/agregar-auto")
+    public String agregarAutoAlCarrito(@RequestParam Long id,
+                                       @RequestParam String nombre,
+                                       @RequestParam double precio,
+                                       @RequestParam String color,
+                                       @ModelAttribute("carrito") Carrito carrito) {
 
+        carrito.agregarItem(new Item(id, nombre, precio, color)); // ← lo mismo que haces en Pagos
+        return "redirect:/vista-accesorios";
+    }*/
 }

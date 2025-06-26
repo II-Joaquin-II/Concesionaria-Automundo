@@ -82,7 +82,8 @@ public class AutosServicio {
         AlquilerAuto alquiler = new AlquilerAuto();
         alquiler.setAuto(autoGuardado);
         alquiler.setDisponibleAlquiler(autoDTO.getDisponibleAlquiler()); // "sí" o "no"
-
+        
+        alquiler.setPagoalquiler(autoDTO.getPagoalquiler());
         alquilerAutoRepositorio.save(alquiler);
     }
 
@@ -146,7 +147,8 @@ public class AutosServicio {
         return nuevo;
     });
 
-    alquiler.setDisponibleAlquiler(disponible); // ✅ Guardar en minúscula
+    alquiler.setDisponibleAlquiler(disponible); // Guardar en minúscula
+    alquiler.setPagoalquiler(autoDTO.getPagoalquiler());
     alquilerAutoRepositorio.save(alquiler);
 }
 
@@ -201,8 +203,14 @@ public class AutosServicio {
 // Obtener disponibilidad de alquiler, en minúsculas para que el front coincida
     alquilerAutoRepositorio.findByAuto_IdAuto(auto.getIdAuto())
         .ifPresentOrElse(
-            alquiler -> dto.setDisponibleAlquiler(alquiler.getDisponibleAlquiler().toLowerCase()),
-            () -> dto.setDisponibleAlquiler("no disponible") // puedes poner "no" si prefieres
+            alquiler -> {dto.setDisponibleAlquiler(alquiler.getDisponibleAlquiler().toLowerCase());
+                        dto.setPagoalquiler(alquiler.getPagoalquiler());
+            },
+            () -> 
+            {dto.setDisponibleAlquiler("no disponible"); // puedes poner "no" si prefieres
+                 dto.setPagoalquiler(null);
+                }
+                    
         );
     return dto;
 }
