@@ -93,7 +93,7 @@ public String confirmarPago(HttpSession session,
     pedido.setAutos(auto);
     pedido.setColorauto(colorAuto);
     pedido.setTotal(BigDecimal.valueOf(carrito.getTotal()));
-
+    
     // 4. Crear items SOLO para los accesorios (id ≠ 1000)
     for (Item it : carrito.getItems()) {
         if (it.getId() == 1000) continue;              // omitimos placeholder

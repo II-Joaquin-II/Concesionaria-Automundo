@@ -82,7 +82,6 @@ INSERT INTO autos (modelo, marca, ano, precio, kilometraje, transmision, combust
 	('Range Rover Autobiography', 'Land Rover', 2022, 140000, 17000, 'Automática', 'Gasolina', 'Interior de lujo', 'Suspensión neumática', 'Sistema Meridian', 'Cámara 360', 'SUV', 'Disponible'),
 	('Levante Trofeo', 'Maserati', 2020, 125000, 30000, 'Automática', 'Gasolina', 'Motor V8', 'Sonido Harman Kardon', 'Alerón deportivo', 'Asientos deportivos', 'SUV', 'Disponible'),
 	('LC 500h', 'Lexus', 2022, 97000, 19000, 'Automática', 'Híbrido', 'Diseño coupé', 'Asistente de carril', 'Sonido Mark Levinson', 'Head-Up Display', 'Coupé', 'Disponible');
-SELECT * FROM autos;
 
 CREATE TABLE IF NOT EXISTS `alquiler_auto` (
     `id_alquiler` INT PRIMARY KEY AUTO_INCREMENT,
@@ -307,7 +306,6 @@ VALUES
 
 
 
-
 CREATE TABLE venta (
     id_venta INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     precio DECIMAL(10,2) NOT NULL,
@@ -457,3 +455,48 @@ INSERT INTO accesorio (nombre, descripcion, imagen, colores, precio) VALUES
 ('Palanca de Cambio Deportiva', 'Diseño premium', 'palanca-roja.jpg,palanca-negra.jpg,palanca-verde.jpg', 'Rojo,Negro,Verde', 100);
 
 SELECT * FROM ACCESORIO;
+
+CREATE TABLE IF NOT EXISTS pedido (
+    id_pedido BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    id_auto INT NOT NULL,
+    colorauto VARCHAR(30) NOT NULL,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    estado ENUM('pendiente', 'en proceso', 'entregado') DEFAULT 'pendiente',
+    total DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELETE CASCADE,
+    FOREIGN KEY (id_auto) REFERENCES autos(id_auto) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE IF NOT EXISTS pedido_item (
+    id_item BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id_pedido BIGINT NOT NULL,
+    id_acc BIGINT NOT NULL,
+    coloracc VARCHAR(30) NOT NULL,
+    precio_unitario DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (id_pedido) REFERENCES pedido(id_pedido) ON DELETE CASCADE,
+    FOREIGN KEY (id_acc) REFERENCES accesorio(id_acc) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO pedido (id_usuario, id_auto, colorauto, fecha, estado, total) VALUES
+(1, 1, 'Negro', '2025-06-20 14:30:00', 'pendiente', 115650.00),
+(2, 3, 'Gris', '2025-06-21 10:15:00', 'en proceso', 98100.00),
+(3, 5, 'Blanco', '2025-06-22 09:45:00', 'entregado', 130650.00),
+(4, 7, 'Rojo', '2025-06-23 16:20:00', 'pendiente', 125100.00),
+(5, 6, 'Negro', '2025-06-24 11:00:00', 'en proceso', 140650.00);
+
+
+INSERT INTO pedido_item (id_pedido, id_acc, coloracc, precio_unitario) VALUES
+(1, 1, 'Rojo', 500.00),
+(1, 2, 'Negro', 150.00),
+(2, 3, 'Verde', 100.00),
+(3, 1, 'Azul', 500.00),
+(3, 2, 'Rojo', 150.00),
+(4, 3, 'Negro', 100.00),
+(5, 2, 'Azul', 150.00),
+(5, 1, 'Negro', 500.00);
+
+SELECT * FROM autos;
+SELECT * FROM accesorio;
+SELECT * FROM pedido;
+SELECT * FROM pedido_item;

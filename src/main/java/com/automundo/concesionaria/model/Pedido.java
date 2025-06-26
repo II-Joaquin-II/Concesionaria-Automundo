@@ -32,6 +32,9 @@ public class Pedido {
     @Column(nullable = false)
     private LocalDateTime fecha = LocalDateTime.now();
 
+    @Column(length = 20, nullable = false)
+    private String estado = "pendiente";
+
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal total;
 
