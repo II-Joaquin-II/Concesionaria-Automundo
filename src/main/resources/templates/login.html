@@ -19,7 +19,7 @@
                     <a th:href="@{/principal}">
                         <img src="../img/logo.jpg" alt="Logo AutoMundo" class="logo">
                     </a>
-                    <h1>Bienvenido</h1>
+                    <h5 class="text-center my-3">Bienvenido</h5>
                     <div class="contenedor">
                         <div class="input-contenedor">
                             <i class="fas fa-envelope icon"></i>
@@ -45,6 +45,14 @@
         </div>
 
         <script src="../js/sweetalert.js"></script>
+
+        <script th:if="${param.error}" th:inline="javascript">
+            Swal.fire("Error", "Correo o contraseña incorrectos.", "error");
+        </script>
+
+        <script th:if="${param.logout}" th:inline="javascript">
+            Swal.fire("Sesión cerrada", "Has cerrado sesión correctamente.", "success");
+        </script>
 
         <!--  Ocasiona un fallo cuando se intenta iniciar sesión
         <script src="../js/login.js"></script>

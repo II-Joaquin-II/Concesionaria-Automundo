@@ -1,8 +1,8 @@
 package com.automundo.concesionaria.controladores;
 
 import com.automundo.concesionaria.servicios.PasswordResetService;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-
 public class PasswordPageController {
 
     private final PasswordResetService passwordResetService;
@@ -26,23 +25,18 @@ public class PasswordPageController {
         return "forgot-password";
     }
 
-    /* 
     @PostMapping("/forgot-password")
-    public String processForgotPassword(@RequestParam String email, Model model) {
-        passwordResetService.sendResetLink(email);
-        model.addAttribute("message", true);
-        return "forgot-password";
+    public ResponseEntity<?> processForgotPassword(@RequestParam String email) {
+        try {
+            passwordResetService.sendResetLink(email);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Correo no encontrado.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("No se pudo enviar el correo.");
+        }
     }
-    */
-
-    
-    @PostMapping("/forgot-password")
-    public ResponseEntity<Void> processForgotPassword(@RequestParam String email) {
-    passwordResetService.sendResetLink(email);
-    return ResponseEntity.ok().build(); // importante para que JS detecte que todo salió bien
-    }
-    
-
 
     @GetMapping("/reset-password")
     public String showResetPasswordForm(@RequestParam("token") String token, Model model) {
