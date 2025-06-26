@@ -26,10 +26,10 @@ public class VistaController {
     public String cargarVistaVerReclamos() {
         return "adminverreclamos";
     }
-     @GetMapping("/adminventaauto")
+   /*  @GetMapping("/adminventaauto")
     public String cargarVistaVentaAuto() {
         return "adminventaauto";
-    }
+    }*/
      @GetMapping("/adminventaautoalquilado")
     public String cargarVistaVentaAutoAlquilado() {
         return "adminventaautoalquilado";
