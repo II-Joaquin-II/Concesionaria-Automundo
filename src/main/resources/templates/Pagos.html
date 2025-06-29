@@ -66,7 +66,7 @@
                         <th>#</th>
                         <th>Producto</th>
                         <th>Color</th>
-                        <th>Precio (S/.)</th>
+                        <th>Precio (USD $.)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -80,7 +80,7 @@
                 <tfoot>
                     <tr class="fw-bold">
                         <td colspan="3" class="text-end">Total:</td>
-                        <td th:text="${'%.2f'.formatted(total)}">S/. 0.00</td>
+                        <td th:text="${'%.2f'.formatted(total)}">USD $. 0.00</td>
                     </tr>
                 </tfoot>
             </table>
@@ -135,9 +135,7 @@
                     <!-- Thymeleaf para pasar el total a Paypal -->
                     <script th:inline="javascript">
                         /*<![CDATA[*/
-                        var totalSoles = /*[[${total}]]*/ 0;
-                        var tipoCambio = 3.80;
-                        var totalUSD = totalSoles / tipoCambio;
+                        var totalUSD = /*[[${total}]]*/ 0;
 
                         paypal.Buttons({
                             createOrder: function (data, actions) {
@@ -157,12 +155,10 @@
                                             orderId: data.orderID,
                                             payerName: details.payer.name.given_name,
                                             payerEmail: details.payer.email_address
-                                                   
                                         })
                                     })
                                             .then(response => {
                                                 if (response.ok) {
-                                                    // Redirige a la página (Resum. Pedidos)
                                                     window.location.href = '/resumen';
                                                 } else {
                                                     alert('Error al confirmar el pago en el servidor.');

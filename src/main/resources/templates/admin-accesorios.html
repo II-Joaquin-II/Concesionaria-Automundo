@@ -111,7 +111,7 @@
                     <td th:text="${acc.id_acc}">1</td>
                     <td th:text="${acc.nombre}">Nombre</td>
                     <td th:text="${acc.descripcion}">Descripción</td>
-                    <td th:text="${'S/. %.2f'.formatted(acc.precio)}">S/. 0.00</td>
+                    <td th:text="${'USD $. %.2f'.formatted(acc.precio)}">USD $. 0.00</td>
                     <td th:text="${acc.colores}">Rojo, Azul</td>
                     <td>
                         <div th:each="img : ${#strings.arraySplit(acc.imagen, ',')}">

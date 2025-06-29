@@ -53,7 +53,7 @@ float y = (ps.getHeight() - logo.getImageScaledHeight()) / 2;
         tabla.addHeaderCell("N°");
         tabla.addHeaderCell("Producto");
         tabla.addHeaderCell("Color");
-        tabla.addHeaderCell("Precio (S/.)");
+        tabla.addHeaderCell("Precio (USD $.)");
 
         int i = 1;
         for (Item it : items) {

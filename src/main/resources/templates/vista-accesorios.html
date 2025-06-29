@@ -59,7 +59,7 @@
                             <p class="card-text" th:text="${acc.descripcion}">Descripción del accesorio</p>
 
                             <!-- Precio con estilo resaltado -->
-                            <p class="card-text price">Precio: S/. <span th:text="${'%.2f'.formatted(acc.precio)}">0.00</span></p>
+                            <p class="card-text price">Precio: USD $. <span th:text="${'%.2f'.formatted(acc.precio)}">0.00</span></p>
 
                             <!-- Colores disponibles -->
                             <div class="mb-2">
@@ -140,7 +140,7 @@
     
     <div class="d-flex justify-content-between fw-bold mb-2">
         <span>Total:</span>
-        <span id="carrito-total">S/. 0.00</span>
+        <span id="carrito-total">USD $. 0.00</span>
     </div>
     
     <div class="text-end">

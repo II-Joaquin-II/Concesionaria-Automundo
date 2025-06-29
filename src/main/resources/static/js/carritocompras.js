@@ -50,7 +50,7 @@ function actualizarVistaCarrito(data) {
             contenedor.innerHTML += `
                 <tr>
                     <td>${item.nombre}</td>
-                    <td>S/. ${parseFloat(item.precio).toFixed(2)}</td>
+                    <td>$. ${parseFloat(item.precio).toFixed(2)}</td>
                     <td>${item.color}</td>
                     <td>
                         ${esAuto ? "" : `
@@ -61,7 +61,7 @@ function actualizarVistaCarrito(data) {
         });
     }
 
-    totalSpan.innerText = "S/. " + data.total.toFixed(2);
+    totalSpan.innerText = "USD $. " + data.total.toFixed(2);
 }
 
 document.addEventListener('DOMContentLoaded', () => {

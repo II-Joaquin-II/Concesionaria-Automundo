@@ -70,7 +70,7 @@
                                 <th>#</th>
                                 <th>Producto</th>
                                 <th>Color</th>
-                                <th>Precio (S/.)</th>
+                                <th>Precio ($.)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -91,7 +91,7 @@
 
                     <p class="text-end fw-bold fs-5 mt-3">
                         Total a pagar:
-                        <span>S/. </span><span th:text="${#numbers.formatDecimal(total, 1, 'POINT', 2, 'POINT')}">0.00</span>
+                        <span>$. </span><span th:text="${#numbers.formatDecimal(total, 1, 'POINT', 2, 'POINT')}">0.00</span>
                     </p>
 
                     <div class="d-flex justify-content-end gap-2 mt-3">
