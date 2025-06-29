@@ -89,14 +89,14 @@ CREATE TABLE IF NOT EXISTS `autos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO autos (modelo, marca, ano, precio, kilometraje, transmision, combustible,equipamiento1, equipamiento2, equipamiento3, equipamiento4, categoria, estado) VALUES
-	('S-Class S580', 'Mercedes-Benz', 2022, 115000, 18000, 'Automática', 'Gasolina', 'Asientos de piel', 'Cámara 360', 'Piloto automático', 'Sonido Burmester', 'Sedán', 'Disponible'),
-	('7 Series 750i', 'BMW', 2021, 105000, 25000, 'Automática', 'Gasolina', 'Pantalla táctil', 'Asistente de parqueo', 'Asientos ventilados', 'Head-Up Display', 'Sedán', 'Disponible'),
-	('A8 L', 'Audi', 2022, 98000, 22000, 'Automática', 'Gasolina', 'Suspensión adaptativa', 'Sonido Bang & Olufsen', 'Control crucero adaptativo', 'Asientos masajeadores', 'Sedán', 'Disponible'),
-	('Panamera 4 E-Hybrid', 'Porsche', 2021, 120000, 20000, 'Automática', 'Híbrido', 'Techo panorámico', 'Sistema BOSE', 'Navegación premium', 'Cámara de reversa', 'Deportivo', 'Disponible'),
-	('Model S Plaid', 'Tesla', 2023, 130000, 12000, 'Automática', 'Eléctrico', 'Piloto automático', 'Pantalla táctil', 'Cámara 360', 'Modo Ludicrous', 'Sedán', 'Disponible'),
-	('Range Rover Autobiography', 'Land Rover', 2022, 140000, 17000, 'Automática', 'Gasolina', 'Interior de lujo', 'Suspensión neumática', 'Sistema Meridian', 'Cámara 360', 'SUV', 'Disponible'),
-	('Levante Trofeo', 'Maserati', 2020, 125000, 30000, 'Automática', 'Gasolina', 'Motor V8', 'Sonido Harman Kardon', 'Alerón deportivo', 'Asientos deportivos', 'SUV', 'Disponible'),
-	('LC 500h', 'Lexus', 2022, 97000, 19000, 'Automática', 'Híbrido', 'Diseño coupé', 'Asistente de carril', 'Sonido Mark Levinson', 'Head-Up Display', 'Coupé', 'Disponible');
+	('S-Class S580', 'Mercedes-Benz', 2022, 32700, 18000, 'Automática', 'Gasolina', 'Asientos de piel', 'Cámara 360', 'Piloto automático', 'Sonido Burmester', 'Sedán', 'Disponible'),
+	('7 Series 750i', 'BMW', 2021, 29606, 25000, 'Automática', 'Gasolina', 'Pantalla táctil', 'Asistente de parqueo', 'Asientos ventilados', 'Head-Up Display', 'Sedán', 'Disponible'),
+	('A8 L', 'Audi', 2022, 27632, 22000, 'Automática', 'Gasolina', 'Suspensión adaptativa', 'Sonido Bang & Olufsen', 'Control crucero adaptativo', 'Asientos masajeadores', 'Sedán', 'Disponible'),
+	('Panamera 4 E-Hybrid', 'Porsche', 2021, 33835, 20000, 'Automática', 'Híbrido', 'Techo panorámico', 'Sistema BOSE', 'Navegación premium', 'Cámara de reversa', 'Deportivo', 'Disponible'),
+	('Model S Plaid', 'Tesla', 2023, 36655, 12000, 'Automática', 'Eléctrico', 'Piloto automático', 'Pantalla táctil', 'Cámara 360', 'Modo Ludicrous', 'Sedán', 'Disponible'),
+	('Range Rover Autobiography', 'Land Rover', 2022, 39474, 17000, 'Automática', 'Gasolina', 'Interior de lujo', 'Suspensión neumática', 'Sistema Meridian', 'Cámara 360', 'SUV', 'Disponible'),
+	('Levante Trofeo', 'Maserati', 2020, 35245, 30000, 'Automática', 'Gasolina', 'Motor V8', 'Sonido Harman Kardon', 'Alerón deportivo', 'Asientos deportivos', 'SUV', 'Disponible'),
+	('LC 500h', 'Lexus', 2022, 27350, 19000, 'Automática', 'Híbrido', 'Diseño coupé', 'Asistente de carril', 'Sonido Mark Levinson', 'Head-Up Display', 'Coupé', 'Disponible');
 
 CREATE TABLE IF NOT EXISTS `alquiler_auto` (
     `id_alquiler` INT PRIMARY KEY AUTO_INCREMENT,
@@ -292,11 +292,11 @@ CREATE TABLE IF NOT EXISTS pedido_item (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO pedido (id_usuario, id_auto, colorauto, fecha, estado, total) VALUES
-(1, 1, 'Negro', '2025-06-20 14:30:00', 'pendiente', 115650.00),
-(2, 3, 'Gris', '2025-06-21 10:15:00', 'en proceso', 98100.00),
-(3, 5, 'Blanco', '2025-06-22 09:45:00', 'entregado', 130650.00),
-(4, 7, 'Rojo', '2025-06-23 16:20:00', 'pendiente', 125100.00),
-(5, 6, 'Negro', '2025-06-24 11:00:00', 'en proceso', 140650.00);
+(1, 1, 'Negro', '2025-06-20 14:30:00', 'pendiente', 32609.11),
+(2, 3, 'Gris', '2025-06-21 10:15:00', 'en proceso', 27660.65),
+(3, 5, 'Blanco', '2025-06-22 09:45:00', 'entregado', 36838.57),
+(4, 7, 'Rojo', '2025-06-23 16:20:00', 'pendiente', 35273.67),
+(5, 6, 'Negro', '2025-06-24 11:00:00', 'en proceso', 140650.00);
 
 
 INSERT INTO pedido_item (id_pedido, id_acc, coloracc, precio_unitario) VALUES
