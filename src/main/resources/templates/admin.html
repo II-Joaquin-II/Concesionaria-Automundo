@@ -8,11 +8,12 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="/css/estiloAdmin.css">
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <title>Admin</title>
     </head>
 
     <body>
-      <header class="p-3 text-bg-dark header">
+        <header class="p-3 text-bg-dark header">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-12 col-md-4 mb-3 mb-md-0 text-md-start">
@@ -84,14 +85,55 @@
                     </ul>
                     <a href="adminverreclamos" class="btn btn-outline-primary btn-lg" type="button">Ver reclamos</a>
                 </div>
-                
+
             </div>
         </div>
 
-        <br>
-        <h1 class="fw-bold p-5">Dashboard:</h1>
+
+        <h4 class="text-center mb-4">Resumen gráfico de ventas</h4>
+
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card p-3 shadow-sm mb-4">
+                        <h5 class="mb-3"><i class="fas fa-chart-bar"></i> Pedidos por estado</h5>
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                <canvas id="estadoChart" height="200"></canvas>
+                            </div>
+                            <div class="ms-4">
+                                <p class="mb-1 text-warning fw-bold">[[${pendientes}]] Pendientes</p>
+                                <p class="mb-1 text-success fw-bold">[[${entregados}]] Entregados</p>
+                                <p class="mb-0 text-danger fw-bold">[[${enProceso}]] En proceso</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    
+                    <div class="card p-3 shadow-sm mb-4" style="width: 350px; margin: auto;">
+                        <h5 class="mb-3"><i class="fas fa-chart-pie"></i> Accesorios más vendidos</h5>
+                        <canvas id="accesoriosChart" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
+        <script>
+            const pendientes = [[${pendientes}]];
+            const entregados = [[${entregados}]];
+            const enProceso = [[${enProceso}]];
+        </script>
+
+        <script src="/js/Dashboard.js"></script>
+
+
+        <script th:inline="javascript">
+            const nombresAccesorios = [[${nombresAccesorios}]];
+            const cantidadesAccesorios = [[${cantidadesAccesorios}]];
+        </script>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     </body>

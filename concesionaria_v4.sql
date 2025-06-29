@@ -56,6 +56,21 @@ JOIN roles r ON r.nombre = 'ROLE_ADMIN'
 WHERE u.email = 'admin@admin.com';
 
 
+CREATE TABLE IF NOT EXISTS `password_reset_token` (
+    `id_token` INT PRIMARY KEY AUTO_INCREMENT,
+    `token` VARCHAR(255) NOT NULL,
+    `user_id` INT NOT NULL,
+    `expiry_date` DATETIME NOT NULL,
+    CONSTRAINT `fk_user_reset_token`
+        FOREIGN KEY (`user_id`)
+        REFERENCES `usuario`(`id_usuario`)
+        ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+select*from password_reset_token;
+
+
+
 CREATE TABLE IF NOT EXISTS `autos` (
     `id_auto` INT PRIMARY KEY AUTO_INCREMENT,
     `modelo` VARCHAR(50),
@@ -82,7 +97,6 @@ INSERT INTO autos (modelo, marca, ano, precio, kilometraje, transmision, combust
 	('Range Rover Autobiography', 'Land Rover', 2022, 140000, 17000, 'Automática', 'Gasolina', 'Interior de lujo', 'Suspensión neumática', 'Sistema Meridian', 'Cámara 360', 'SUV', 'Disponible'),
 	('Levante Trofeo', 'Maserati', 2020, 125000, 30000, 'Automática', 'Gasolina', 'Motor V8', 'Sonido Harman Kardon', 'Alerón deportivo', 'Asientos deportivos', 'SUV', 'Disponible'),
 	('LC 500h', 'Lexus', 2022, 97000, 19000, 'Automática', 'Híbrido', 'Diseño coupé', 'Asistente de carril', 'Sonido Mark Levinson', 'Head-Up Display', 'Coupé', 'Disponible');
-SELECT * FROM autos;
 
 CREATE TABLE IF NOT EXISTS `alquiler_auto` (
     `id_alquiler` INT PRIMARY KEY AUTO_INCREMENT,
@@ -117,75 +131,6 @@ INSERT INTO colores (nombre_color) VALUES
 ('Gris'),
 ('Verde');
 
-/*
-CREATE TABLE IF NOT EXISTS `color_auto` (
-    `id_auto` INT NOT NULL,
-    `id_color` INT NOT NULL,
-    PRIMARY KEY (`id_auto`, `id_color`),
-    FOREIGN KEY (`id_auto`) REFERENCES `autos`(`id_auto`) ON DELETE CASCADE,
-    FOREIGN KEY (`id_color`) REFERENCES `colores`(`id_color`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- El auto con id 1 tendrá los colores Negro (3), Gris (5), y Blanco (4)
-INSERT INTO color_auto (id_auto, id_color) VALUES
--- S-Class
-(1, 3), -- Negro
-(1, 5), -- Gris
-(1, 4), -- Blanco
-
--- BMW 7 Series
-(2, 3), -- Negro
-(2, 2), -- Azul
-(2, 5), -- Gris
-
--- Audi A8
-(3, 4), -- Blanco
-(3, 5), -- Gris
-(3, 6), -- Verde
-
--- Porsche Panamera
-(4, 1), -- Rojo
-(4, 3), -- Negro
-(4, 5), -- Gris
-(4, 2), -- Azul
-
--- Tesla Model S
-(5, 3), -- Negro
-(5, 4), -- Blanco
-
--- Range Rover
-(6, 2), -- Azul
-(6, 5), -- Gris
-(6, 4), -- Blanco
-(6, 3), -- Negro
-
--- Maserati Levante
-(7, 1), -- Rojo
-(7, 3), -- Negro
-(7, 5), -- Gris
-
--- Lexus LC 500h
-(8, 2), -- Azul
-(8, 4), -- Blanco
-(8, 6); -- Verde
-
-
-select * from color_auto;
-
--- Supongamos que el auto tiene id 1 y el color es rojo con id 1
-INSERT INTO color_auto (id_auto, id_color) VALUES (1, 1);
-
--- Eliminación de la relación entre el auto con ID 1 y el color rojo id 1
-DELETE FROM color_auto WHERE id_auto = 1 AND id_color = 1;
-
-SELECT 
-    a.modelo,
-    c.nombre_color
-FROM autos a
-JOIN color_auto ca ON a.id_auto = ca.id_auto
-JOIN colores c ON ca.id_color = c.id_color
-WHERE a.id_auto = 1;
-*/
 
 CREATE TABLE IF NOT EXISTS `imagen_auto_color` (
     `id_imagen` INT PRIMARY KEY AUTO_INCREMENT,
@@ -308,147 +253,6 @@ VALUES
 (1, '2025-05-25', 'Documento incompleto', 'alquilado', 'No se entregó el contrato completo al momento del alquiler.', 'pendiente'),
 (2, '2025-05-28', 'Luces defectuosas', 'nuevo', 'Las luces delanteras parpadean de forma intermitente.', 'pendiente');
 
-
-/*
-
-CREATE TABLE venta (
-    id_venta INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    precio DECIMAL(10,2) NOT NULL,
-    id_usuario INT NOT NULL,
-    id_auto INT NOT NULL,
-    tipo_comprobante VARCHAR(20) NOT NULL,
-    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
-    FOREIGN KEY (id_auto) REFERENCES autos(id_auto)
-);
-
-INSERT INTO venta (precio, id_usuario, id_auto, tipo_comprobante) VALUES
-(15000.00, 1, 1, 'Boleta'),
-(16000.00, 2, 2, 'Factura'),
-(35000.00, 3, 3, 'Boleta'),
-(22000.00, 4, 4, 'Factura'),
-(27000.00, 5, 5, 'Boleta');
-
-CREATE TABLE boleta (
-    id_boleta INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    fecha_emision DATE NOT NULL,
-    numero_boleta VARCHAR(50) NOT NULL,
-    id_venta INT NOT NULL,
-    FOREIGN KEY (id_venta) REFERENCES venta(id_venta)
-);
-
-INSERT INTO boleta (fecha_emision, numero_boleta, id_venta) VALUES
-('2025-01-15', 'B001-0001', 1),
-('2025-01-18', 'B001-0002', 3),
-('2025-02-01', 'B001-0003', 5),
-('2025-02-10', 'B001-0004', 4),
-('2025-03-05', 'B001-0005', 2);
-
-CREATE TABLE detalle_boleta (
-    id_detalle_boleta INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    id_boleta INT NOT NULL,
-    cantidad INT NOT NULL,
-    precio_unitario DECIMAL(10,2) NOT NULL,
-    subtotal DECIMAL(10,2) NOT NULL,
-    igv DECIMAL(10,2) NOT NULL,
-    total DECIMAL(10,2) NOT NULL,
-    FOREIGN KEY (id_boleta) REFERENCES boleta(id_boleta)
-);
-
-INSERT INTO detalle_boleta (id_boleta, cantidad, precio_unitario, subtotal, igv, total) VALUES
-(1, 1, 15000.00, 15000.00, 2700.00, 17700.00),
-(2, 1, 35000.00, 35000.00, 6300.00, 41300.00),
-(3, 1, 27000.00, 27000.00, 4860.00, 31860.00),
-(4, 1, 22000.00, 22000.00, 3960.00, 25960.00),
-(5, 1, 16000.00, 16000.00, 2880.00, 18880.00);
-
-CREATE TABLE factura (
-    id_factura INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    fecha_emision DATE NOT NULL,
-    numero_factura VARCHAR(50) NOT NULL,
-    ruc VARCHAR(20) NOT NULL,
-    id_venta INT NOT NULL,
-    FOREIGN KEY (id_venta) REFERENCES venta(id_venta)
-);
-
-INSERT INTO factura (fecha_emision, numero_factura, ruc, id_venta) VALUES
-('2025-01-20', 'F001-0001', '20123456789', 2),
-('2025-01-25', 'F001-0002', '20123456789', 4),
-('2025-02-15', 'F001-0003', '20987654321', 1),
-('2025-03-01', 'F001-0004', '20987654321', 3),
-('2025-03-10', 'F001-0005', '20345678901', 5);
-
-CREATE TABLE detalle_factura (
-    id_detalle_factura INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    id_factura INT NOT NULL,
-    cantidad INT NOT NULL,
-    precio_unitario DECIMAL(10,2) NOT NULL,
-    subtotal DECIMAL(10,2) NOT NULL,
-    total DECIMAL(10,2) NOT NULL,
-    FOREIGN KEY (id_factura) REFERENCES factura(id_factura)
-);
-
-INSERT INTO detalle_factura (id_factura, cantidad, precio_unitario, subtotal, total) VALUES
-(1, 1, 16000.00, 16000.00, 18880.00),
-(2, 1, 22000.00, 22000.00, 25960.00),
-(3, 1, 15000.00, 15000.00, 17700.00),
-(4, 1, 35000.00, 35000.00, 41300.00),
-(5, 1, 27000.00, 27000.00, 31860.00);
-
-
-
-CREATE TABLE alquiler (
-    id_alquiler INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    precio DECIMAL(10,2) NOT NULL,
-    id_usuario INT NOT NULL,
-    id_auto INT NOT NULL,
-    tiempo_alquilado INT NOT NULL,
-    tipo_comprobante VARCHAR(20) NOT NULL,
-    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
-    FOREIGN KEY (id_auto) REFERENCES autos(id_auto)
-);
-
-
-INSERT INTO alquiler (precio, id_usuario, id_auto, tiempo_alquilado, tipo_comprobante) VALUES
-(500.00, 1, 2, 3, 'Boleta'),
-(800.00, 2, 3, 2, 'Factura'),
-(1200.00, 3, 4, 5, 'Boleta'),
-(1000.00, 4, 5, 4, 'Factura'),
-(600.00, 5, 1, 2, 'Boleta');
-
-CREATE TABLE boleta_alquiler (
-    id_boleta_alquiler INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    fecha_emision DATE NOT NULL,
-    numero_boleta_alquiler VARCHAR(50) NOT NULL,
-    id_alquiler INT NOT NULL,
-    FOREIGN KEY (id_alquiler) REFERENCES alquiler(id_alquiler)
-);
-
-INSERT INTO boleta_alquiler (fecha_emision, numero_boleta_alquiler, id_alquiler) VALUES
-('2025-03-15', 'BA001-0001', 1),
-('2025-03-16', 'BA001-0002', 3),
-('2025-03-17', 'BA001-0003', 5),
-('2025-03-18', 'BA001-0004', 4),
-('2025-03-19', 'BA001-0005', 2);
-
-CREATE TABLE detalle_boleta_alquiler (
-    id_detalle_boleta_alquiler INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    id_boleta_alquiler INT NOT NULL,
-    cantidad INT NOT NULL,
-    precio_unitario DECIMAL(10,2) NOT NULL,
-    subtotal DECIMAL(10,2) NOT NULL,
-    igv DECIMAL(10,2) NOT NULL,
-    total DECIMAL(10,2) NOT NULL,
-    FOREIGN KEY (id_boleta_alquiler) REFERENCES boleta_alquiler(id_boleta_alquiler)
-);
-
-INSERT INTO detalle_boleta_alquiler (id_boleta_alquiler, cantidad, precio_unitario, subtotal, igv, total) VALUES
-(1, 1, 500.00, 500.00, 90.00, 590.00),
-(2, 1, 1200.00, 1200.00, 216.00, 1416.00),
-(3, 1, 600.00, 600.00, 108.00, 708.00),
-(4, 1, 1000.00, 1000.00, 180.00, 1180.00),
-(5, 1, 800.00, 800.00, 144.00, 944.00);
-*/
-
 CREATE TABLE accesorio (
     id_acc BIGINT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100),
@@ -471,6 +275,7 @@ CREATE TABLE IF NOT EXISTS pedido (
     id_auto INT NOT NULL,
     colorauto VARCHAR(30) NOT NULL,
     fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    estado ENUM('pendiente', 'en proceso', 'entregado') DEFAULT 'pendiente',
     total DECIMAL(10,2) NOT NULL,
     FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELETE CASCADE,
     FOREIGN KEY (id_auto) REFERENCES autos(id_auto) ON DELETE CASCADE
@@ -486,4 +291,25 @@ CREATE TABLE IF NOT EXISTS pedido_item (
     FOREIGN KEY (id_acc) REFERENCES accesorio(id_acc) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-select*from pedido;
+INSERT INTO pedido (id_usuario, id_auto, colorauto, fecha, estado, total) VALUES
+(1, 1, 'Negro', '2025-06-20 14:30:00', 'pendiente', 115650.00),
+(2, 3, 'Gris', '2025-06-21 10:15:00', 'en proceso', 98100.00),
+(3, 5, 'Blanco', '2025-06-22 09:45:00', 'entregado', 130650.00),
+(4, 7, 'Rojo', '2025-06-23 16:20:00', 'pendiente', 125100.00),
+(5, 6, 'Negro', '2025-06-24 11:00:00', 'en proceso', 140650.00);
+
+
+INSERT INTO pedido_item (id_pedido, id_acc, coloracc, precio_unitario) VALUES
+(1, 1, 'Rojo', 500.00),
+(1, 2, 'Negro', 150.00),
+(2, 3, 'Verde', 100.00),
+(3, 1, 'Azul', 500.00),
+(3, 2, 'Rojo', 150.00),
+(4, 3, 'Negro', 100.00),
+(5, 2, 'Azul', 150.00),
+(5, 1, 'Negro', 500.00);
+
+SELECT * FROM autos;
+SELECT * FROM accesorio;
+SELECT * FROM pedido;
+SELECT * FROM pedido_item;
