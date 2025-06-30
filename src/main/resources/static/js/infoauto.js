@@ -59,6 +59,7 @@ async function cargarAuto() {
 
 
 
+
 document.getElementById("btn-alquilar").onclick = () => {
 
   const color = document.getElementById("color-select").value || "";
