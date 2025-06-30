@@ -132,6 +132,7 @@
             <groupId>com.itextpdf</groupId>
             <artifactId>layout</artifactId>
             <version>7.2.3</version>
+            <type>jar</type>
         </dependency>
         <!--Generar archivos pdf-->
 
@@ -161,7 +162,6 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.14.0</version>
         </dependency>
-
 
     </dependencies>
 
