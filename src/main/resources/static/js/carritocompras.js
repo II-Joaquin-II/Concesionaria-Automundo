@@ -30,38 +30,44 @@ function eliminarDelCarrito(id) {
 
 function actualizarVistaCarrito(data) {
     const contenedor = document.getElementById("carrito-items");
-    const totalSpan = document.getElementById("carrito-total");
-    if (!contenedor || !totalSpan)
-        return;
-
-    const idAuto = parseInt(localStorage.getItem("idAutoElegido") || "-1", 10);
+    const totalSpan   = document.getElementById("carrito-total");
+    if (!contenedor || !totalSpan) return;
 
     contenedor.innerHTML = "";
 
     if (data.items.length === 0) {
         contenedor.innerHTML = `
             <tr>
-                <td colspan="4" class="text-center text-muted">Tu carrito está vacío</td>
+                <td colspan="4" class="text-center text-muted">
+                    Tu carrito está vacío
+                </td>
             </tr>`;
     } else {
+
+        /*  👉  CONSTANTE: el auto siempre entra con id 1000  */
+        const AUTO_PLACEHOLDER_ID = 1000;
+
         data.items.forEach(item => {
-            const esAuto = parseInt(item.id) === idAuto;
+            const esAuto = Number(item.id) === AUTO_PLACEHOLDER_ID;  // ⬅️  aquí la magia
 
             contenedor.innerHTML += `
                 <tr>
                     <td>${item.nombre}</td>
-                    <td>$. ${parseFloat(item.precio).toFixed(2)}</td>
-                    <td>${item.color}</td>
+                    <td>USD $. ${Number(item.precio).toFixed(2)}</td>
+                    <td>${item.color || "-"}</td>
                     <td>
-                        ${esAuto ? "" : `
-                            <button class="btn btn-danger btn-sm"
-                                    onclick="eliminarDelCarrito(${item.id})">✕</button>`}
+                        ${
+                            esAuto
+                                ? ""   /* No mostrar botón para el auto */
+                                : `<button class="btn btn-danger btn-sm"
+                                           onclick="eliminarDelCarrito(${item.id})">✕</button>`
+                        }
                     </td>
                 </tr>`;
         });
     }
 
-    totalSpan.innerText = "USD $. " + data.total.toFixed(2);
+    totalSpan.textContent = `USD $. ${data.total.toFixed(2)}`;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
