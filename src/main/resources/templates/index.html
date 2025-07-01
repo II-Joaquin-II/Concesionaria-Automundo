@@ -12,9 +12,7 @@
 
 <body>
 
-    
     </head>
-
     <body>
         <header class="p-3 text-bg-dark header">
             <div class="container">
@@ -22,7 +20,7 @@
                     <div class="col-12 col-md-4 mb-3 mb-md-0 text-md-start">
                         <ul class="nav justify-content-center fs-5">
                             <li class="nav-item">
-                                <a href="" class="nav-link fw-bold text-white px-3">NOSOTROS</a>
+                                <a th:href="@{/reclamos}" class="nav-link fw-bold text-white px-3">RECLAMOS</a>
                             </li>
                             <li class="nav-item">
                                 <a th:href="@{/index}" class="nav-link fw-bold text-white px-3">AUTOS</a>
@@ -60,6 +58,73 @@
      
     </div>
     </main>
+
+    <footer class="text-bg-dark text-light pt-5 pb-4 columnas">
+            <div class="container">
+
+                <div class="row text-center text-md-start"><!--Fila principal donde estaran los divisiones-->
+
+                    <!--DIV RECLAMACIONES-->
+                    <div class="col-12 col-md-3 mb-4">
+                        <h5 class="text-uppercase mb-4 fw-bold text-danger">Reclamaciones</h5>
+                        <hr class="mb-4">
+                        <div class="mt-3">
+                            <a th:href="@{/reclamos}"> <!-- Link de la pagina de reclamaciones -->
+                                <img src="img/libro.png" width="150" height="80">
+                            </a>
+                        </div>
+                    </div>
+                    <!--DIV CONTACTOS-->
+                    <div class="col-12 col-md-3 mb-4">
+                        <h5 class="text-uppercase mb-4 fw-bold text-danger">Contacto</h5>
+                        <hr class="mb-4">
+                        <p><i class="fas fa-home me-2"></i> Av. Andrés Aramburú, 1105, San Isidro</p>
+                        <p><i class="fas fa-envelope me-2"></i> Lunes a Sábado de 09:00 am - 06:00 pm</p>
+                        <p><i class="fas fa-phone me-2"></i>
+                            <a href="https://chat.whatsapp.com/FcHo3U2scUO3hlYxQvarL3" class="text-light" style="text-decoration: none;">+51 925 222 579</a>
+                        </p>
+                    </div>
+
+
+                    <!--DIV Inicio y nosotros-->
+                    <div class="col-12 col-md-3 mb-4">
+                        <h5 class="text-uppercase mb-4 fw-bold text-danger">Inicio</h5>
+                        <hr class="mb-4">
+                        <p><a th:href="@{/index}" class="text-light" style="text-decoration: none;">Nuestros Autos</a></p>
+                        <p><a href="https://chat.whatsapp.com/FcHo3U2scUO3hlYxQvarL3" class="text-light" style="text-decoration: none;">Contacto</a></p>
+                    </div>
+
+                    <!--DIV REDES-->
+                    <div class="col-12 col-md-3 mb-4">
+                        <h5 class="text-uppercase mb-4 fw-bold text-danger">NUESTRAS REDES</h5>
+                        <hr class="mb-4">
+                        <ul class="list-unstyled d-flex justify-content-center justify-content-md-start gap-3">
+                            <li class="list-inline-item">
+                                <a href="https://www.facebook.com/AutomundoPe?mibextid=ZbWKwL" class="text-light"><i class="fab fa-facebook"></i></a>
+                            </li>   
+                            <li class="list-inline-item">
+                                <a href="https://x.com/automundo" class="text-light"><i class="fab fa-twitter"></i></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="https://www.linkedin.com/company/automundope/?originalSubdomain=pe" class="text-light"><i class="fab fa-linkedin-in"></i></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="https://www.youtube.com/channel/UCtYJf45k8xS7GdIfvVgAjlw" class="text-light"><i class="fab fa-youtube"></i></a>
+                            </li>
+                        </ul>
+                        <a href="principal">
+                            <img src="img/LOGOV.4.png">
+                        </a>
+                    </div>
+                </div>
+
+                <!--Mensaje final del aplicativo-->
+                <hr class="mb-2">
+                <div class="text-center mb-2">
+                    <p>Concesionaria AUTOMUNDO | Todos los derechos reservados © 2025</p>
+                </div>
+            </div>
+        </footer>
         
         
         <script src="/js/AutosTarjetas.js"></script>
