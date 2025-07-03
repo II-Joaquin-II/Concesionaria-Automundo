@@ -96,8 +96,8 @@ INSERT INTO autos (modelo, marca, ano, precio, kilometraje, transmision, combust
 	('Model S Plaid', 'Tesla', 2023, 36655, 12000, 'Automática', 'Eléctrico', 'Piloto automático', 'Pantalla táctil', 'Cámara 360', 'Modo Ludicrous', 'Sedán', 'Disponible'),
 	('Range Rover Autobiography', 'Land Rover', 2022, 39474, 17000, 'Automática', 'Gasolina', 'Interior de lujo', 'Suspensión neumática', 'Sistema Meridian', 'Cámara 360', 'SUV', 'Disponible'),
 	('Levante Trofeo', 'Maserati', 2020, 35245, 30000, 'Automática', 'Gasolina', 'Motor V8', 'Sonido Harman Kardon', 'Alerón deportivo', 'Asientos deportivos', 'SUV', 'Disponible'),
-	('LC 500h', 'Lexus', 2022, 27350, 19000, 'Automática', 'Híbrido', 'Diseño coupé', 'Asistente de carril', 'Sonido Mark Levinson', 'Head-Up Display', 'Coupé', 'Disponible');
-
+	('LC 500h', 'Lexus', 2022, 27350, 19000, 'Automática', 'Híbrido', 'Diseño coupé', 'Asistente de carril', 'Sonido Mark Levinson', 'Head-Up Display', 'Coupé', 'Disponible'),
+	('S-Class S580', 'Mercedes-Benz', 2022, 32700, 18000, 'Automática', 'Gasolina', 'Asientos de piel', 'Cámara 360', 'Piloto automático', 'Sonido Burmester', 'Sedán', 'Disponible');
 
 CREATE TABLE IF NOT EXISTS `alquiler_auto` (
     `id_alquiler` INT PRIMARY KEY AUTO_INCREMENT,
@@ -115,7 +115,8 @@ INSERT INTO alquiler_auto (id_auto, disponible_alquiler, pago_alquiler) VALUES
 (5, 'sí', 800),   -- Tesla Model S Plaid
 (6, 'no', 650),   -- Land Rover Range Rover Autobiography (Este auto está alquilado)
 (7, 'sí', 750),   -- Maserati Levante Trofeo
-(8, 'sí', 550);   -- Lexus LC 500h
+(8, 'sí', 550),   -- Lexus LC 500h
+(9, 'sí', 600);
 
 -- ALTER TABLE autos DROP COLUMN imagen;
 
@@ -185,7 +186,11 @@ INSERT INTO imagen_auto_color (id_auto, id_color, nombre_archivo) VALUES
 -- Lexus LC 500h
 (8, 2, 'LC500h_azul.jpg'),
 (8, 4, 'LC500h_blanco.jpg'),
-(8, 6, 'LC500h_verde.jpg');
+(8, 6, 'LC500h_verde.jpg'),
+
+(9, 3, 'SClass_negro.jpg'),
+(9, 5, 'SClass_gris.jpg'),
+(9, 4, 'SClass_blanco.jpg');
 
 SELECT 
     a.id_auto,

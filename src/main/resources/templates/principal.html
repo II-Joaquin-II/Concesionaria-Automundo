@@ -53,8 +53,8 @@
 
 
         <main>
-            <div class="mt-0"> <!--Espacio superior-->
-                <a th:href="@{/index}"> <!--Link que te manda a la pagina de autos-->
+            <div class="mt-0">
+                <a th:href="@{/index}">
                     <img src="img/BannerPrincipal.jpg" class="img-fluid">
                 </a>
             </div>
@@ -79,7 +79,6 @@
                                 <img src="https://autoland.com.pe/wp-content/uploads/2024/09/logo-chery.png" height="40" alt="BMW">
                                 <img src="https://autoland.com.pe/wp-content/themes/autoland-theme/assets/Mazda-logo.png" height="40" alt="BMW">
                                 <img src="https://images.icon-icons.com/2699/PNG/512/toyota_logo_icon_167770.png" height="40" alt="BMW">
-                                <!-- Agregar más marcas -->
                             </div>
                         </div>
                         <h4 class="text-danger mt-4 fw-bold my-4">Algunos de nuestros autos</h4>
@@ -98,14 +97,13 @@
                         </div>
                         <div class="mt-4" id="botonprincipal">
                             <a th:href="@{/index}">
-                                <button type="button" class="btn btn-primary p-3">Ver más autos</button>
+                                <button type="button" class="btn btn-danger p-3"><b>Ver más autos</b></button>
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
         </main>
-
 
         <footer class="text-bg-dark text-light pt-5 pb-4 columnas">
             <div class="container">
@@ -182,8 +180,6 @@
                 <input type="text" id="user-input" placeholder="Escribe tu mensaje...">
             </div>
         </div>
-
-
 
         <script src="/js/AutosCarousel.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
