@@ -45,25 +45,34 @@
     text-align: left;  
 }
 
-#carouselExampleControls {
+.swiper-container-wrapper {
   position: relative;
   padding: 0 60px; 
 }
 
-.carousel-control-prev,
-.carousel-control-next {
-  filter: invert(100%); 
-  width: 50px; 
+.swiper {
+  overflow: visible;
+}
+
+.custom-swiper-btn {
+  position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 5;
+  z-index: 100;
+  width: 40px;
+  height: 40px;
 }
 
-.carousel-inner {
-  padding: 0 10px; 
-  overflow: visible; 
-  padding-left: 15px;
-  padding-right: 15px;
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  color: white;    
+  font-size: 10px;  
 }
 
+.swiper-button-prev {
+  left: -15px !important;
+}
 
+.swiper-button-next {
+  right: -15px !important;
+}
