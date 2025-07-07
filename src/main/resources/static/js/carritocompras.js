@@ -30,8 +30,9 @@ function eliminarDelCarrito(id) {
 
 function actualizarVistaCarrito(data) {
     const contenedor = document.getElementById("carrito-items");
-    const totalSpan   = document.getElementById("carrito-total");
-    if (!contenedor || !totalSpan) return;
+    const totalSpan = document.getElementById("carrito-total");
+    if (!contenedor || !totalSpan)
+        return;
 
     contenedor.innerHTML = "";
 
@@ -57,17 +58,30 @@ function actualizarVistaCarrito(data) {
                     <td>${item.color || "-"}</td>
                     <td>
                         ${
-                            esAuto
-                                ? ""   /* No mostrar botón para el auto */
-                                : `<button class="btn btn-danger btn-sm"
+                    esAuto
+                    ? ""   /* No mostrar botón para el auto */
+                    : `<button class="btn btn-danger btn-sm"
                                            onclick="eliminarDelCarrito(${item.id})">✕</button>`
-                        }
+                    }
                     </td>
                 </tr>`;
         });
     }
 
     totalSpan.textContent = `USD $. ${data.total.toFixed(2)}`;
+}
+
+function changeImage(index, imgElement) {
+    const mainImage = document.getElementById('main-image-' + index);
+    if (!mainImage)
+        return;
+    mainImage.src = imgElement.src;
+
+    // Actualizar miniaturas activas
+    const thumbnailsContainer = imgElement.parentElement;
+    const thumbnails = thumbnailsContainer.querySelectorAll('.thumbnail');
+    thumbnails.forEach(thumb => thumb.classList.remove('active'));
+    imgElement.classList.add('active');
 }
 
 document.addEventListener('DOMContentLoaded', () => {

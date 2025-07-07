@@ -214,20 +214,6 @@
                 </div>
             </div>
         </footer>
-        <script>
-            function changeImage(index, imgElement) {
-                const mainImage = document.getElementById('main-image-' + index);
-                if (!mainImage)
-                    return;
-                mainImage.src = imgElement.src;
-
-                // Actualizar miniaturas activas
-                const thumbnailsContainer = imgElement.parentElement;
-                const thumbnails = thumbnailsContainer.querySelectorAll('.thumbnail');
-                thumbnails.forEach(thumb => thumb.classList.remove('active'));
-                imgElement.classList.add('active');
-            }
-        </script>
 
         <script src="/js/carritocompras.js"></script>
     </body>
