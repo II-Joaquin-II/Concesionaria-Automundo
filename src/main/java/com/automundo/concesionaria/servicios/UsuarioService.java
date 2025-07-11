@@ -27,12 +27,10 @@ public class UsuarioService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
 
     public List<Usuario> listarTodos() {
-        //return repo_clientes.findAll();
         return repo_clientes.findByRolNombre("ROLE_USER");
     }
 
     public Optional<Usuario> BuscaId(int id_cli) {
-        //return repo_clientes.findById(id_cli);
         Optional<Usuario> cliente = repo_clientes.findById(id_cli);
         return cliente.filter(c -> c.getRoles().stream().anyMatch(r -> "ROLE_USER".equals(r.getNombre())));
     }
