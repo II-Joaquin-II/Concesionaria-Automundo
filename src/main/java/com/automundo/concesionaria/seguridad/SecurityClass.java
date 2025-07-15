@@ -81,6 +81,9 @@ public class SecurityClass {
 
                 .requestMatchers("/reset-password/**", "/forgot-password/**").permitAll()
 
+                .requestMatchers("/actuator").permitAll()
+                .requestMatchers("/actuator/prometheus").permitAll()
+
                 .anyRequest().authenticated() 
 
             )

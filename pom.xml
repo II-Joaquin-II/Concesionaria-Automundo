@@ -30,6 +30,19 @@
         <java.version>21</java.version>
     </properties>
     <dependencies>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+            <version>3.3.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <version>1.13.6</version>
+        </dependency>
+
         <!-- Dependencia para el chat bot (1) -->
         <dependency>
             <groupId>org.json</groupId>
@@ -115,10 +128,8 @@
             <version>3.1.1.RELEASE</version>
         </dependency>
         <dependency>
-            <groupId>net.xdob.springframework</groupId>
-            <artifactId>spring-webflux</artifactId>
-            <version>5.3.41</version>
-            <type>jar</type>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
 
         <!--Generar archivos pdf-->
